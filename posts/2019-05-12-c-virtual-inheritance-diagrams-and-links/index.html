@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>C&#43;&#43; virtual inheritance diagrams and links | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="http://example.org/">~/tuket</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<div class="article-meta">
+<h1><span class="title">C++ virtual inheritance diagrams and links</span></h1>
+
+<h2 class="date">2019/05/12</h2>
+<p class="terms">
+  
+  
+  
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>These is a cheatsheet of the memory layout of some common pattens in virtual inheritance.</p>
+<p>For each case there is first the code.</p>
+<p>Then there is a diagram.<br>
+On the left there is a representation of the inheritance relationships.
+<span style="color:#A59200">Gold</span> color means virtual.<br>
+On the right there is the memory layout.<br>
+The dashed arrows represent where a pointer of that type would point if a casting was performed.</p>
+<p>At the bottom of this page there is a collection of <a href="#links">links</a>. Some of them are good for a first contact, and other go very in depth.</p>
+<h1 id="1">1</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><img src="/img/virtual_inheritance/1.svg" alt="1.svg" width="75%"/>
+<h1 id="2">2</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><img src="/img/virtual_inheritance/2.svg" alt="2.svg" width="75%"/>
+<h1 id="3">3</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><img src="/img/virtual_inheritance/3.svg" alt="3.svg" width="75%"/>
+<h1 id="4">4</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><img src="/img/virtual_inheritance/4.svg" alt="4.svg" width="75%"/>
+<h1 id="5">5</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop1</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">struct</span> <span class="nc">Prop2</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">struct</span> <span class="nc">Prop3</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop1</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div><img src="/img/virtual_inheritance/5.svg" alt="5.svg" width="100%"/>
+<h1 id="6">6</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop1</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop2</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop3</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="n">Prop1</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div><img src="/img/virtual_inheritance/6.svg" alt="6.svg" width="100%"/>
+<h1 id="7">7</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop1</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop2</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop3</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop1</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div><p>Same memory layout.</p>
+<img src="/img/virtual_inheritance/7.svg" alt="7.svg" width="100%"/>
+<h1 id="8">8</h1>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop1</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop2</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Prop3</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
+<span class="p">};</span>
+    
+<span class="k">struct</span> <span class="nc">Button</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="nl">Widget</span>
+    <span class="p">:</span> <span class="k">public</span> <span class="n">Prop1</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div><img src="/img/virtual_inheritance/8.svg" alt="8.svg" width="100%"/>
+<h1 id="links">Links</h1>
+<p>Good as introduction:</p>
+<ul>
+<li><a href="https://www.cprogramming.com/tutorial/virtual_inheritance.html">https://www.cprogramming.com/tutorial/virtual_inheritance.html</a></li>
+</ul>
+<p>This series explores virtual inheritance at the low level. Goes really in depth: memory layout and assemble code. This is the best resource I found. It also teaches you how to use GDB to get the answers yourself.</p>
+<ul>
+<li>
+<p><a href="https://shaharmike.com/cpp/vtable-part1/">https://shaharmike.com/cpp/vtable-part1/</a></p>
+</li>
+<li>
+<p><a href="https://shaharmike.com/cpp/vtable-part2/">https://shaharmike.com/cpp/vtable-part2/</a></p>
+</li>
+<li>
+<p><a href="https://shaharmike.com/cpp/vtable-part3/">https://shaharmike.com/cpp/vtable-part3/</a></p>
+</li>
+<li>
+<p><a href="https://shaharmike.com/cpp/vtable-part4/">https://shaharmike.com/cpp/vtable-part4/</a></p>
+</li>
+</ul>
+<p>Other useful resources:</p>
+<ul>
+<li>
+<p><a href="https://cs.nyu.edu/courses/fall16/CSCI-UA.0470-001/slides/MemoryLayoutMultipleInheritance.pdf">https://cs.nyu.edu/courses/fall16/CSCI-UA.0470-001/slides/MemoryLayoutMultipleInheritance.pdf</a></p>
+</li>
+<li>
+<p><a href="http://www.drdobbs.com/cpp/multiple-inheritance-considered-useful/184402074?pgno=1">http://www.drdobbs.com/cpp/multiple-inheritance-considered-useful/184402074?pgno=1</a></p>
+</li>
+<li>
+<p><a href="https://www.programering.com/a/MTO5UTNwATE.html">https://www.programering.com/a/MTO5UTNwATE.html</a></p>
+</li>
+<li>
+<p><a href="https://hownot2code.com/2016/08/12/good-and-bad-sides-of-virtual-inheritance-in-c/">https://hownot2code.com/2016/08/12/good-and-bad-sides-of-virtual-inheritance-in-c/</a></p>
+</li>
+</ul>
+<p>Some interesting stackoverflow questions:</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/11603198/virtual-tables-and-memory-layout-in-multiple-virtual-inheritance">https://stackoverflow.com/questions/11603198/virtual-tables-and-memory-layout-in-multiple-virtual-inheritance</a></li>
+<li><a href="https://stackoverflow.com/questions/28521242/memory-layout-of-a-class-under-multiple-or-virtual-inheritance-and-the-vtables">https://stackoverflow.com/questions/28521242/memory-layout-of-a-class-under-multiple-or-virtual-inheritance-and-the-vtables</a></li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+
