@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Notes on tuket</title>
-    <link>/notes/</link>
+    <link>tuket.github.io/notes/</link>
     <description>Recent content in Notes on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="/notes/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="tuket.github.io/notes/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
