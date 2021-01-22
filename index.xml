@@ -146,6 +146,16 @@ SECTION .text global _start ; &amp;#34;global&amp;#34; means that the symbol can
     </item>
     
     <item>
+      <title>Notes</title>
+      <link>https://tuket.github.io/notes/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/</guid>
+      <description>These are my notes on different topics
+ Assembly  </description>
+    </item>
+    
+    <item>
       <title>Portfolio</title>
       <link>https://tuket.github.io/portfolio/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
