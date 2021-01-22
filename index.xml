@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on tuket</title>
-    <link>tuket.github.io/</link>
+    <link>https://tuket.github.io/</link>
     <description>Recent content in Home on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 09 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Circle vs Ray intersection</title>
-      <link>tuket.github.io/posts/2020-07-09-circle-vs-ray-intersection/</link>
+      <link>https://tuket.github.io/posts/2020-07-09-circle-vs-ray-intersection/</link>
       <pubDate>Thu, 09 Jul 2020 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2020-07-09-circle-vs-ray-intersection/</guid>
+      <guid>https://tuket.github.io/posts/2020-07-09-circle-vs-ray-intersection/</guid>
       <description>A simple way to compute the intersection of a ray vs a circle.
 Code snippet:
 bool rayVsCircle(float&amp;amp; depth, glm::vec2 rayOrig, glm::vec2 rayDir, glm::vec2 circlePos, float circleRad) { const float R = circleRad; const glm::vec2 op = circlePos - rayOrig; if(dot(op, op) &amp;lt; R*R) { // is rayOrigin inside the circle ?  depth = 0; return true; } const float D = dot(rayDir, op); const float H2 = dot(op, op) - D*D; const float K2 = R*R - H2; if(K2 &amp;gt;= 0) { depth = D - sqrt(K2); if(depth &amp;gt; 0) return true; } return false; } Demo here: https://github.</description>
@@ -20,20 +20,20 @@ bool rayVsCircle(float&amp;amp; depth, glm::vec2 rayOrig, glm::vec2 rayDir, glm:
     
     <item>
       <title>Generate icosphere mesh fast</title>
-      <link>tuket.github.io/posts/2020-06-10-generate-icosphere-mesh-fast/</link>
+      <link>https://tuket.github.io/posts/2020-06-10-generate-icosphere-mesh-fast/</link>
       <pubDate>Wed, 10 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2020-06-10-generate-icosphere-mesh-fast/</guid>
+      <guid>https://tuket.github.io/posts/2020-06-10-generate-icosphere-mesh-fast/</guid>
       <description>If you seach in the Internet for algorithms to generate icosphere meshes, most algorithms out there take an icosahedron and keep tessellating the triangular faces recursivelly (link).
 I have made an algorithm that outputs the result, in a couple of flat arrays(vertices and indices), in a single pass, so it&amp;rsquo;s faster and very cache friendly. It also has the advantage that you can query the exact memory you need to allocate.</description>
     </item>
     
     <item>
       <title>Compute triangle area from three 2D points (fast way)</title>
-      <link>tuket.github.io/posts/2020-02-14-compute-triangle-area-from-three-2d-points/</link>
+      <link>https://tuket.github.io/posts/2020-02-14-compute-triangle-area-from-three-2d-points/</link>
       <pubDate>Fri, 14 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2020-02-14-compute-triangle-area-from-three-2d-points/</guid>
+      <guid>https://tuket.github.io/posts/2020-02-14-compute-triangle-area-from-three-2d-points/</guid>
       <description>TLDR: code is at the end.
 It&amp;rsquo;s well know that we can compute the area of a triangle as the base times the height divided by two.
 $$ A = 0.5 \cdot b \cdot h $$
@@ -44,10 +44,10 @@ We make the vectors $\vec{v_1}$ and $\vec{v_2}$ by linking one point to the othe
     
     <item>
       <title>C&#43;&#43; virtual inheritance diagrams and links</title>
-      <link>tuket.github.io/posts/2019-05-12-c-virtual-inheritance-diagrams-and-links/</link>
+      <link>https://tuket.github.io/posts/2019-05-12-c-virtual-inheritance-diagrams-and-links/</link>
       <pubDate>Sun, 12 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2019-05-12-c-virtual-inheritance-diagrams-and-links/</guid>
+      <guid>https://tuket.github.io/posts/2019-05-12-c-virtual-inheritance-diagrams-and-links/</guid>
       <description>These is a cheatsheet of the memory layout of some common pattens in virtual inheritance.
 For each case there is first the code.
 Then there is a diagram.
@@ -59,10 +59,10 @@ At the bottom of this page there is a collection of links.</description>
     
     <item>
       <title>Nifty hidden shapes in a Codejam problem</title>
-      <link>tuket.github.io/posts/2018-10-13-nifty-hiddent-shapes-in-a-codejam-problem/</link>
+      <link>https://tuket.github.io/posts/2018-10-13-nifty-hiddent-shapes-in-a-codejam-problem/</link>
       <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2018-10-13-nifty-hiddent-shapes-in-a-codejam-problem/</guid>
+      <guid>https://tuket.github.io/posts/2018-10-13-nifty-hiddent-shapes-in-a-codejam-problem/</guid>
       <description>I was trying to solve a problem called How Big Are the Pockets? from Codejam.
 Basically they want you to count the number of shaded squares in a figure like follows. They give you as input a sequence of movements (right, left, or forward):
 9 F 6 R 1 F 4 RFF 2 LFF 1 LFFFR 1 F 2 R 1 F 5 In order to debug my solution I made a program that draws the line path and a trace of my solution.</description>
@@ -70,10 +70,10 @@ Basically they want you to count the number of shaded squares in a figure like f
     
     <item>
       <title>Sending emails with C&#43;&#43; and GMail</title>
-      <link>tuket.github.io/posts/2018-09-03-send-gmail-cpp/</link>
+      <link>https://tuket.github.io/posts/2018-09-03-send-gmail-cpp/</link>
       <pubDate>Mon, 03 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2018-09-03-send-gmail-cpp/</guid>
+      <guid>https://tuket.github.io/posts/2018-09-03-send-gmail-cpp/</guid>
       <description>In this post I&amp;rsquo;m going to show how to send emails using C++ and a GMail account.
 For networking I&amp;rsquo;m going to be using Asio (non-boost verion).
 If you just want to see the code, here it is: github.com/tuket/send_gmail.
@@ -82,10 +82,10 @@ SSL You cannot simply connect to GMail through a regular socket. You will have t
     
     <item>
       <title>Sorting multiple vectors in the same way using C&#43;&#43; variadic templates</title>
-      <link>tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</link>
+      <link>https://tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</link>
       <pubDate>Sat, 30 Sep 2017 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</guid>
+      <guid>https://tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</guid>
       <description>Let&amp;rsquo;s imagine we have a table like shown below. In this simple example we have information about people organized in rows.
    Id Name Surname Age     1 Tuket Troco 24   0 Rufol Conino 11   2 Muscul Man 20   3 Jigoro Kano 78    And we represent this table using C++ std::vectors:
 using namespace std; ... vector&amp;lt;int&amp;gt; id = {1, 0, 2, 3}; vector&amp;lt;string&amp;gt; name = {&amp;#34;Tuket&amp;#34;, &amp;#34;Rufol&amp;#34;, &amp;#34;Muscul&amp;#34;, &amp;#34;Jigoro&amp;#34;}; vector&amp;lt;string&amp;gt; surname = {&amp;#34;Troco&amp;#34;, &amp;#34;Conino&amp;#34;, &amp;#34;Man&amp;#34;, &amp;#34;Kano&amp;#34;}; vector&amp;lt;unsigned&amp;gt; age = {24, 11, 20, 78}; We want to be able to sort these rows by different criterias.</description>
@@ -93,10 +93,10 @@ using namespace std; ... vector&amp;lt;int&amp;gt; id = {1, 0, 2, 3}; vector&amp
     
     <item>
       <title>BRDF based importance sampling for microfacets cheatsheet</title>
-      <link>tuket.github.io/posts/2017-07-09-brdf-based-importance-sampling/</link>
+      <link>https://tuket.github.io/posts/2017-07-09-brdf-based-importance-sampling/</link>
       <pubDate>Sun, 09 Jul 2017 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2017-07-09-brdf-based-importance-sampling/</guid>
+      <guid>https://tuket.github.io/posts/2017-07-09-brdf-based-importance-sampling/</guid>
       <description>BRDF based importance sampling aims to reduce the cost of computing the rendering equation by taking into account the BRDF itself. In this case we are going to use the normal distribution function NDF1.
 First let&amp;rsquo;s review the rendering equation (simplified version)
 $$ L_o(\vec{\omega} _ o)= L_e(\vec{\omega} _ o) + \int _\Omega {f_r(\vec{\omega} _i, \vec{\omega} _o) \ L_i(\vec{\omega} _i}) \ (\vec{\omega}_i \cdot \vec{n}) \ d\vec{\omega} _i $$
@@ -105,10 +105,10 @@ $\vec{\omega}_i$: incoming directions.</description>
     
     <item>
       <title>The Curse of Magin</title>
-      <link>tuket.github.io/posts/2017-07-09-the-curse-of-magin/</link>
+      <link>https://tuket.github.io/posts/2017-07-09-the-curse-of-magin/</link>
       <pubDate>Sun, 09 Jul 2017 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2017-07-09-the-curse-of-magin/</guid>
+      <guid>https://tuket.github.io/posts/2017-07-09-the-curse-of-magin/</guid>
       <description>We developed a game for a school subject called the curse of Magin. It has been a great experience and very useful for learning.
 
 Check it out at thecurseofmagin.itch.io/the-curse-of-magin.</description>
@@ -116,30 +116,30 @@ Check it out at thecurseofmagin.itch.io/the-curse-of-magin.</description>
     
     <item>
       <title>Create a simple BRDF plotter with Untity</title>
-      <link>tuket.github.io/posts/2017-05-13-unity-brdf-plotter/</link>
+      <link>https://tuket.github.io/posts/2017-05-13-unity-brdf-plotter/</link>
       <pubDate>Sat, 13 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2017-05-13-unity-brdf-plotter/</guid>
+      <guid>https://tuket.github.io/posts/2017-05-13-unity-brdf-plotter/</guid>
       <description>I needed a tool to plot analytical BRDFs. I was surprised I wasn&amp;rsquo;t able to find anything that could fit my requirements(shame on me: check out the one from Disney). So I created my own interactive BRDF plotter using Unity. It&amp;rsquo;s pretty easy to create your own BRDF plotter (if you don&amp;rsquo;t have big expectations on it). The goal is to make something useful in a couple hours.
 Displacing vertices of a sphere What we are going to do is super easy.</description>
     </item>
     
     <item>
       <title>Hello world in Linux</title>
-      <link>tuket.github.io/notes/asm/hello_world_linux/</link>
+      <link>https://tuket.github.io/notes/asm/hello_world_linux/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/notes/asm/hello_world_linux/</guid>
+      <guid>https://tuket.github.io/notes/asm/hello_world_linux/</guid>
       <description>This is a minimal hello world program in Linux. It doesn&amp;rsquo;t need to link any external libraries.
 SECTION .text global _start ; &amp;#34;global&amp;#34; means that the symbol can be accessed in other modules. In order to refer to a global symbol from another module, you must use the &amp;#34;extern&amp;#34; keyboard _start: mov eax, 4 ; syscall: write mov ebx, 1 ; stdout mov ecx, msg mov edx, msgLen syscall mov eax, 1 ; syscal: exit mov ebx, 0 ; return code syscall msg: db &amp;#34;hello&amp;#34;,10 msgLen: equ $ - msg ; the $ sign means the current byte address.</description>
     </item>
     
     <item>
       <title>Portfolio</title>
-      <link>tuket.github.io/portfolio/</link>
+      <link>https://tuket.github.io/portfolio/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/portfolio/</guid>
+      <guid>https://tuket.github.io/portfolio/</guid>
       <description>Disclaimer: many of these projects were done when I was very noob. Even if I provide download links and code, please don&amp;rsquo;t take it as reference since it is probably of very bad quality. Anyway, it might be useful for learning how not to do things and laughing (that&amp;rsquo;s what I do).
  glTF viewer Work in progress&amp;hellip;
 This is a simple viewer for the glTF format.
@@ -148,19 +148,19 @@ Hosted in github.  Raytracer I implemented this raytracer with Monte Carlo stima
     
     <item>
       <title>Print the contents of a file in Linux</title>
-      <link>tuket.github.io/notes/asm/print_file_linux/</link>
+      <link>https://tuket.github.io/notes/asm/print_file_linux/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/notes/asm/print_file_linux/</guid>
+      <guid>https://tuket.github.io/notes/asm/print_file_linux/</guid>
       <description>; nasm -f elf64 pf.asm &amp;amp;&amp;amp; ld -nostartfiles pf.o -o pf SECTION .text global _start _start: mov rax, 2 ; syscall: open mov rdi, str_testFile mov rsi, 0 ; flags syscall mov rdi, rax ; the file descriptor mov rsi, buffer mov rdx, 128 mov rax, 0; syscall: read syscall mov rdi, 1 ; stdout mov rsi, buffer mov rdx, rax ; the size returned by read mov rax, 1; syscall: write syscall mov rax, 60 ; syscal: exit mov rdi, 0 ; return code syscall str_testFile: db &amp;#34;test.</description>
     </item>
     
     <item>
       <title>Test markdown</title>
-      <link>tuket.github.io/posts/2015-02-20-test-markdown/</link>
+      <link>https://tuket.github.io/posts/2015-02-20-test-markdown/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>tuket.github.io/posts/2015-02-20-test-markdown/</guid>
+      <guid>https://tuket.github.io/posts/2015-02-20-test-markdown/</guid>
       <description>You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&amp;rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
 Here is some bold text
 Here is a secondary heading Here&amp;rsquo;s a useless table:
