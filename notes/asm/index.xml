@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Assembly on tuket</title>
+    <link>/notes/asm/</link>
+    <description>Recent content in Assembly on tuket</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/notes/asm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hello world in Linux</title>
+      <link>/notes/asm/hello_world_linux/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notes/asm/hello_world_linux/</guid>
+      <description>This is a minimal hello world program in Linux. It doesn&amp;rsquo;t need to link any external libraries.
+SECTION .text global _start ; &amp;#34;global&amp;#34; means that the symbol can be accessed in other modules. In order to refer to a global symbol from another module, you must use the &amp;#34;extern&amp;#34; keyboard _start: mov eax, 4 ; syscall: write mov ebx, 1 ; stdout mov ecx, msg mov edx, msgLen syscall mov eax, 1 ; syscal: exit mov ebx, 0 ; return code syscall msg: db &amp;#34;hello&amp;#34;,10 msgLen: equ $ - msg ; the $ sign means the current byte address.</description>
+    </item>
+    
+    <item>
+      <title>Print the contents of a file in Linux</title>
+      <link>/notes/asm/print_file_linux/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notes/asm/print_file_linux/</guid>
+      <description>; nasm -f elf64 pf.asm &amp;amp;&amp;amp; ld -nostartfiles pf.o -o pf SECTION .text global _start _start: mov rax, 2 ; syscall: open mov rdi, str_testFile mov rsi, 0 ; flags syscall mov rdi, rax ; the file descriptor mov rsi, buffer mov rdx, 128 mov rax, 0; syscall: read syscall mov rdi, 1 ; stdout mov rsi, buffer mov rdx, rax ; the size returned by read mov rax, 1; syscall: write syscall mov rax, 60 ; syscal: exit mov rdi, 0 ; return code syscall str_testFile: db &amp;#34;test.</description>
+    </item>
+    
+  </channel>
+</rss>

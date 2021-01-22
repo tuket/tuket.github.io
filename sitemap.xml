@@ -63,11 +63,27 @@
   </url>
   
   <url>
+    <loc>/notes/asm/</loc>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
   </url>
   
   <url>
+    <loc>/notes/asm/hello_world_linux/</loc>
+  </url>
+  
+  <url>
+    <loc>/notes/</loc>
+  </url>
+  
+  <url>
     <loc>/portfolio/</loc>
+  </url>
+  
+  <url>
+    <loc>/notes/asm/print_file_linux/</loc>
   </url>
   
   <url>
