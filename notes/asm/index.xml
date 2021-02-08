@@ -18,6 +18,23 @@ So I though I would make an executable by hand, where every bit in it is underst
     </item>
     
     <item>
+      <title>GDB commands for Assembly</title>
+      <link>https://tuket.github.io/notes/asm/gdb_asm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/asm/gdb_asm/</guid>
+      <description>Start up:
+gdb exe Enter TUI mode:
+Ctrl+A, Ctrl+A Switch to assembly mode:
+layout asm Run the program and break in the first like of work (b main and b _start dont&#39; work):
+starti Execute till next instruction:
+ni Step one instruction (unline the previous, this will enter function calls):
+si Retrive the values of all registers:
+i r ; info registers Get the value of one register:
+i r rax </description>
+    </item>
+    
+    <item>
       <title>Hello world in Linux</title>
       <link>https://tuket.github.io/notes/asm/hello_world_linux/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
