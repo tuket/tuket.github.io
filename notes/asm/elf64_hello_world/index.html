@@ -278,7 +278,7 @@ onload='renderMathInElement(document.body);'></script>
 </table>
 <p>So shouldn&rsquo;t <code>p_offset</code> be 64+56=120?</p>
 <p>That would make sense but there is a little problem.
-The ELF spec say the following about <code>p_align</code>:</p>
+The ELF spec says the following about <code>p_align</code>:</p>
 <blockquote>
 <p>This member holds the value to which the segments are
 aligned in memory and in the file.  Loadable process
@@ -288,7 +288,7 @@ mean no alignment is required.  Otherwise, p_align should
 be a positive, integral power of two, and p_vaddr should
 equal p_offset, modulo p_align.</p>
 </blockquote>
-<p>The key is in &ldquo;p_vaddr should equal p_offset, modulo p_align&rdquo;. In our case, <code>p_vaddr</code> is <code>0x400000</code> which is the usual address for x64 processes<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>. If had <code>p_offset==120</code>, that the alignment rule would be violated, since we have a <code>p_align</code> of <code>0x1000</code>.</p>
+<p>The key is in &ldquo;p_vaddr should equal p_offset, modulo p_align&rdquo;. In our case, <code>p_vaddr</code> is <code>0x400000</code> which is the usual address for x64 processes<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>. If we had <code>p_offset==120</code>, the alignment rule would be violated, since we have a <code>p_align</code> of <code>0x1000</code>.</p>
 <p>And the obvious question is: why we don&rsquo;t just decrease the alignment? &hellip; The Linux kernel has a minimum alignment that is usually the page size. I believe that the page size is usually 4KB. So we would have to add padding after the headers to align up to 4KB. That would make the executable much bigger; therefore we opted to just include the headers in the segment, and set the entry point to <code>0x400000 + 120</code>.</p>
 <p>But there is something better we can do. We said that <code>0x400000</code> is the usual load address for x64 processes. But it turns out it&rsquo;s not mandatory. We can set <code>p_vaddr</code> to <code>0x400078</code> so it matches the <code>p_offset</code>, modulo <code>0x1000</code>. In this way, the executable is small and we don&rsquo;t load the headers unnecessarily.</p>
 <p>In order to figure this out I had to ask in <a href="https://stackoverflow.com/questions/66035102/in-elf-why-do-the-headers-need-to-be-in-one-segment">StackOverflow</a>.</p>
