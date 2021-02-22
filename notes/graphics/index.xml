@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Graphics on tuket</title>
+    <link>https://tuket.github.io/notes/graphics/</link>
+    <description>Recent content in Graphics on tuket</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 22 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/notes/graphics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Partial custom mipmap levels in OpenGL</title>
+      <link>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</link>
+      <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</guid>
+      <description>OpenGL allows to automatically create mipmaps for you with glGenMipmap.
+But you can upload you own mipmaps using glTexImage2D.
+for(int lvl = 0; numMips; lvl++) { glTexImage2D(GL_TEXTURE_2D, lvl, GL_RGBA8, texture[lvl].w, texture[lvl].h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture[lvl].data ); } However, I wanted to provide my own images only for the upper levels, and let OpenGL compute the rest. This is possible to do because OpenGL will generate mipmaps starting from GL_TEXTURE_BASE_LEVEL. So you can do it like this:</description>
+    </item>
+    
+  </channel>
+</rss>

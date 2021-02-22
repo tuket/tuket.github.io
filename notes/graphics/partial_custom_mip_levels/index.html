@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Partial custom mipmap levels in OpenGL | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        
+        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/notes/">~/notes</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<a href="../">&lt;&lt; ../</a>
+<div class="article-meta">
+<h1><span class="title">Partial custom mipmap levels in OpenGL</span></h1>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>OpenGL allows to automatically create mipmaps for you with <code>glGenMipmap</code>.</p>
+<p>But you can upload you own mipmaps using <code>glTexImage2D</code>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">lvl</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">numMips</span><span class="p">;</span> <span class="n">lvl</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
+        <span class="n">lvl</span><span class="p">,</span>
+        <span class="n">GL_RGBA8</span><span class="p">,</span>
+        <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">w</span><span class="p">,</span> <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">GL_RGBA</span><span class="p">,</span> <span class="n">GL_UNSIGNED_BYTE</span><span class="p">,</span> <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">data</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p>However, I wanted to provide my own images only for the upper levels, and let OpenGL compute the rest.
+This is possible to do because OpenGL will generate mipmaps starting from <code>GL_TEXTURE_BASE_LEVEL</code>.
+So you can do it like this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// upload custom images
+</span><span class="c1"></span><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numCustomMips</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
+        <span class="n">lvl</span><span class="p">,</span>
+        <span class="n">GL_RGBA8</span><span class="p">,</span>
+        <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">w</span><span class="p">,</span> <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">GL_RGBA</span><span class="p">,</span> <span class="n">GL_UNSIGNED_BYTE</span><span class="p">,</span> <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">data</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// set the base level to the smallest mip we provided
+</span><span class="c1"></span><span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_BASE_LEVEL</span><span class="p">,</span> <span class="n">numCustomMips</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">glGenerateMipmap</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">);</span>
+<span class="c1">// restore base level
+</span><span class="c1"></span><span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_BASE_LEVEL</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</code></pre></div><p>If you find some textures look tilted, it could be that your texture rows are not 4-byte aligned for higher mips. Try if doing this fixes you problem:</p>
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="n">glPixelStorei</span><span class="p">(</span><span class="n">GL_UNPACK_ALIGNMENT</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://stackoverflow.com/users/1754322/tuket"><img src="/img/stack_overflow_icon.svg" width="18" height="18" alt="stackOverflow"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"></a> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+

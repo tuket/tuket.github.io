@@ -5,17 +5,7 @@
     <link>https://tuket.github.io/notes/</link>
     <description>Recent content in Notes on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://tuket.github.io/notes/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Assembly</title>
-      <link>https://tuket.github.io/notes/asm/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://tuket.github.io/notes/asm/</guid>
-      <description>Unless otherwise specified I use the Intel syntax. My assembler of choice is NASM but sometimes I might also use yasm, which is quite similar.
-Hello world in Linux This is a minimal hello world program in Linux. It doesn&amp;rsquo;t need to link any external libraries.
-SECTION .text global _start ; &amp;#34;global&amp;#34; means that the symbol can be accessed in other modules. In order to refer to a global symbol from another module, you must use the &amp;#34;extern&amp;#34; keyboard _start: mov eax, 4 ; syscall: write mov ebx, 1 ; stdout mov ecx, msg mov edx, msgLen syscall mov eax, 1 ; syscal: exit mov ebx, 0 ; return code syscall msg: db &amp;#34;hello&amp;#34;,10 msgLen: equ $ - msg ; the $ sign means the current byte address.</description>
-    </item>
-    
+    <language>en-us</language>
+    <lastBuildDate>Mon, 22 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/notes/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
