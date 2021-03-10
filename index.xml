@@ -36,7 +36,7 @@ So I though I would make an executable by hand, where every bit in it is underst
       <guid>https://tuket.github.io/notes/asm/gdb_asm/</guid>
       <description>Start up:
 gdb exe Enter TUI mode:
-Ctrl+A, Ctrl+A Switch to assembly mode:
+Ctrl+X, Ctrl+A Switch to assembly mode:
 layout asm Run the program and break in the first like of work (b main and b _start dont&#39; work):
 starti Execute till next instruction:
 ni Step one instruction (unline the previous, this will enter function calls):
