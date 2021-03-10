@@ -118,6 +118,48 @@ onload='renderMathInElement(document.body);'></script>
 
 <span class="k">SECTION</span> <span class="nv">.data</span>
 <span class="nl">buffer:</span> <span class="kd">TIMES</span> <span class="mi">128</span> <span class="nv">db</span> <span class="mi">0</span>
+</code></pre></div><p>But that will only print 128 bytes.</p>
+<p>If we want to print the entire file:</p>
+<div class="highlight"><pre class="chroma"><code class="language-nasm" data-lang="nasm"><span class="c1">; nasm -f elf64 pf.asm &amp;&amp; ld -nostartfiles pf.o -o pf</span>
+
+<span class="k">SECTION</span> <span class="nv">.text</span>    
+
+<span class="k">global</span> <span class="nv">_start</span>
+<span class="nl">_start:</span>
+    <span class="nf">mov</span> <span class="nb">rax</span><span class="p">,</span> <span class="mi">2</span> <span class="c1">; syscall: open</span>
+    <span class="nf">mov</span> <span class="nb">rdi</span><span class="p">,</span> <span class="nv">str_testFile</span>
+    <span class="nf">mov</span> <span class="nb">rsi</span><span class="p">,</span> <span class="mi">0</span> <span class="c1">; flags</span>
+    <span class="nf">syscall</span>
+
+    <span class="nf">mov</span> <span class="nv">r10</span><span class="p">,</span> <span class="nb">rax</span> <span class="c1">; save file descriptor</span>
+    <span class="nl">.keep_reading:</span>
+        <span class="nf">mov</span> <span class="nb">rdi</span><span class="p">,</span> <span class="nv">r10</span> <span class="c1">; the file descriptor</span>
+        <span class="nf">mov</span> <span class="nb">rsi</span><span class="p">,</span> <span class="nv">buffer</span>
+        <span class="nf">mov</span> <span class="nb">rdx</span><span class="p">,</span> <span class="mi">128</span>
+        <span class="nf">mov</span> <span class="nb">rax</span><span class="p">,</span> <span class="mi">0</span><span class="c1">; syscall: read</span>
+        <span class="nf">syscall</span>
+
+        <span class="nf">cmp</span> <span class="nb">rax</span><span class="p">,</span> <span class="mi">0</span> <span class="c1">; if no bytes read, done</span>
+        <span class="nf">jle</span> <span class="nv">.done_reading</span>
+
+        <span class="nf">mov</span> <span class="nb">rdi</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; stdout</span>
+        <span class="nf">mov</span> <span class="nb">rsi</span><span class="p">,</span> <span class="nv">buffer</span>
+        <span class="nf">mov</span> <span class="nb">rdx</span><span class="p">,</span> <span class="nb">rax</span> <span class="c1">; the size returned by read</span>
+        <span class="nf">mov</span> <span class="nb">rax</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; syscall: write</span>
+        <span class="nf">syscall</span>
+
+        <span class="nf">jmp</span> <span class="nv">.keep_reading</span>
+    <span class="nl">.done_reading:</span>
+
+    <span class="nf">mov</span> <span class="nb">rax</span><span class="p">,</span> <span class="mi">60</span> <span class="c1">; syscal: exit</span>
+    <span class="nf">mov</span> <span class="nb">rdi</span><span class="p">,</span> <span class="mi">0</span> <span class="c1">; return code</span>
+    <span class="nf">syscall</span>
+
+<span class="nl">str_testFile:</span> <span class="kd">db</span> <span class="s">&#34;test.txt&#34;</span><span class="p">,</span> <span class="mi">0</span>
+
+<span class="k">SECTION</span> <span class="nv">.data</span>
+<span class="nl">buffer:</span> <span class="kd">TIMES</span> <span class="mi">128</span> <span class="nv">db</span> <span class="mi">0</span>
+
 </code></pre></div>
     <a href="/"> >> Home</a>
   </main>
