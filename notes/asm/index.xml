@@ -24,14 +24,13 @@ So I though I would make an executable by hand, where every bit in it is underst
       
       <guid>https://tuket.github.io/notes/asm/gdb_asm/</guid>
       <description>Start up:
-gdb exe Enter TUI mode:
+gdb exe Change the assembler syntax from AT&amp;amp;T to Intel:
+set disassembly-flavor intel If you want to make this setting permanent, paste that into ~/gdbinit.
+You can verify which assembly syntax is active with:
+show disassembly-flavor Enter TUI mode:
 Ctrl+X, Ctrl+A Switch to assembly mode:
-layout asm Run the program and break in the first like of work (b main and b _start dont&#39; work):
-starti Execute till next instruction:
-ni Step one instruction (unline the previous, this will enter function calls):
-si Retrive the values of all registers:
-i r ; info registers Get the value of one register:
-i r rax </description>
+layout asm Run the program and break in the first like of work (b main and b _start don&amp;rsquo;t work):
+starti Execute till next instruction:</description>
     </item>
     
     <item>
