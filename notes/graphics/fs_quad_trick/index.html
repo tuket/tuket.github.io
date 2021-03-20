@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Full-screen quad: easy and efficient trick | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        
+        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/notes/">~/notes</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<a href="../">&lt;&lt; ../</a>
+<div class="article-meta">
+<h1><span class="title">Full-screen quad: easy and efficient trick</span></h1>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>The usual way would be to create a VBO with the geometry of a quad (2 triangles).</p>
+<img src="/img/fs_quad_trick/fs_quad.svg" alt="fs_quad.svg" width="50%"/>
+<p>However, there is a better way of doing it.</p>
+<ul>
+<li>Draw a single triangle that covers the whole screen (the triangle will extend outside of the screen).</li>
+<li>Don&rsquo;t use a VBO. Instead, use the vertex id (<code>gl_VertexID</code>) to figure out the position and texture coordinates.</li>
+</ul>
+<img src="/img/fs_quad_trick/fs_triangle.svg" alt="fs_quad.svg" width="60%"/>
+<p>The reason this is faster, is not because it&rsquo;s drawing less triangles. It&rsquo;s because, paradoxically, it&rsquo;s drawing less fragments!
+The GPU generates fragments in tiles of 2x2 to compute partial derivatives. At the boundaries of primitives, there can be some fragment overdraw just to compute those devivatives, even though the fragment is discarded. When drawing two triangles, the diagonal in between will produce for sure some of those wasted fragments. More info here: <a href="https://stackoverflow.com/a/59739538/1754322">https://stackoverflow.com/a/59739538/1754322</a>.</p>
+<img src="/img/fs_quad_trick/fs_overdraw.svg" alt="fs_quad.svg" width="60%"/>
+<p>As an additional trick, we can avoid having to upload vertex data by using the vertex id in the vertex shader:</p>
+<div class="highlight"><pre class="chroma"><code class="language-glsl" data-lang="glsl"><span class="k">out</span> <span class="k">vec2</span> <span class="n">v_tc</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="k">vec2</span> <span class="n">tc</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="k">vec2</span><span class="p">[</span><span class="mi">3</span><span class="p">](</span>
+        <span class="k">vec2</span><span class="p">(</span><span class="mo">0</span><span class="p">,</span> <span class="mo">0</span><span class="p">),</span>
+        <span class="k">vec2</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mo">0</span><span class="p">),</span>
+        <span class="k">vec2</span><span class="p">(</span><span class="mo">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">);</span>
+    <span class="n">v_tc</span> <span class="o">=</span> <span class="n">tc</span><span class="p">[</span><span class="n">gl_VertexID</span><span class="p">];</span>
+    <span class="n">gl_Position</span> <span class="o">=</span>  <span class="k">vec4</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">v_tc</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">,</span> <span class="mo">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>   
+<span class="p">}</span>
+</code></pre></div><p>And just draw it normally with:</p>
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</code></pre></div><p>Important note: from OpenGL 3.3 the use VAOs is <a href="https://stackoverflow.com/questions/30057286/how-to-use-vbos-without-vaos-with-opengl-core-profile">mandatory</a>.
+That means that, despite not needing VBOs, we would still have to create at least one VAO and bind it. No need to use a specific one though, any one that was previously bound will do.</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://stackoverflow.com/users/1754322/tuket"><img src="/img/stack_overflow_icon.svg" width="18" height="18" alt="stackOverflow"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"></a> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+
