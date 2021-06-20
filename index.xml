@@ -6,7 +6,16 @@
     <description>Recent content in Home on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 19 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vulkan cheatsheet</title>
+      <link>https://tuket.github.io/notes/graphics/vulkan_cheatsheet/</link>
+      <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/vulkan_cheatsheet/</guid>
+      <description>Enumerating layers constexpr u32 MAX_LAYERS = 32; VkLayerProperties layersProps[MAX_LAYERS]; u32 numLayers = MAX_LAYERS; vkEnumerateInstanceLayerProperties(&amp;amp;numLayers, layersProps); printf(&amp;#34;Available Layers\n&amp;#34;); for(u32 i = 0; i &amp;lt; numLayers; i++) { printf(&amp;#34;%s: %s\n&amp;#34;, layersProps[i].layerName, layersProps[i].description); } Create a Vulkan instance VkApplicationInfo appInfo = {}; appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO; appInfo.pApplicationName = &amp;#34;example&amp;#34;; appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0); appInfo.pEngineName = &amp;#34;none&amp;#34;; appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0); appInfo.apiVersion = VK_API_VERSION_1_0; VkInstanceCreateInfo instanceCreateInfo = {}; instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO; instanceCreateInfo.pApplicationInfo = &amp;amp;appInfo; instanceCreateInfo.</description>
+    </item>
+    
     <item>
       <title>Full-screen quad: easy and efficient trick</title>
       <link>https://tuket.github.io/notes/graphics/fs_quad_trick/</link>
@@ -210,7 +219,7 @@ Displacing vertices of a sphere What we are going to do is super easy.</descript
       <description>Disclaimer: many of these projects were done when I was very noob. Even if I provide download links and code, please don&amp;rsquo;t take it as reference since it is probably of very bad quality. Anyway, it might be useful for learning how not to do things and laughing (that&amp;rsquo;s what I do).
  glTF viewer Work in progress&amp;hellip;
 This is a simple viewer for the glTF format.
-Hosted in github.  Raytracer I implemented this raytracer with Monte Carlo stimation and importance sampling for a college subject.</description>
+Hosted in github. Watch video.</description>
     </item>
     
     <item>
