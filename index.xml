@@ -6,7 +6,18 @@
     <description>Recent content in Home on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 19 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Aug 2022 21:15:50 +0200</lastBuildDate><atom:link href="https://tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Explosion Decals</title>
+      <link>https://tuket.github.io/posts/2022-08-05-explosion-decals/</link>
+      <pubDate>Fri, 05 Aug 2022 21:15:50 +0200</pubDate>
+      
+      <guid>https://tuket.github.io/posts/2022-08-05-explosion-decals/</guid>
+      <description>I&amp;rsquo;m going to explain a technique that I implemented for the explosion decals of my game.
+Many games have the need to splat textures on to surfaces dynamically. For example, we might have a floor and we would like to splat some blood onto it when a character has been hurt.
+Image from https://www.gamemodd.com/cs/sprites/blooddecals/3926-fear-blood.htmlThe common approach for implementing these so called decals is to project a quad along a direction.</description>
+    </item>
+    
     <item>
       <title>Full-screen quad: easy and efficient trick</title>
       <link>https://tuket.github.io/notes/graphics/fs_quad_trick/</link>
@@ -15,18 +26,7 @@
       <guid>https://tuket.github.io/notes/graphics/fs_quad_trick/</guid>
       <description>The usual way would be to create a VBO with the geometry of a quad (2 triangles).
 However, there is a better way of doing it.
- Draw a single triangle that covers the whole screen (the triangle will extend outside of the screen). Don&amp;rsquo;t use a VBO. Instead, use the vertex id (gl_VertexID) to figure out the position and texture coordinates.  The reason this is faster, is not because it&amp;rsquo;s drawing less triangles.</description>
-    </item>
-    
-    <item>
-      <title>Partial custom mipmap levels in OpenGL</title>
-      <link>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</link>
-      <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</guid>
-      <description>OpenGL allows to automatically create mipmaps for you with glGenMipmap.
-But you can upload you own mipmaps using glTexImage2D.
-for(int lvl = 0; numMips; lvl++) { glTexImage2D(GL_TEXTURE_2D, lvl, GL_RGBA8, texture[lvl].w, texture[lvl].h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture[lvl].data ); } However, I wanted to provide my own images only for the upper levels, and let OpenGL compute the rest. This is possible to do because OpenGL will generate mipmaps starting from GL_TEXTURE_BASE_LEVEL. So you can do it like this:</description>
+Draw a single triangle that covers the whole screen (the triangle will extend outside of the screen). Don&amp;rsquo;t use a VBO. Instead, use the vertex id (gl_VertexID) to figure out the position and texture coordinates. The reason this is faster, is not because it&amp;rsquo;s drawing less triangles.</description>
     </item>
     
     <item>
@@ -82,7 +82,7 @@ SECTION .text global _start ; &amp;#34;global&amp;#34; means that the symbol can
       <guid>https://tuket.github.io/posts/2020-07-09-circle-vs-ray-intersection/</guid>
       <description>A simple way to compute the intersection of a ray vs a circle.
 Code snippet:
-bool rayVsCircle(float&amp;amp; depth, glm::vec2 rayOrig, glm::vec2 rayDir, glm::vec2 circlePos, float circleRad) { const float R = circleRad; const glm::vec2 op = circlePos - rayOrig; if(dot(op, op) &amp;lt; R*R) { // is rayOrigin inside the circle ?  depth = 0; return true; } const float D = dot(rayDir, op); const float H2 = dot(op, op) - D*D; const float K2 = R*R - H2; if(K2 &amp;gt;= 0) { depth = D - sqrt(K2); if(depth &amp;gt; 0) return true; } return false; } Demo here: https://github.</description>
+bool rayVsCircle(float&amp;amp; depth, glm::vec2 rayOrig, glm::vec2 rayDir, glm::vec2 circlePos, float circleRad) { const float R = circleRad; const glm::vec2 op = circlePos - rayOrig; if(dot(op, op) &amp;lt; R*R) { // is rayOrigin inside the circle ? depth = 0; return true; } const float D = dot(rayDir, op); const float H2 = dot(op, op) - D*D; const float K2 = R*R - H2; if(K2 &amp;gt;= 0) { depth = D - sqrt(K2); if(depth &amp;gt; 0) return true; } return false; } Demo here: https://github.</description>
     </item>
     
     <item>
@@ -154,7 +154,7 @@ SSL You cannot simply connect to GMail through a regular socket. You will have t
       
       <guid>https://tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</guid>
       <description>Let&amp;rsquo;s imagine we have a table like shown below. In this simple example we have information about people organized in rows.
-   Id Name Surname Age     1 Tuket Troco 24   0 Rufol Conino 11   2 Muscul Man 20   3 Jigoro Kano 78    And we represent this table using C++ std::vectors:
+Id Name Surname Age 1 Tuket Troco 24 0 Rufol Conino 11 2 Muscul Man 20 3 Jigoro Kano 78 And we represent this table using C++ std::vectors:
 using namespace std; ... vector&amp;lt;int&amp;gt; id = {1, 0, 2, 3}; vector&amp;lt;string&amp;gt; name = {&amp;#34;Tuket&amp;#34;, &amp;#34;Rufol&amp;#34;, &amp;#34;Muscul&amp;#34;, &amp;#34;Jigoro&amp;#34;}; vector&amp;lt;string&amp;gt; surname = {&amp;#34;Troco&amp;#34;, &amp;#34;Conino&amp;#34;, &amp;#34;Man&amp;#34;, &amp;#34;Kano&amp;#34;}; vector&amp;lt;unsigned&amp;gt; age = {24, 11, 20, 78}; We want to be able to sort these rows by different criterias.</description>
     </item>
     
@@ -177,7 +177,6 @@ $\vec{\omega}_i$: incoming directions.</description>
       
       <guid>https://tuket.github.io/posts/2017-07-09-the-curse-of-magin/</guid>
       <description>We developed a game for a school subject called the curse of Magin. It has been a great experience and very useful for learning.
-
 Check it out at thecurseofmagin.itch.io/the-curse-of-magin.</description>
     </item>
     
@@ -198,7 +197,18 @@ Displacing vertices of a sphere What we are going to do is super easy.</descript
       
       <guid>https://tuket.github.io/notes/</guid>
       <description>These are my notes on different topics
- Graphics Assembly  </description>
+Graphics Assembly </description>
+    </item>
+    
+    <item>
+      <title>Partial custom mipmap levels in OpenGL</title>
+      <link>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</guid>
+      <description>OpenGL allows to automatically create mipmaps for you with glGenMipmap.
+But you can upload you own mipmaps using glTexImage2D.
+for(int lvl = 0; numMips; lvl++) { glTexImage2D(GL_TEXTURE_2D, lvl, GL_RGBA8, texture[lvl].w, texture[lvl].h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture[lvl].data ); } However, I wanted to provide my own images only for the upper levels, and let OpenGL compute the rest. This is possible to do because OpenGL will generate mipmaps starting from GL_TEXTURE_BASE_LEVEL. So you can do it like this:</description>
     </item>
     
     <item>
@@ -208,7 +218,7 @@ Displacing vertices of a sphere What we are going to do is super easy.</descript
       
       <guid>https://tuket.github.io/portfolio/</guid>
       <description>Disclaimer: many of these projects were done when I was very noob. Even if I provide download links and code, please don&amp;rsquo;t take it as reference since it is probably of very bad quality. Anyway, it might be useful for learning how not to do things and laughing (that&amp;rsquo;s what I do).
- glTF viewer Work in progress&amp;hellip;
+glTF viewer Work in progress&amp;hellip;
 This is a simple viewer for the glTF format.
 Hosted in github. Watch video.</description>
     </item>
@@ -222,7 +232,7 @@ Hosted in github. Watch video.</description>
       <description>You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&amp;rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
 Here is some bold text
 Here is a secondary heading Here&amp;rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?</description>
+Number Next number Previous number Five Six Four Ten Eleven Nine Seven Eight Six Two Three One How about a yummy crepe?</description>
     </item>
     
   </channel>

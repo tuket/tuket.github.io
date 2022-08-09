@@ -100,51 +100,53 @@ Since we don&rsquo;t want our BRDF to look spiky, we will import a higher resolu
 We can make a sphere in an external modeling tool like blender and import it. Feel free to take this <a href="https://drive.google.com/file/d/0BwBC4DUnZLBXbU9xNWdNUWs4bnM/view?usp=sharing">sphere</a>.</p>
 <p>Also we can increse the resolution of the sphere using geometry shaders. But if we want to make something quick we can skip this part.</p>
 <p>The first thing we are going to do is create a new material and a new shader (just right click in the folder you want them to be created and select create&gt;). The type of shader we are going to use is unlit.</p>
-<p><img src="http://i.imgur.com/rs5Ooi0.png" alt="image"></p>
+<p>
+  <img src="http://i.imgur.com/rs5Ooi0.png" alt="image">
+</p>
 <p>Then open the shader source. You should see a function called <code>vert</code>, which is actually the vertex shader. If you placed the sphere at the origin of coordinates you can just evaluate the brdf, then set the position of that vertex at a distance proportional to the BRDF value.
 You could also set the color of the vertex acording to the BRDF value.</p>
 <p>Here is an example of a vertex shader.</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"><span class="n">v2f</span> <span class="n">vert</span> <span class="p">(</span><span class="n">appdata</span> <span class="n">v</span><span class="p">)</span>
-<span class="p">{</span>
-	<span class="n">v2f</span> <span class="n">o</span><span class="p">;</span>
-
-	<span class="n">float3</span> <span class="n">L</span> <span class="p">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">vertex</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span>
-	<span class="k">if</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">float3</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">))</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="c1">// set distance proportional to the BRDF value
-</span><span class="c1"></span>		<span class="n">float3</span> <span class="n">V</span> <span class="p">=</span> <span class="n">normalize</span><span class="p">(</span><span class="m">_</span><span class="n">Ray</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span>
-		<span class="kt">float</span> <span class="n">intensity</span> <span class="p">=</span> <span class="n">someBRDF</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">);</span>
-		<span class="n">v</span><span class="p">.</span><span class="n">vertex</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="n">intensity</span> <span class="p">*</span> <span class="n">L</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
-		
-		<span class="c1">// put some color to the vertex
-</span><span class="c1"></span>		<span class="n">o</span><span class="p">.</span><span class="n">color</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">intensity</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
-	<span class="p">}</span>
-	<span class="k">else</span>
-	<span class="p">{</span>
-		<span class="c1">// this part of the BRDF shouldn&#39;t be plotted
-</span><span class="c1"></span>		<span class="c1">// but some people might find utility in
-</span><span class="c1"></span>		<span class="n">float3</span> <span class="n">V</span> <span class="p">=</span> <span class="n">normalize</span><span class="p">(</span><span class="m">_</span><span class="n">Ray</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span>
-		<span class="kt">float</span> <span class="n">intensity</span> <span class="p">=</span> <span class="n">someBRDF</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">);</span>
-		<span class="n">v</span><span class="p">.</span><span class="n">vertex</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="n">intensity</span> <span class="p">*</span> <span class="n">L</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
-		<span class="n">o</span><span class="p">.</span><span class="n">color</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
-	<span class="p">}</span>
-
-	<span class="n">o</span><span class="p">.</span><span class="n">vertex</span> <span class="p">=</span> <span class="n">UnityObjectToClipPos</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">vertex</span><span class="p">);</span>
-	<span class="n">o</span><span class="p">.</span><span class="n">uv</span> <span class="p">=</span> <span class="n">TRANSFORM_TEX</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">uv</span><span class="p">,</span> <span class="m">_</span><span class="n">MainTex</span><span class="p">);</span>
-	<span class="n">UNITY_TRANSFER_FOG</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="p">.</span><span class="n">vertex</span><span class="p">);</span>
-
-	<span class="k">return</span> <span class="n">o</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><p>At the top of the code you can add <code>Properties</code> to the shader.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="n">v2f</span> <span class="n">vert</span> <span class="p">(</span><span class="n">appdata</span> <span class="n">v</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">v2f</span> <span class="n">o</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">float3</span> <span class="n">L</span> <span class="p">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">vertex</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">float3</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">))</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// set distance proportional to the BRDF value</span>
+</span></span><span class="line"><span class="cl">		<span class="n">float3</span> <span class="n">V</span> <span class="p">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">_Ray</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">intensity</span> <span class="p">=</span> <span class="n">someBRDF</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">v</span><span class="p">.</span><span class="n">vertex</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="n">intensity</span> <span class="p">*</span> <span class="n">L</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="c1">// put some color to the vertex</span>
+</span></span><span class="line"><span class="cl">		<span class="n">o</span><span class="p">.</span><span class="n">color</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">intensity</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// this part of the BRDF shouldn&#39;t be plotted</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// but some people might find utility in</span>
+</span></span><span class="line"><span class="cl">		<span class="n">float3</span> <span class="n">V</span> <span class="p">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">_Ray</span><span class="p">.</span><span class="n">xyz</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">intensity</span> <span class="p">=</span> <span class="n">someBRDF</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">v</span><span class="p">.</span><span class="n">vertex</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="n">intensity</span> <span class="p">*</span> <span class="n">L</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">o</span><span class="p">.</span><span class="n">color</span> <span class="p">=</span> <span class="n">float4</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">o</span><span class="p">.</span><span class="n">vertex</span> <span class="p">=</span> <span class="n">UnityObjectToClipPos</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">vertex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">o</span><span class="p">.</span><span class="n">uv</span> <span class="p">=</span> <span class="n">TRANSFORM_TEX</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">uv</span><span class="p">,</span> <span class="n">_MainTex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">UNITY_TRANSFER_FOG</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="p">.</span><span class="n">vertex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">o</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>At the top of the code you can add <code>Properties</code> to the shader.
 You could use these to add some parameters of the BRDF (e.g. roughness) and be able to modify them in real-time.</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"><span class="n">Properties</span>
-<span class="p">{</span>
-    <span class="m">_</span><span class="n">MainTex</span> <span class="p">(</span><span class="s">&#34;Texture&#34;</span><span class="p">,</span> <span class="m">2D</span><span class="p">)</span> <span class="p">=</span> <span class="s">&#34;white&#34;</span> <span class="p">{}</span>
-    <span class="m">_</span><span class="n">Alpha</span> <span class="p">(</span><span class="s">&#34;Alpha&#34;</span><span class="p">,</span> <span class="n">Float</span><span class="p">)</span> <span class="p">=</span> <span class="m">0.5</span>
-    <span class="m">_</span><span class="n">Ray</span><span class="p">(</span><span class="s">&#34;Ray&#34;</span><span class="p">,</span> <span class="n">Vector</span><span class="p">)</span> <span class="p">=</span> <span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
-    <span class="m">_</span><span class="n">R0</span> <span class="p">(</span><span class="s">&#34;R0&#34;</span><span class="p">,</span> <span class="n">Float</span><span class="p">)</span> <span class="p">=</span> <span class="m">0.5</span>
-<span class="p">}</span>
-</code></pre></div><p>In the previous example I have added <code>_Alpha</code> for the roughness, <code>_Ray</code> for the incident ray  direction, and <code>_R0</code> for the base refectance at zero degrees. You can add as many as you want and modify them in real-time, in the editor, or through script.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="n">Properties</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_MainTex</span> <span class="p">(</span><span class="s">&#34;Texture&#34;</span><span class="p">,</span> <span class="m">2D</span><span class="p">)</span> <span class="p">=</span> <span class="s">&#34;white&#34;</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_Alpha</span> <span class="p">(</span><span class="s">&#34;Alpha&#34;</span><span class="p">,</span> <span class="n">Float</span><span class="p">)</span> <span class="p">=</span> <span class="m">0.5</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_Ray</span><span class="p">(</span><span class="s">&#34;Ray&#34;</span><span class="p">,</span> <span class="n">Vector</span><span class="p">)</span> <span class="p">=</span> <span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_R0</span> <span class="p">(</span><span class="s">&#34;R0&#34;</span><span class="p">,</span> <span class="n">Float</span><span class="p">)</span> <span class="p">=</span> <span class="m">0.5</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>In the previous example I have added <code>_Alpha</code> for the roughness, <code>_Ray</code> for the incident ray  direction, and <code>_R0</code> for the base refectance at zero degrees. You can add as many as you want and modify them in real-time, in the editor, or through script.</p>
 <h2 id="additional-improvements">Additional improvements</h2>
 <p>We could make a lot of improvements to our BRDF plotter. I have implemented only some basic features. Here are some ideas:</p>
 <ul>
@@ -157,7 +159,9 @@ You could use these to add some parameters of the BRDF (e.g. roughness) and be a
 <li>Use geometry shaders for more resolution.</li>
 <li>Whatever you want.</li>
 </ul>
-<p><img src="http://i.imgur.com/sJq40wS.gif" alt="BRDF plot"></p>
+<p>
+  <img src="http://i.imgur.com/sJq40wS.gif" alt="BRDF plot">
+</p>
 <p>Once you have implemented the basic structure you can just replace the BRDF function for another.</p>
 <p>Basic plotter example project: <a href="https://drive.google.com/open?id=0BwBC4DUnZLBXU0NFMlZSU2hSQWs">download</a>.</p>
 

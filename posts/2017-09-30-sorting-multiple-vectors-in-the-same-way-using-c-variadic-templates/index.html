@@ -126,13 +126,13 @@ onload='renderMathInElement(document.body);'></script>
 </tbody>
 </table>
 <p>And we represent this table using C++ <code>std::vector</code>s:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">id</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
-<span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Tuket&#34;</span><span class="p">,</span> <span class="s">&#34;Rufol&#34;</span><span class="p">,</span> <span class="s">&#34;Muscul&#34;</span><span class="p">,</span> <span class="s">&#34;Jigoro&#34;</span><span class="p">};</span>
-<span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">surname</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Troco&#34;</span><span class="p">,</span> <span class="s">&#34;Conino&#34;</span><span class="p">,</span> <span class="s">&#34;Man&#34;</span><span class="p">,</span> <span class="s">&#34;Kano&#34;</span><span class="p">};</span>
-<span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="p">{</span><span class="mi">24</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">78</span><span class="p">};</span>
-</code></pre></div><p>We want to be able to sort these rows by different criterias. For example, we might want to sort by ascending surname alphabetical order:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">id</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Tuket&#34;</span><span class="p">,</span> <span class="s">&#34;Rufol&#34;</span><span class="p">,</span> <span class="s">&#34;Muscul&#34;</span><span class="p">,</span> <span class="s">&#34;Jigoro&#34;</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">surname</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Troco&#34;</span><span class="p">,</span> <span class="s">&#34;Conino&#34;</span><span class="p">,</span> <span class="s">&#34;Man&#34;</span><span class="p">,</span> <span class="s">&#34;Kano&#34;</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="p">{</span><span class="mi">24</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">78</span><span class="p">};</span>
+</span></span></code></pre></div><p>We want to be able to sort these rows by different criterias. For example, we might want to sort by ascending surname alphabetical order:</p>
 <table>
 <thead>
 <tr>
@@ -170,115 +170,115 @@ onload='renderMathInElement(document.body);'></script>
 </tbody>
 </table>
 <p>Our goal is to be able to do this with a very short and easy syntax:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// the first parameter is the vector that is used as criteria (not modified)
-</span><span class="c1">// the rest are the vectors that are rearranged
-</span><span class="c1"></span><span class="n">sortVectorsAscending</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">surname</span><span class="p">,</span> <span class="n">age</span><span class="p">);</span>
-</code></pre></div><p>If we are interested we can even choose to sort only a subset of these vectors. For example, we want people names and surnames sorted by surname:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">sortVectorsAscending</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">surnames</span><span class="p">);</span>
-</code></pre></div><p>We will also be able to specify the compare function.</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">sortVectors</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">surname</span><span class="p">,</span> <span class="n">age</span><span class="p">);</span>    <span class="c1">// descending
-</span></code></pre></div><p>For this we will make use of a very convenient C++ feature called varadic templates<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Varadic templates are just templates with a variable amount of parameters, similar to variadic functions in C.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// the first parameter is the vector that is used as criteria (not modified)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// the rest are the vectors that are rearranged
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">sortVectorsAscending</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">surname</span><span class="p">,</span> <span class="n">age</span><span class="p">);</span>
+</span></span></code></pre></div><p>If we are interested we can even choose to sort only a subset of these vectors. For example, we want people names and surnames sorted by surname:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">sortVectorsAscending</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">surnames</span><span class="p">);</span>
+</span></span></code></pre></div><p>We will also be able to specify the compare function.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">sortVectors</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">surname</span><span class="p">,</span> <span class="n">age</span><span class="p">);</span>    <span class="c1">// descending
+</span></span></span></code></pre></div><p>For this we will make use of a very convenient C++ feature called varadic templates<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Varadic templates are just templates with a variable amount of parameters, similar to variadic functions in C.</p>
 <p>The algorithm is very simple:</p>
-<pre><code>1. Find the sort permutation. That is, a list of indices
+<pre tabindex="0"><code>1. Find the sort permutation. That is, a list of indices
    pointing to the criteria vector elements in the correct order.
 2. Apply permutation to all the desired vectors
 </code></pre><h2 id="get-sort-permutation">Get sort permutation</h2>
 <p>First we declare the function that will get the list of <em>sorting</em> indices.</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Compare</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">getSortPermutation</span><span class="p">(</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;&amp;</span> <span class="n">out</span><span class="p">,</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">,</span>
-    <span class="n">Compare</span> <span class="n">compare</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">less</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())</span>
-<span class="p">{</span>
-    <span class="n">out</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">out</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
-    
-    <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">out</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
-        <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">unsigned</span> <span class="n">i</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">j</span><span class="p">){</span> <span class="k">return</span> <span class="nf">compare</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span> <span class="p">});</span>
-<span class="p">}</span>
-</code></pre></div><h2 id="apply-the-permutation">Apply the permutation</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Compare</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">getSortPermutation</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;&amp;</span> <span class="n">out</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Compare</span> <span class="n">compare</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">less</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">out</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">out</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">unsigned</span> <span class="n">i</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">j</span><span class="p">){</span> <span class="k">return</span> <span class="nf">compare</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="apply-the-permutation">Apply the permutation</h2>
 <p>Next we define the function that takes the list of sorted indices and performs the permutation. This permutation could be performed <em>in-place</em><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> but it is a bit slower.</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">applyPermutation</span><span class="p">(</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;&amp;</span> <span class="n">order</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">assert</span><span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">st</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">st</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
-    <span class="p">}</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">st</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">S</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">applyPermutation</span><span class="p">(</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;&amp;</span> <span class="n">order</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span><span class="p">...</span> <span class="n">s</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">applyPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
-    <span class="n">applyPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">s</span><span class="p">...);</span>
-<span class="p">}</span>
-</code></pre></div><p>As you can see, there are two functions with the same name. Essentially, this variadic template approach is using recusion. The fist function template is the base case, it will be checked for signature matching before the second one. The second funtion template calls itself recursivelly.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">applyPermutation</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;&amp;</span> <span class="n">order</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">assert</span><span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">st</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">st</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">t</span> <span class="o">=</span> <span class="n">st</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">S</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">applyPermutation</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;&amp;</span> <span class="n">order</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span><span class="p">...</span> <span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">applyPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">applyPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">s</span><span class="p">...);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>As you can see, there are two functions with the same name. Essentially, this variadic template approach is using recusion. The fist function template is the base case, it will be checked for signature matching before the second one. The second funtion template calls itself recursivelly.</p>
 <p>Finally we define our sort function.</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// sort multiple vectors using the criteria of the first one
-</span><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Compare</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">SS</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">sortVectors</span><span class="p">(</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span>
-    <span class="n">Compare</span> <span class="n">comp</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SS</span><span class="o">&gt;&amp;</span><span class="p">...</span> <span class="n">ss</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">order</span><span class="p">;</span>
-    <span class="n">getSortPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">comp</span><span class="p">);</span>
-    <span class="n">applyPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">ss</span><span class="p">...);</span>
-<span class="p">}</span>
-</code></pre></div><p>Variadic templates require that at least one argument is provided. So if we don&rsquo;t provide any vector to be sorted we get an error.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// sort multiple vectors using the criteria of the first one
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Compare</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">SS</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">sortVectors</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Compare</span> <span class="n">comp</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SS</span><span class="o">&gt;&amp;</span><span class="p">...</span> <span class="n">ss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">order</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">getSortPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">comp</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">applyPermutation</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">ss</span><span class="p">...);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Variadic templates require that at least one argument is provided. So if we don&rsquo;t provide any vector to be sorted we get an error.</p>
 <p>If we want to make our code less verbose, we can declare aliases for most comon compare functions.</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">SS</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">sortVectorsAscending</span><span class="p">(</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SS</span><span class="o">&gt;&amp;</span><span class="p">...</span> <span class="n">ss</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">sortVectors</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">less</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">ss</span><span class="p">...);</span>
-<span class="p">}</span>
-</code></pre></div><p>Here&rsquo;s a simple test:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">id</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
-  <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Tuket&#34;</span><span class="p">,</span> <span class="s">&#34;Rufol&#34;</span><span class="p">,</span> <span class="s">&#34;Muscul&#34;</span><span class="p">,</span> <span class="s">&#34;Jigoro&#34;</span><span class="p">};</span>
-  <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">surname</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Troco&#34;</span><span class="p">,</span> <span class="s">&#34;Conino&#34;</span><span class="p">,</span> <span class="s">&#34;Man&#34;</span><span class="p">,</span> <span class="s">&#34;Kano&#34;</span><span class="p">};</span>
-  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="p">{</span><span class="mi">24</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">78</span><span class="p">};</span>
-  
-  <span class="n">sortVectors</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">surname</span><span class="p">,</span> <span class="n">age</span><span class="p">);</span>
-  
-  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="n">cout</span>
-        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span>
-        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">name</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span>
-        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">surname</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span>
-        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">age</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>That&rsquo;s it.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">SS</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">sortVectorsAscending</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SS</span><span class="o">&gt;&amp;</span><span class="p">...</span> <span class="n">ss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sortVectors</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">less</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">ss</span><span class="p">...);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Here&rsquo;s a simple test:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">id</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Tuket&#34;</span><span class="p">,</span> <span class="s">&#34;Rufol&#34;</span><span class="p">,</span> <span class="s">&#34;Muscul&#34;</span><span class="p">,</span> <span class="s">&#34;Jigoro&#34;</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">surname</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;Troco&#34;</span><span class="p">,</span> <span class="s">&#34;Conino&#34;</span><span class="p">,</span> <span class="s">&#34;Man&#34;</span><span class="p">,</span> <span class="s">&#34;Kano&#34;</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="p">{</span><span class="mi">24</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">78</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">sortVectors</span><span class="p">(</span><span class="n">surname</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">surname</span><span class="p">,</span> <span class="n">age</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">name</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">surname</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">age</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>That&rsquo;s it.</p>
 <p>Complete code in gist: <a href="https://gist.github.com/tuket/df944e4194d39061b9a9f2780e0d2aae">link</a></p>
 <p>Test it in Ideone:</p>
 <script src="https://ideone.com/e.js/QEAoqL" type="text/javascript" ></script>
 <p>For more ways of doing this kind of sorting check out this <a href="%5Bhttps://stackoverflow.com/questions/17074324/how-can-i-sort-two-vectors-in-the-same-way-with-criteria-that-uses-only-one-of">Stack Overflow question</a>.</p>
 <h1 id="references">References</h1>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
+<li id="fn:1">
 <p><a href="https://eli.thegreenplace.net/2014/variadic-templates-in-c/">https://eli.thegreenplace.net/2014/variadic-templates-in-c/</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
+<li id="fn:2">
 <p><a href="https://blog.merovius.de/2014/08/12/applying-permutation-in-constant.html">https://blog.merovius.de/2014/08/12/applying-permutation-in-constant.html</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
     <a href="/"> >> Home</a>
   </main>

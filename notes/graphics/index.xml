@@ -15,13 +15,13 @@
       <guid>https://tuket.github.io/notes/graphics/fs_quad_trick/</guid>
       <description>The usual way would be to create a VBO with the geometry of a quad (2 triangles).
 However, there is a better way of doing it.
- Draw a single triangle that covers the whole screen (the triangle will extend outside of the screen). Don&amp;rsquo;t use a VBO. Instead, use the vertex id (gl_VertexID) to figure out the position and texture coordinates.  The reason this is faster, is not because it&amp;rsquo;s drawing less triangles.</description>
+Draw a single triangle that covers the whole screen (the triangle will extend outside of the screen). Don&amp;rsquo;t use a VBO. Instead, use the vertex id (gl_VertexID) to figure out the position and texture coordinates. The reason this is faster, is not because it&amp;rsquo;s drawing less triangles.</description>
     </item>
     
     <item>
       <title>Partial custom mipmap levels in OpenGL</title>
       <link>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</link>
-      <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</guid>
       <description>OpenGL allows to automatically create mipmaps for you with glGenMipmap.

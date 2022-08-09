@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Explosion Decals | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        
+        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/notes/">~/notes</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<br>
+<div class="article-meta">
+<h1><span class="title">Explosion Decals</span></h1>
+<p class="date" style="margin-top: 1px;margin-bottom: 1px">2022/08/05</h2>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>I&rsquo;m going to explain a technique that I implemented for the explosion decals of my game.</p>
+<p>
+  <img src="/img/explosion_decals/demo.jpg" alt="demo.jpg">
+</p>
+<p>Many games have the need to splat textures on to surfaces dynamically. For example, we might have a floor and we would like to splat some blood onto it when a character has been hurt.</p>
+<p>
+  <figure>
+    <img src="https://www.gamemodd.com/uploads/posts/2017-07/1500927041_f.e.a.r.-blood.jpg" alt="d">
+    <figcaption>Image from https://www.gamemodd.com/cs/sprites/blooddecals/3926-fear-blood.html</figcaption>
+  </figure>
+</p>
+<p>The common approach for implementing these so called <strong>decals</strong> is to project a quad along a direction. There needs to be a near-far range, so the decal only affects an enclosing box.</p>
+<p>
+  <figure>
+    <img src="https://user-images.githubusercontent.com/54776415/83612801-3400fc00-a583-11ea-923c-9097e790e601.PNG" alt="directional decal">
+    <figcaption>Image from https://github.com/Master-J/DecalCo</figcaption>
+  </figure>
+</p>
+<p>There are different variations of directional decals. For example, some of them generate a mesh that wraps  the geometry underneath (<a href="http://blog.wolfire.com/2009/06/how-to-project-decals/">link</a>), other do it in screen space (<a href="https://www.gamedevs.org/uploads/screenspace-decals-space-marine.pdf">link</a>). Some use forward rendering, some use deferred rendering.</p>
+<p>
+  <figure>
+    <img src="http://cdn.wolfire.com/blog/decalgeom/decaltriangles.jpg" alt="wolfire decals">
+    <figcaption>Decals with projected geometry. Image from http://blog.wolfire.com/2009/06/how-to-project-decals/</figcaption>
+  </figure>
+</p>
+<p>My technique uses a different approach to that of directional decals. But I will leave some links here:</p>
+<ul>
+<li><a href="https://gamedev.stackexchange.com/questions/32095/decal-implementation">https://gamedev.stackexchange.com/questions/32095/decal-implementation</a></li>
+<li><a href="http://blog.wolfire.com/2009/06/how-to-project-decals/">http://blog.wolfire.com/2009/06/how-to-project-decals/</a></li>
+<li><a href="https://bartwronski.com/2015/03/12/fixing-screen-space-deferred-decals/">https://bartwronski.com/2015/03/12/fixing-screen-space-deferred-decals/</a></li>
+<li><a href="https://martindevans.me/game-development/2015/02/27/Drawing-Stuff-On-Other-Stuff-With-Deferred-Screenspace-Decals/">https://martindevans.me/game-development/2015/02/27/Drawing-Stuff-On-Other-Stuff-With-Deferred-Screenspace-Decals/</a></li>
+</ul>
+<h1 id="radial-decals">Radial Decals</h1>
+<p>The technique I&rsquo;m going to explain here has been designed for a very specific use case in my game: explosions. This is a screenshot of what my game currently looks like.</p>
+<p>
+  <img src="/img/explosion_decals/evil_robots.png" alt="evil robots">
+</p>
+<p>Notice that the game has a top down camera. This is relevant because, as will explain later, this has specially good performance in this scenario.</p>
+<p>I&rsquo;m not an artist, and I work alone in this game, so I aimed for a procedural technique. We will make use prodedural noise.</p>
+<p>Directional decals project along one direction, radial decals project in all directions. Think of directional lights vs point lights.</p>
+<img src="/img/explosion_decals/diag_0.svg" width="80%"/>
+<p>As you can imagine, since we are going to splat the texture in all directions, instead of a 2D texture, we need to use an environment texture (cubemap for example). But we can also generate the texture procedurally.</p>
+<p>For each decal we will draw a sphere.</p>
+<p>
+  <img src="/img/explosion_decals/1.gif" alt="1.gif">
+</p>
+<p>But we actually don&rsquo;t need to draw the whole sphere; only the intersection of the sphere with floor and other object static objets in the scene.</p>
+<p>
+  <img src="/img/explosion_decals/2.gif" alt="2.gif">
+</p>
+<p>In order to check the surface that intersects the sphere we use the depth buffer. Using the depth, and the XY screen coordinates, we can reconstruct the world position of the background objects. Then we just test if this point is inside the sphere, and <strong>discard</strong> the fragment otherwise. In the following picture, we would discard the fragment for point B.</p>
+<p>
+  <img src="/img/explosion_decals/diag_1.svg" alt="diag_1.svg">
+</p>
+<p>As you can see in the previous picture, when the camera has more inclination, there is a bigger surface that needs to be discarded. And when the camera looks downwards, we don&rsquo;t discard any fragments. That&rsquo;s why this technique is specially suitable for games with top down camera.</p>
+<p>Another important detail to take into account is: what happens when the camera is inside the sphere? If we have depth testing enabled, or backface culling enabled, it won&rsquo;t draw anything! If in your game it&rsquo;s possible that the camera enters the radius of the decals, you can do the following:</p>
+<ul>
+<li>Always disable <strong>writing</strong> to the depth buffer. This applies regardless the camera can be inside the radius of decals or not.</li>
+<li>Disable backface culling.</li>
+<li>Keep depth test enabled but invert the test function (<a href="https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glDepthFunc">use GL_GREATER instead of GL_LESS if you are using OpenGL</a>).</li>
+</ul>
+<h2 id="procedural-noise">Procedural noise</h2>
+<p>Next we are going to generate a procedural enverironement map. We could cache this noisy environment into a cubemap, that&rsquo;s up to you.</p>
+<img src="/img/explosion_decals/sphere_noise.jpg" width="50%"/>
+<p>How can we generate noise in the surface of a sphere? A simple method is to generate 3D noise and sample the points at the surface of the sphere.</p>
+<p>In order to generate the 3D noise I used the simplex 3D noise implementation of <a href="https://www.shadertoy.com/view/XsX3zB">this ShaderToy</a>.</p>
+<p>The sampling direction is computed as <code>normalize(backgroundPointPosition - sphereCenter)</code>.</p>
+<p>Just sampling the noise, and using it for the alpha channel, you will get something like this.</p>
+<p>
+  <img src="/img/explosion_decals/circle_noise_0.jpg" alt="circle_noise_0.jpg">
+</p>
+<p>Looks pretty ugly but we can fix it with some tricks. Introduce an attenuation with the distance, with a pow with a configurable exponent to make the curve more interesting (called <em>u_exponent</em> in the example code). If you need a more complex curve you could use a bezier curve and store the interpolation coefficients in a 1D texture.</p>
+<p>
+  <img src="/img/explosion_decals/circle_noise_1.jpg" alt="circle_noise_1.jpg">
+</p>
+<p>Also I added an additive constant to make it look darker specially at the center of the explosion.</p>
+<p>
+  <img src="/img/explosion_decals/circle_noise_2.jpg" alt="circle_noise_2.jpg">
+</p>
+<h3 id="adding-some-variety">Adding some variety</h3>
+<p>With this approach, all the decals will look the same because they sample the same noise map. The obvious solution is having multiple noise environemnt maps. But this is not needed at all. Just assign a random rotation matrix to each decal, and use it to rotate the sampling vector. It&rsquo;s just one matrix multiplication: <code>sampleDir = rotationMtx * sampleDir;</code>.</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://stackoverflow.com/users/1754322/tuket"><img src="/img/stack_overflow_icon.svg" width="18" height="18" alt="stackOverflow"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"></a> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+

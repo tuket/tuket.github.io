@@ -97,174 +97,174 @@ On the right there is the memory layout.<br>
 The dashed arrows represent where a pointer of that type would point if a casting was performed.</p>
 <p>At the bottom of this page there is a collection of <a href="#links">links</a>. Some of them are good for a first contact, and other go very in depth.</p>
 <h1 id="1">1</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><img src="/img/virtual_inheritance/1.svg" alt="1.svg" width="75%"/>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><img src="/img/virtual_inheritance/1.svg" alt="1.svg" width="75%"/>
 <h1 id="2">2</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><img src="/img/virtual_inheritance/2.svg" alt="2.svg" width="75%"/>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><img src="/img/virtual_inheritance/2.svg" alt="2.svg" width="75%"/>
 <h1 id="3">3</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><img src="/img/virtual_inheritance/3.svg" alt="3.svg" width="75%"/>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><img src="/img/virtual_inheritance/3.svg" alt="3.svg" width="75%"/>
 <h1 id="4">4</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><img src="/img/virtual_inheritance/4.svg" alt="4.svg" width="75%"/>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><img src="/img/virtual_inheritance/4.svg" alt="4.svg" width="75%"/>
 <h1 id="5">5</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop1</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span> <span class="p">};</span>
-<span class="k">struct</span> <span class="nc">Prop2</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span> <span class="p">};</span>
-<span class="k">struct</span> <span class="nc">Prop3</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span> <span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop1</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div><img src="/img/virtual_inheritance/5.svg" alt="5.svg" width="100%"/>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop1</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop2</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop3</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop1</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><img src="/img/virtual_inheritance/5.svg" alt="5.svg" width="100%"/>
 <h1 id="6">6</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop1</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop2</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop3</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="n">Prop1</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div><img src="/img/virtual_inheritance/6.svg" alt="6.svg" width="100%"/>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop1</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop2</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop3</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="n">Prop1</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><img src="/img/virtual_inheritance/6.svg" alt="6.svg" width="100%"/>
 <h1 id="7">7</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop1</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop2</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop3</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop1</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div><p>Same memory layout.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop1</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop2</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop3</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop1</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>Same memory layout.</p>
 <img src="/img/virtual_inheritance/7.svg" alt="7.svg" width="100%"/>
 <h1 id="8">8</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop1</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop2</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">struct</span> <span class="nc">Prop3</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
-<span class="p">};</span>
-    
-<span class="k">struct</span> <span class="nc">Button</span>
-    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="nl">Widget</span>
-    <span class="p">:</span> <span class="k">public</span> <span class="n">Prop1</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
-    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div><img src="/img/virtual_inheritance/8.svg" alt="8.svg" width="100%"/>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop1</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop2</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Prop3</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">prop3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="k">virtual</span> <span class="nl">Widget</span>
+</span></span><span class="line"><span class="cl">    <span class="p">:</span> <span class="k">public</span> <span class="n">Prop1</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop2</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span> <span class="k">public</span> <span class="n">Prop3</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><img src="/img/virtual_inheritance/8.svg" alt="8.svg" width="100%"/>
 <h1 id="links">Links</h1>
 <p>Good as introduction:</p>
 <ul>

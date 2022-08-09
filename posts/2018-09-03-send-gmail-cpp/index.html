@@ -93,67 +93,67 @@ onload='renderMathInElement(document.body);'></script>
 <p>If you just want to see the code, here it is: <a href="https://github.com/tuket/send_gmail">github.com/tuket/send_gmail</a>.</p>
 <h3 id="ssl">SSL</h3>
 <p>You cannot simply connect to GMail through a regular socket. You will have to use SSL to stablish a secure connection. In Asio you will have to create an <code>ssl::context</code>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span> <span class="n">sslContext</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">tlsv12_client</span><span class="p">);</span>
-</code></pre></div><p>Then we have to load the certificates.</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">sslContext</span><span class="p">.</span><span class="n">set_default_verify_paths</span><span class="p">();</span>
-</code></pre></div><p>This should set the path where it looks for certificates to the default system one. But it didn&rsquo;t work for me. In Ubuntu I had to manually set the path:</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">sslContext</span><span class="p">.</span><span class="n">add_verify_path</span><span class="p">(</span><span class="s">&#34;/etc/ssl/certs&#34;</span><span class="p">);</span>
-</code></pre></div><h3 id="basic-structure">Basic structure</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span> <span class="n">sslContext</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">tlsv12_client</span><span class="p">);</span>
+</span></span></code></pre></div><p>Then we have to load the certificates.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">sslContext</span><span class="p">.</span><span class="n">set_default_verify_paths</span><span class="p">();</span>
+</span></span></code></pre></div><p>This should set the path where it looks for certificates to the default system one. But it didn&rsquo;t work for me. In Ubuntu I had to manually set the path:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">sslContext</span><span class="p">.</span><span class="n">add_verify_path</span><span class="p">(</span><span class="s">&#34;/etc/ssl/certs&#34;</span><span class="p">);</span>
+</span></span></code></pre></div><h3 id="basic-structure">Basic structure</h3>
 <p>This will be the structure of our main function:</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span> <span class="n">sslContext</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">tlsv12_client</span><span class="p">);</span>
-<span class="n">sslContext</span><span class="p">.</span><span class="n">add_verify_path</span><span class="p">(</span><span class="s">&#34;/etc/ssl/certs&#34;</span><span class="p">);</span>
-<span class="n">asio</span><span class="o">::</span><span class="n">io_context</span> <span class="n">ioc</span><span class="p">;</span>
-
-<span class="n">EPostMan</span> <span class="nf">postMan</span><span class="p">(</span><span class="n">sslContext</span><span class="p">,</span> <span class="n">ioc</span><span class="p">,</span> <span class="s">&#34;smtp.gmail.com&#34;</span><span class="p">,</span> <span class="mi">465</span><span class="p">,</span> <span class="s">&#34;myemail@gmail.com&#34;</span><span class="p">,</span> <span class="s">&#34;mypassprd&#34;</span><span class="p">);</span>
-<span class="n">postMan</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">EMail</span><span class="p">{</span><span class="s">&#34;recipient@outlook.com&#34;</span><span class="p">,</span> <span class="s">&#34;subject&#34;</span><span class="p">,</span> <span class="s">&#34;body&#34;</span><span class="p">},</span>
-<span class="p">[](</span><span class="n">EPostMan</span><span class="o">::</span><span class="n">ErrorCode</span> <span class="n">ec</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">ec</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;error sending email&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="p">{</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;email sent!&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-
-<span class="n">ioc</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
-</code></pre></div><p>As you can see we have two new classes here. <code>EMail</code>is going to be a simple struct with the email to be sent. <code>EPostMan</code>is where we are going to write the SMTP protocol stuff.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span> <span class="n">sslContext</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">tlsv12_client</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">sslContext</span><span class="p">.</span><span class="n">add_verify_path</span><span class="p">(</span><span class="s">&#34;/etc/ssl/certs&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">asio</span><span class="o">::</span><span class="n">io_context</span> <span class="n">ioc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">EPostMan</span> <span class="nf">postMan</span><span class="p">(</span><span class="n">sslContext</span><span class="p">,</span> <span class="n">ioc</span><span class="p">,</span> <span class="s">&#34;smtp.gmail.com&#34;</span><span class="p">,</span> <span class="mi">465</span><span class="p">,</span> <span class="s">&#34;myemail@gmail.com&#34;</span><span class="p">,</span> <span class="s">&#34;mypassprd&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">postMan</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">EMail</span><span class="p">{</span><span class="s">&#34;recipient@outlook.com&#34;</span><span class="p">,</span> <span class="s">&#34;subject&#34;</span><span class="p">,</span> <span class="s">&#34;body&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">[](</span><span class="n">EPostMan</span><span class="o">::</span><span class="n">ErrorCode</span> <span class="n">ec</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">ec</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;error sending email&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;email sent!&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ioc</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+</span></span></code></pre></div><p>As you can see we have two new classes here. <code>EMail</code>is going to be a simple struct with the email to be sent. <code>EPostMan</code>is where we are going to write the SMTP protocol stuff.</p>
 <h3 id="connect-steps">Connect steps</h3>
 <ol>
 <li><strong>Resolve DNS endpoint</strong>. We have to translate our URL (<code>smtp.gmail.com:465</code>) to the actual enpoint.</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">asio</span><span class="o">::</span><span class="n">ip</span><span class="o">::</span><span class="n">tcp</span><span class="o">::</span><span class="n">resolver</span><span class="o">::</span><span class="n">iterator</span> <span class="n">endpointIt</span> <span class="o">=</span> <span class="n">resolver</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">serverUrl</span><span class="p">,</span> <span class="n">to_string</span><span class="p">(</span><span class="n">port</span><span class="p">));</span>
-</code></pre></div><ol start="2">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">asio</span><span class="o">::</span><span class="n">ip</span><span class="o">::</span><span class="n">tcp</span><span class="o">::</span><span class="n">resolver</span><span class="o">::</span><span class="n">iterator</span> <span class="n">endpointIt</span> <span class="o">=</span> <span class="n">resolver</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">serverUrl</span><span class="p">,</span> <span class="n">to_string</span><span class="p">(</span><span class="n">port</span><span class="p">));</span>
+</span></span></code></pre></div><ol start="2">
 <li><strong>Create the socket</strong>.</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">typedef</span> <span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">stream</span><span class="o">&lt;</span><span class="n">Socket</span><span class="o">&gt;</span> <span class="n">SslSocket</span><span class="p">;</span>
-<span class="n">SslSocket</span> <span class="n">socket</span><span class="p">(</span><span class="n">ioc</span><span class="p">,</span> <span class="n">sslContext</span><span class="p">)</span>
-</code></pre></div><ol start="3">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">typedef</span> <span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">stream</span><span class="o">&lt;</span><span class="n">Socket</span><span class="o">&gt;</span> <span class="n">SslSocket</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">SslSocket</span> <span class="n">socket</span><span class="p">(</span><span class="n">ioc</span><span class="p">,</span> <span class="n">sslContext</span><span class="p">)</span>
+</span></span></code></pre></div><ol start="3">
 <li><strong>Connect to the socket</strong>. We use the low level TCP socket for connecting.</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">asio</span><span class="o">::</span><span class="n">connect</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">lowest_layer</span><span class="p">(),</span> <span class="n">endpointIt</span><span class="p">);</span>
-</code></pre></div><ol start="4">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">asio</span><span class="o">::</span><span class="n">connect</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">lowest_layer</span><span class="p">(),</span> <span class="n">endpointIt</span><span class="p">);</span>
+</span></span></code></pre></div><ol start="4">
 <li><strong>Set verify mode and perform the handshake</strong>. The verification mode that we have to use for clients is <code>ssl::verify_peer</code>.</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">socket</span><span class="p">.</span><span class="n">set_verify_callback</span><span class="p">(</span><span class="n">make_verbose_verification</span><span class="p">(</span>
-    <span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">rfc2818_verification</span><span class="p">(</span><span class="n">serverUrl</span><span class="p">)));</span>  <span class="c1">// this is so we can print certificate stuff
-</span><span class="c1"></span>
-<span class="n">socket</span><span class="p">.</span><span class="n">set_verify_mode</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">verify_peer</span><span class="p">);</span>
-<span class="k">try</span><span class="p">{</span>
-    <span class="n">socket</span><span class="p">.</span><span class="n">handshake</span><span class="p">(</span><span class="n">SslSocket</span><span class="o">::</span><span class="n">client</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">){</span>
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><p>All these steps are located in the constructor of <code>EPostMan</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">socket</span><span class="p">.</span><span class="n">set_verify_callback</span><span class="p">(</span><span class="n">make_verbose_verification</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">rfc2818_verification</span><span class="p">(</span><span class="n">serverUrl</span><span class="p">)));</span>  <span class="c1">// this is so we can print certificate stuff
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="p">.</span><span class="n">set_verify_mode</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">verify_peer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">socket</span><span class="p">.</span><span class="n">handshake</span><span class="p">(</span><span class="n">SslSocket</span><span class="o">::</span><span class="n">client</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>All these steps are located in the constructor of <code>EPostMan</code>.</p>
 <h3 id="smtp-steps">SMTP steps</h3>
 <p>For the SMTP steps, it will be easier to understand if we use the <code>openssl</code> command line tool.</p>
 <p>So, we will start by typing this in the command line:</p>
-<pre><code>openssl s_client -connect smtp.gmail.com:465
+<pre tabindex="0"><code>openssl s_client -connect smtp.gmail.com:465
 </code></pre><p>That will print out a bunch of certificate related stuff.</p>
 <p><strong>1. Say hello</strong>. We are going to stablish a conversation, let&rsquo;s say hello! just type in <code>EHLO</code> and press enter. For some reason Gmail doesn&rsquo;t like <code>EHLO</code> by itself, so we will have to write something next to it. For example:</p>
-<pre><code>EHLO smtp.gmail.com
+<pre tabindex="0"><code>EHLO smtp.gmail.com
 </code></pre><p>Gmail will respond with something like:</p>
-<pre><code>250-smtp.gmail.com at your service, [92.2.159.213]
+<pre tabindex="0"><code>250-smtp.gmail.com at your service, [92.2.159.213]
 250-SIZE 35882577
 250-8BITMIME
 250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
@@ -162,45 +162,43 @@ onload='renderMathInElement(document.body);'></script>
 250-CHUNKING
 250 SMTPUTF8
 </code></pre><p><strong>2. Login</strong>. In order to login write:</p>
-<pre><code>AUTH LOGIN
+<pre tabindex="0"><code>AUTH LOGIN
 </code></pre><p>And the server will respond with:</p>
-<pre><code>334 VXNlcm5hbWU6
+<pre tabindex="0"><code>334 VXNlcm5hbWU6
 </code></pre><p>What is that? It&rsquo;s a message encoded in base64. Paste that code here: <a href="base64decode.org">base64decode.org</a>. It says <code>Username:</code>. So, we will respond in base64 too.</p>
 <p><strong>3. User and password</strong>
 Go to this webpage <a href="base64encode.org">base64encode.org</a> and encode you gmail address. Paste that into the command line.</p>
 <p>The server will reply with:</p>
-<pre><code>334 UGFzc3dvcmQ6
+<pre tabindex="0"><code>334 UGFzc3dvcmQ6
 </code></pre><p>Which means <code>Password:</code>. So, do repeat the same process with your password.</p>
 <p>If everything goes fine you will get:</p>
-<pre><code>235 2.7.0 Accepted
+<pre tabindex="0"><code>235 2.7.0 Accepted
 </code></pre><p><strong>4. Specify emitter and recipient</strong>. Now we have to specify those two:</p>
-<pre><code>mail from:&lt;myuser@gmail.com&gt;
+<pre tabindex="0"><code>mail from:&lt;myuser@gmail.com&gt;
 250 2.1.0 OK (come code) - gsmtp
 rcpt to:&lt;dest@outlook.es&gt;
 250 2.1.5 OK (some code) - gsmtp
 </code></pre><p><strong>5. Write the email</strong>. Finally we will get to write the email.
 Type in:</p>
-<pre><code>data
+<pre tabindex="0"><code>data
 </code></pre><p>We will get a reply such as:</p>
-<pre><code>354  Go ahead (some code) - gsmtp
+<pre tabindex="0"><code>354  Go ahead (some code) - gsmtp
 </code></pre><p>So let&rsquo;s write the email.</p>
-<pre><code>from:&lt;myuser@gmail.com&gt;
+<pre tabindex="0"><code>from:&lt;myuser@gmail.com&gt;
 to:&lt;dest@outlook.es&gt;
 subject:Here the goes subject
 This is the body of the email.
-We need to end the message with a single dot on it's own line.
+We need to end the message with a single dot on it&#39;s own line.
 .
-
 </code></pre><p>In the Linux command line you have to press <code>shift+V + enter</code> to generate the correct sequence for a new line (CRLF).
 The command line should display something like:</p>
-<pre><code>blabla
+<pre tabindex="0"><code>blabla
 blabla last line
 ^M
 .^M
-
 </code></pre><p>In C code it has to end with the following string: <code>&quot;\r\n.\r\n&quot;</code>.</p>
 <p>The server will respond with:</p>
-<pre><code>250 2.0.0 OK (some code) - gsmtp
+<pre tabindex="0"><code>250 2.0.0 OK (some code) - gsmtp
 </code></pre><p>And you have successfully sent an email! Check you inbox!</p>
 <p><strong>6. End the session</strong>. When you get tired of sending emails you can type in <code>quit</code> that will end the session.</p>
 <p>That&rsquo;s all you have to do.</p>

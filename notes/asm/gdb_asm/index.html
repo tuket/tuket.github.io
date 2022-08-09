@@ -88,26 +88,26 @@ onload='renderMathInElement(document.body);'></script>
 <div class="content-wrapper">
   <main>
     <p>Start up:</p>
-<pre><code>gdb exe
+<pre tabindex="0"><code>gdb exe
 </code></pre><p>Change the assembler syntax from AT&amp;T to Intel:</p>
-<pre><code>set disassembly-flavor intel
+<pre tabindex="0"><code>set disassembly-flavor intel
 </code></pre><p>If you want to make this setting permanent, paste that into <code>~/gdbinit</code>.</p>
 <p>You can verify which assembly syntax is active with:</p>
-<pre><code>show disassembly-flavor
+<pre tabindex="0"><code>show disassembly-flavor
 </code></pre><p>Enter TUI mode:</p>
-<pre><code>Ctrl+X, Ctrl+A
+<pre tabindex="0"><code>Ctrl+X, Ctrl+A
 </code></pre><p>Switch to assembly mode:</p>
-<pre><code>layout asm
+<pre tabindex="0"><code>layout asm
 </code></pre><p>Run the program and break in the first like of work (<code>b main</code> and <code>b _start</code> don&rsquo;t work):</p>
-<pre><code>starti
+<pre tabindex="0"><code>starti
 </code></pre><p>Execute till next instruction:</p>
-<pre><code>ni
+<pre tabindex="0"><code>ni
 </code></pre><p>Step one instruction (unlike the previous, this will enter function calls):</p>
-<pre><code>si
+<pre tabindex="0"><code>si
 </code></pre><p>Retrive the values of all registers:</p>
-<pre><code>i r                      ; info registers
+<pre tabindex="0"><code>i r                      ; info registers
 </code></pre><p>Get the value of one register:</p>
-<pre><code>i r rax
+<pre tabindex="0"><code>i r rax
 </code></pre>
     <a href="/"> >> Home</a>
   </main>

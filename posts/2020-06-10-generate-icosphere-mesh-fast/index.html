@@ -92,13 +92,15 @@ onload='renderMathInElement(document.body);'></script>
 <img src="https://www.researchgate.net/profile/Nathan_Simmons/publication/253252594/figure/fig5/AS:668851566043151@1536478048938/Spherical-tessellation-grids-and-parent-daughter-triangle-relationships-The-initial.png" alt="recursive icosphere tesellation" width="50%"/>
 <p>I have made an algorithm that outputs the result, in a couple of flat arrays(vertices and indices), in a single pass, so it&rsquo;s faster and very cache friendly. It also has the advantage that you can query the exact memory you need to allocate.</p>
 <p><a href="https://gist.github.com/tuket/32951040ca0a4b31395175ee3e075d46">https://gist.github.com/tuket/32951040ca0a4b31395175ee3e075d46</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// example usage
-</span><span class="c1"></span><span class="kt">int</span> <span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">;</span>
-<span class="n">generateIcosphere</span><span class="p">(</span><span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
-<span class="n">vec3</span><span class="o">*</span> <span class="n">verts</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vec3</span><span class="p">[</span><span class="n">numVerts</span><span class="p">];</span>
-<span class="kt">int</span><span class="o">*</span> <span class="n">inds</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">numInds</span><span class="p">];</span>
-<span class="n">generateIcosphere</span><span class="p">(</span><span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">verts</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">inds</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
-</code></pre></div><p><img src="/img/generate_icosphere.png" alt="generate_icosphere.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// example usage
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">generateIcosphere</span><span class="p">(</span><span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">vec3</span><span class="o">*</span> <span class="n">verts</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vec3</span><span class="p">[</span><span class="n">numVerts</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span><span class="o">*</span> <span class="n">inds</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">numInds</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">generateIcosphere</span><span class="p">(</span><span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">verts</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">inds</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+</span></span></code></pre></div><p>
+  <img src="/img/generate_icosphere.png" alt="generate_icosphere.png">
+</p>
 
     <a href="/"> >> Home</a>
   </main>

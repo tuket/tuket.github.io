@@ -88,33 +88,33 @@ onload='renderMathInElement(document.body);'></script>
 <div class="content-wrapper">
   <main>
     <p>This is a minimal hello world program in Linux. It doesn&rsquo;t need to link any external libraries.</p>
-<div class="highlight"><pre class="chroma"><code class="language-nasm" data-lang="nasm"><span class="k">SECTION</span> <span class="nv">.text</span>
-
-<span class="k">global</span> <span class="nv">_start</span> <span class="c1">; &#34;global&#34; means that the symbol can be accessed in other modules. In order to refer to a global symbol from another module, you must use the &#34;extern&#34; keyboard</span>
-<span class="nl">_start:</span>
-    <span class="nf">mov</span> <span class="nb">eax</span><span class="p">,</span> <span class="mi">4</span> <span class="c1">; syscall: write</span>
-    <span class="nf">mov</span> <span class="nb">ebx</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; stdout</span>
-    <span class="nf">mov</span> <span class="nb">ecx</span><span class="p">,</span> <span class="nv">msg</span>
-    <span class="nf">mov</span> <span class="nb">edx</span><span class="p">,</span> <span class="nv">msgLen</span>
-    <span class="nf">syscall</span>
-
-    <span class="nf">mov</span> <span class="nb">eax</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; syscal: exit</span>
-    <span class="nf">mov</span> <span class="nb">ebx</span><span class="p">,</span> <span class="mi">0</span> <span class="c1">; return code</span>
-    <span class="nf">syscall</span>
-
-<span class="nl">msg:</span> <span class="kd">db</span> <span class="s">&#34;hello&#34;</span><span class="p">,</span><span class="mi">10</span>
-<span class="nl">msgLen:</span> <span class="nf">equ</span> <span class="kc">$</span> <span class="o">-</span> <span class="nv">msg</span> <span class="c1">; the $ sign means the current byte address. That means the address where the next byte would go</span>
-</code></pre></div><p>I compile it with</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ nasm -f elf64 hello.asm <span class="o">&amp;&amp;</span> ld -nostartfiles hello.o -o hello
-$ ./hello
-hello
-</code></pre></div><p>Since this program doesn&rsquo;t use any external functions, the executable is very small, and it doesn&rsquo;t link any dynamic libraries (not even libc).</p>
-<pre><code>$ ldd hello
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-nasm" data-lang="nasm"><span class="line"><span class="cl"><span class="k">SECTION</span> <span class="nv">.text</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">global</span> <span class="nv">_start</span> <span class="c1">; &#34;global&#34; means that the symbol can be accessed in other modules. In order to refer to a global symbol from another module, you must use the &#34;extern&#34; keyboard</span>
+</span></span><span class="line"><span class="cl"><span class="nl">_start:</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">mov</span> <span class="nb">eax</span><span class="p">,</span> <span class="mi">4</span> <span class="c1">; syscall: write</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">mov</span> <span class="nb">ebx</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; stdout</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">mov</span> <span class="nb">ecx</span><span class="p">,</span> <span class="nv">msg</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">mov</span> <span class="nb">edx</span><span class="p">,</span> <span class="nv">msgLen</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">syscall</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nf">mov</span> <span class="nb">eax</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; syscal: exit</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">mov</span> <span class="nb">ebx</span><span class="p">,</span> <span class="mi">0</span> <span class="c1">; return code</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">syscall</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nl">msg:</span> <span class="kd">db</span> <span class="s">&#34;hello&#34;</span><span class="p">,</span><span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="nl">msgLen:</span> <span class="nf">equ</span> <span class="kc">$</span> <span class="o">-</span> <span class="nv">msg</span> <span class="c1">; the $ sign means the current byte address. That means the address where the next byte would go</span>
+</span></span></code></pre></div><p>I compile it with</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ nasm -f elf64 hello.asm <span class="o">&amp;&amp;</span> ld -nostartfiles hello.o -o hello
+</span></span><span class="line"><span class="cl">$ ./hello
+</span></span><span class="line"><span class="cl">hello
+</span></span></code></pre></div><p>Since this program doesn&rsquo;t use any external functions, the executable is very small, and it doesn&rsquo;t link any dynamic libraries (not even libc).</p>
+<pre tabindex="0"><code>$ ldd hello
     not a dynamic executable
 $ wc -c hello
 792 hello
 </code></pre><p>So it says that the executable is 792 bytes but we can easily make it smaller by passing the <code>-s</code> flag to <code>ld</code>. Or we could also use the <code>strip</code> command.</p>
-<pre><code>$ nasm -f elf64 hello.asm &amp;&amp; ld -s -nostartfiles hello.o -o hello
+<pre tabindex="0"><code>$ nasm -f elf64 hello.asm &amp;&amp; ld -s -nostartfiles hello.o -o hello
 $ wc -c hello
 384 hello
 

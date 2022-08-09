@@ -6,7 +6,18 @@
     <description>Recent content in Posts on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 09 Jul 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Aug 2022 21:15:50 +0200</lastBuildDate><atom:link href="https://tuket.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Explosion Decals</title>
+      <link>https://tuket.github.io/posts/2022-08-05-explosion-decals/</link>
+      <pubDate>Fri, 05 Aug 2022 21:15:50 +0200</pubDate>
+      
+      <guid>https://tuket.github.io/posts/2022-08-05-explosion-decals/</guid>
+      <description>I&amp;rsquo;m going to explain a technique that I implemented for the explosion decals of my game.
+Many games have the need to splat textures on to surfaces dynamically. For example, we might have a floor and we would like to splat some blood onto it when a character has been hurt.
+Image from https://www.gamemodd.com/cs/sprites/blooddecals/3926-fear-blood.htmlThe common approach for implementing these so called decals is to project a quad along a direction.</description>
+    </item>
+    
     <item>
       <title>Circle vs Ray intersection</title>
       <link>https://tuket.github.io/posts/2020-07-09-circle-vs-ray-intersection/</link>
@@ -15,7 +26,7 @@
       <guid>https://tuket.github.io/posts/2020-07-09-circle-vs-ray-intersection/</guid>
       <description>A simple way to compute the intersection of a ray vs a circle.
 Code snippet:
-bool rayVsCircle(float&amp;amp; depth, glm::vec2 rayOrig, glm::vec2 rayDir, glm::vec2 circlePos, float circleRad) { const float R = circleRad; const glm::vec2 op = circlePos - rayOrig; if(dot(op, op) &amp;lt; R*R) { // is rayOrigin inside the circle ?  depth = 0; return true; } const float D = dot(rayDir, op); const float H2 = dot(op, op) - D*D; const float K2 = R*R - H2; if(K2 &amp;gt;= 0) { depth = D - sqrt(K2); if(depth &amp;gt; 0) return true; } return false; } Demo here: https://github.</description>
+bool rayVsCircle(float&amp;amp; depth, glm::vec2 rayOrig, glm::vec2 rayDir, glm::vec2 circlePos, float circleRad) { const float R = circleRad; const glm::vec2 op = circlePos - rayOrig; if(dot(op, op) &amp;lt; R*R) { // is rayOrigin inside the circle ? depth = 0; return true; } const float D = dot(rayDir, op); const float H2 = dot(op, op) - D*D; const float K2 = R*R - H2; if(K2 &amp;gt;= 0) { depth = D - sqrt(K2); if(depth &amp;gt; 0) return true; } return false; } Demo here: https://github.</description>
     </item>
     
     <item>
@@ -87,7 +98,7 @@ SSL You cannot simply connect to GMail through a regular socket. You will have t
       
       <guid>https://tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</guid>
       <description>Let&amp;rsquo;s imagine we have a table like shown below. In this simple example we have information about people organized in rows.
-   Id Name Surname Age     1 Tuket Troco 24   0 Rufol Conino 11   2 Muscul Man 20   3 Jigoro Kano 78    And we represent this table using C++ std::vectors:
+Id Name Surname Age 1 Tuket Troco 24 0 Rufol Conino 11 2 Muscul Man 20 3 Jigoro Kano 78 And we represent this table using C++ std::vectors:
 using namespace std; ... vector&amp;lt;int&amp;gt; id = {1, 0, 2, 3}; vector&amp;lt;string&amp;gt; name = {&amp;#34;Tuket&amp;#34;, &amp;#34;Rufol&amp;#34;, &amp;#34;Muscul&amp;#34;, &amp;#34;Jigoro&amp;#34;}; vector&amp;lt;string&amp;gt; surname = {&amp;#34;Troco&amp;#34;, &amp;#34;Conino&amp;#34;, &amp;#34;Man&amp;#34;, &amp;#34;Kano&amp;#34;}; vector&amp;lt;unsigned&amp;gt; age = {24, 11, 20, 78}; We want to be able to sort these rows by different criterias.</description>
     </item>
     
@@ -110,7 +121,6 @@ $\vec{\omega}_i$: incoming directions.</description>
       
       <guid>https://tuket.github.io/posts/2017-07-09-the-curse-of-magin/</guid>
       <description>We developed a game for a school subject called the curse of Magin. It has been a great experience and very useful for learning.
-
 Check it out at thecurseofmagin.itch.io/the-curse-of-magin.</description>
     </item>
     
@@ -133,7 +143,7 @@ Displacing vertices of a sphere What we are going to do is super easy.</descript
       <description>You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&amp;rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
 Here is some bold text
 Here is a secondary heading Here&amp;rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?</description>
+Number Next number Previous number Five Six Four Ten Eleven Nine Seven Eight Six Two Three One How about a yummy crepe?</description>
     </item>
     
   </channel>

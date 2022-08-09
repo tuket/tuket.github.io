@@ -91,29 +91,29 @@ onload='renderMathInElement(document.body);'></script>
     <p>A simple way to compute the intersection of a ray vs a circle.</p>
 <img src="/img/ray_circle_intersect.svg" alt="ray_circle_intersect.svg" width="100%"/>
 <p>Code <a href="https://gist.github.com/tuket/7f604c2ea16f62af5a0d4778c80ac8c9" title="snippet">snippet</a>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="nf">rayVsCircle</span><span class="p">(</span><span class="kt">float</span><span class="o">&amp;</span> <span class="n">depth</span><span class="p">,</span>
-    <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">rayOrig</span><span class="p">,</span> <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">rayDir</span><span class="p">,</span>
-    <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">circlePos</span><span class="p">,</span> <span class="kt">float</span> <span class="n">circleRad</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">const</span> <span class="kt">float</span> <span class="n">R</span> <span class="o">=</span> <span class="n">circleRad</span><span class="p">;</span>
-    <span class="k">const</span> <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">op</span> <span class="o">=</span> <span class="n">circlePos</span> <span class="o">-</span> <span class="n">rayOrig</span><span class="p">;</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">R</span><span class="o">*</span><span class="n">R</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// is rayOrigin inside the circle ?
-</span><span class="c1"></span>        <span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">const</span> <span class="kt">float</span> <span class="n">D</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">rayDir</span><span class="p">,</span> <span class="n">op</span><span class="p">);</span>
-    <span class="k">const</span> <span class="kt">float</span> <span class="n">H2</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span> <span class="o">-</span> <span class="n">D</span><span class="o">*</span><span class="n">D</span><span class="p">;</span>
-    <span class="k">const</span> <span class="kt">float</span> <span class="n">K2</span> <span class="o">=</span> <span class="n">R</span><span class="o">*</span><span class="n">R</span> <span class="o">-</span> <span class="n">H2</span><span class="p">;</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">K2</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">depth</span> <span class="o">=</span> <span class="n">D</span> <span class="o">-</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">K2</span><span class="p">);</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><p>Demo here: <a href="https://github.com/tuket/demo_ray_vs_circle/blob/master/README.md">https://github.com/tuket/demo_ray_vs_circle/blob/master/README.md</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">rayVsCircle</span><span class="p">(</span><span class="kt">float</span><span class="o">&amp;</span> <span class="n">depth</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">rayOrig</span><span class="p">,</span> <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">rayDir</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">circlePos</span><span class="p">,</span> <span class="kt">float</span> <span class="n">circleRad</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">float</span> <span class="n">R</span> <span class="o">=</span> <span class="n">circleRad</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">glm</span><span class="o">::</span><span class="n">vec2</span> <span class="n">op</span> <span class="o">=</span> <span class="n">circlePos</span> <span class="o">-</span> <span class="n">rayOrig</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">R</span><span class="o">*</span><span class="n">R</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// is rayOrigin inside the circle ?
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">float</span> <span class="n">D</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">rayDir</span><span class="p">,</span> <span class="n">op</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">float</span> <span class="n">H2</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span> <span class="o">-</span> <span class="n">D</span><span class="o">*</span><span class="n">D</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">float</span> <span class="n">K2</span> <span class="o">=</span> <span class="n">R</span><span class="o">*</span><span class="n">R</span> <span class="o">-</span> <span class="n">H2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">K2</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">depth</span> <span class="o">=</span> <span class="n">D</span> <span class="o">-</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">K2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Demo here: <a href="https://github.com/tuket/demo_ray_vs_circle/blob/master/README.md">https://github.com/tuket/demo_ray_vs_circle/blob/master/README.md</a></p>
 
     <a href="/"> >> Home</a>
   </main>

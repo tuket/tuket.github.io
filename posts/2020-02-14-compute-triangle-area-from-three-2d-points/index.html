@@ -98,31 +98,31 @@ $$</p>
 <p>One efficient way is using the dot product.</p>
 <p>We make the vectors $\vec{v_1}$ and $\vec{v_2}$ by linking one point to the other two.</p>
 <p>Our $\vec{v_2}$ will be the base of our triangle.</p>
-<p>Then we will turn $\vec{v_1}$ 90 degrees ($\vec{v'_1}$).</p>
+<p>Then we will turn $\vec{v_1}$ 90 degrees ($\vec{v&rsquo;_1}$).</p>
 <img src="/img/tria_area/triangle_area.png" alt="triangle_area.png" width="50%"/>
 <p>The projection of this rotated $\vec{v^\prime_1}$ on $\vec{v_2}$ is $h$.</p>
 <p>That means:</p>
 <p>$$
-h = cos(\alpha) \lvert \vec{v_2} \rvert = \frac{\vec{v'_1} \cdot \vec{v_2}}{\lvert \vec{v'_1} \rvert}
+h = cos(\alpha) \lvert \vec{v_2} \rvert = \frac{\vec{v&rsquo;_1} \cdot \vec{v_2}}{\lvert \vec{v&rsquo;_1} \rvert}
 $$</p>
-<p>Because of the definition of dot product $\vec{v'_1} \cdot \vec{v_2} = \lvert \vec{v'_1} \rvert \lvert \vec{v_2} \rvert cos(\alpha)$.</p>
+<p>Because of the definition of dot product $\vec{v&rsquo;_1} \cdot \vec{v_2} = \lvert \vec{v&rsquo;_1} \rvert \lvert \vec{v_2} \rvert cos(\alpha)$.</p>
 <p>Now we can multiply the whole thing by $b$. And we get that.</p>
 <p>$$
-b \cdot h = \vec{v'_1} \cdot \vec{v_2}
+b \cdot h = \vec{v&rsquo;_1} \cdot \vec{v_2}
 $$</p>
 <p>$$
-A = \frac{b \cdot h}{2} = \frac{\vec{v'_1} \cdot \vec{v_2}}{2}
+A = \frac{b \cdot h}{2} = \frac{\vec{v&rsquo;_1} \cdot \vec{v_2}}{2}
 $$</p>
 <p>The area you get could be negative! Just take the absolute value.</p>
 <p>You can get the same result by using the cross product with 3D vectors (Z = 0).</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">float</span> <span class="nf">triangleArea</span><span class="p">(</span><span class="n">vec2</span> <span class="n">a</span><span class="p">,</span> <span class="n">vec2</span> <span class="n">b</span><span class="p">,</span> <span class="n">vec2</span> <span class="n">c</span><span class="p">)</span>
-<span class="p">{</span>
-	<span class="k">const</span> <span class="n">vec2</span> <span class="n">v1</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">;</span>
-  	<span class="k">const</span> <span class="n">vec2</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">a</span><span class="p">;</span>
-  	<span class="k">const</span> <span class="kt">float</span> <span class="n">dp</span> <span class="o">=</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">v2</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">v2</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
-  	<span class="k">return</span> <span class="mf">0.5f</span> <span class="o">*</span> <span class="n">abs</span><span class="p">(</span><span class="n">dp</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">float</span> <span class="nf">triangleArea</span><span class="p">(</span><span class="n">vec2</span> <span class="n">a</span><span class="p">,</span> <span class="n">vec2</span> <span class="n">b</span><span class="p">,</span> <span class="n">vec2</span> <span class="n">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">const</span> <span class="n">vec2</span> <span class="n">v1</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  	<span class="k">const</span> <span class="n">vec2</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  	<span class="k">const</span> <span class="kt">float</span> <span class="n">dp</span> <span class="o">=</span> <span class="n">v1</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">v2</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">v1</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">v2</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  	<span class="k">return</span> <span class="mf">0.5f</span> <span class="o">*</span> <span class="n">abs</span><span class="p">(</span><span class="n">dp</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
     <a href="/"> >> Home</a>
   </main>
 </div>
