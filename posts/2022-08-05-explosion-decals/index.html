@@ -121,14 +121,14 @@ onload='renderMathInElement(document.body);'></script>
 <li><a href="https://bartwronski.com/2015/03/12/fixing-screen-space-deferred-decals/">https://bartwronski.com/2015/03/12/fixing-screen-space-deferred-decals/</a></li>
 <li><a href="https://martindevans.me/game-development/2015/02/27/Drawing-Stuff-On-Other-Stuff-With-Deferred-Screenspace-Decals/">https://martindevans.me/game-development/2015/02/27/Drawing-Stuff-On-Other-Stuff-With-Deferred-Screenspace-Decals/</a></li>
 </ul>
-<h1 id="radial-decals">Radial Decals</h1>
+<h1 id="spherical-decals">Spherical Decals</h1>
 <p>The technique I&rsquo;m going to explain here has been designed for a very specific use case in my game: explosions. This is a screenshot of what my game currently looks like.</p>
 <p>
   <img src="/img/explosion_decals/evil_robots.png" alt="evil robots">
 </p>
 <p>Notice that the game has a top down camera. This is relevant because, as will explain later, this has specially good performance in this scenario.</p>
 <p>I&rsquo;m not an artist, and I work alone in this game, so I aimed for a procedural technique. We will make use prodedural noise.</p>
-<p>Directional decals project along one direction, radial decals project in all directions. Think of directional lights vs point lights.</p>
+<p>Directional decals project along one direction, spherical decals project in all directions. Think of directional lights vs point lights.</p>
 <img src="/img/explosion_decals/diag_0.svg" width="80%"/>
 <p>As you can imagine, since we are going to splat the texture in all directions, instead of a 2D texture, we need to use an environment texture (cubemap for example). But we can also generate the texture procedurally.</p>
 <p>For each decal we will draw a sphere.</p>
