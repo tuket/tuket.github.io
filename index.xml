@@ -6,7 +6,20 @@
     <description>Recent content in Home on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 12 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 24 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ImGui gamma correction in OpenGL and Vulkan</title>
+      <link>https://tuket.github.io/posts/2022-11-24-imgui-gamma/</link>
+      <pubDate>Thu, 24 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/posts/2022-11-24-imgui-gamma/</guid>
+      <description>I had been using ImGui with OpenGL for a long time. Never encountered any problem with gamma corection.
+Recently, I have started using ImGui wih Vulkan and noticed that the colors looked brighter. I immediately suspected it was a gamma issue.
+Googling how to solve my problem, I found lots of people with similar experiences1.
+[]
+Links https://stackoverflow.com/questions/69327444/the-data-rendered-of-imgui-within-window-get-a-lighter-color&amp;#160;&amp;#x21a9;&amp;#xfe0e;</description>
+    </item>
+    
     <item>
       <title>Lightnings!</title>
       <link>https://tuket.github.io/posts/2022-10-12-lightnings/</link>
