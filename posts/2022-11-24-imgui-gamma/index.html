@@ -90,14 +90,115 @@ onload='renderMathInElement(document.body);'></script>
   <main>
     <p>I had been using ImGui with OpenGL for a long time. Never encountered any problem with gamma corection.</p>
 <p>Recently, I have started using ImGui wih Vulkan and noticed that the colors looked brighter. I immediately suspected it was a gamma issue.</p>
-<p>Googling how to solve my problem, I found lots of people with similar experiences<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
-<p>[]</p>
+<p>Googling how to solve my problem, I found lots of people with similar experiences(<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>).</p>
+<p><a href="#he-actual-good-fix">SKIP BLAHBLAH AND GO TO THE GOOD SOLUTION</a></p>
+<h3 id="dumb-solution">Dumb solution</h3>
+<p>One of the solutions people suggested is to create the swapchain images in linear RGB, instead of sRGB. That&rsquo;s obviously not a good solution, because our own application beneffits from using sRGB compression to avoid banding issues. But it does indeed fix the issue with ImGui so it confirms out suspicions about gamma correction being the culprit.</p>
+<h3 id="why-does-it-work-in-opengl">Why does it work in OpenGL?</h3>
+<p>This made me wonder: why is it working in OpenGL but not in Vulkan though? If could find what&rsquo;s different, maybe I could go down to the root cause and fix it. Most of the ImGui code is shared. The difference must be in the backends. However, I wasn&rsquo;t able to find anything different in there.</p>
+<p>Even shaders seem to do the same. Some people in the internet were suggesting to change the vertex shader to do a pow(vertexColor, 2.2). But why does Vulkan need to do it, while OpenGL seems to work fine?</p>
+<h3 id="facepalm">Facepalm</h3>
+<p>After lots of research, FACEPALM.</p>
+<p>
+  <img src="https://i.imgflip.com/7202vq.jpg" alt="facepalm">
+</p>
+<p>I had enabled gamma correction in GLFW with:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_SRGB_CAPABLE</span><span class="p">,</span> <span class="n">GLFW_TRUE</span><span class="p">);</span>
+</span></span></code></pre></div><p>But that&rsquo;s not enough!</p>
+<p>You also need to enable it with:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">glEnable</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER_SRGB</span><span class="p">);</span>
+</span></span></code></pre></div><p>When you do so, then ImGui looks wrong, just like the problem we were having in Vulkan.</p>
+<p>Now everything looks wrong :D</p>
+<h3 id="the-quick-opengl-fix">The quick OpenGL fix</h3>
+<p>In most OpenGL applications that use gamma correction, they use this quick workaround:</p>
+<pre tabindex="0"><code>glEnable(GL_FRAMEBUFFER_SRGB);
+// DRAW MY STUFF
+
+glDisable(GL_FRAMEBUFFER_SRGB);
+ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+</code></pre><p>In this way, we render our stuff with gamma compression, and ImGui without. Everything <em>seems</em> to work.</p>
+<p>This is because ImGui is not designed taking sRGB into account<sup id="fnref1:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>Downsides of this approach:</p>
+<ul>
+<li>Even with this trick, you will encounter issues displaying sRGB textures.</li>
+<li>There is no equivalent API in Vulkan for this.</li>
+</ul>
+<h3 id="demo">Demo</h3>
+<p>In order to understand what&rsquo;s going on I made a simple demo.</p>
+<p>This application draws some simple stuff and then an ImGui window on top.</p>
+<ol>
+<li>Clear the screen with 50% grey</li>
+<li>Draw a big rectangle with a shader that outputs 50% grey (hard-coded in the shader)</li>
+<li>Draw a smaller rectangle that samples a single-pixel, 50% grey, sRGB texture.</li>
+</ol>
+<p>
+  <img src="https://i.stack.imgur.com/x0h30.png" alt="layout">
+</p>
+<p>This is what it looks like when we don&rsquo;t disable sRGB just before rendering ImGui:</p>
+<p>
+  <img src="/img/imgui_gamma/gamma_test_0.png" alt="demo_0">
+</p>
+<p>As you can see, 1 and 2 look the same. That means doing <code>gl_FragColor = vec4(0.5, 0.5, 0.5, 1)</code> in the shader is the same as doing <code>glClearColor(0.5, 0.5, 0.5, 1)</code>.</p>
+<p>The 3rd case looks different. That is because, even though the value 0.5 is stored in the texture, since the texture is sRGB, <strong>decompression</strong> is automatically performed when <strong>sampling</strong> from it. So it would be equivalent to <code>gl_FragColor = vec4(srgbToLinear(vec3(0.5)), 0)</code>.</p>
+<p>Also, since we have gamma correction in the FBO, <strong>compression</strong> is performed automatically when <strong>writing</strong> to the FBO. So the value is decompressed when reading from the texture, and the compressed again when writing to the FBO. So we end up with the original value of 0.5 stored in the FBO.</p>
+<p>
+  <img src="/img/imgui_gamma/diagram_0.svg" alt="diagram_0">
+</p>
+<p>For comparison, this is the 1-pixel 50% grey SRGB texture (it&rsquo;s actully a png of 1 pixel, but it shows scaled):</p>
+<img src="/img/imgui_gamma/grey_05.png" width="20%"/>
+<p>And this is the test image:</p>
+<p>
+  <img src="/img/imgui_gamma/tent.jpg" alt="tent">
+</p>
+<p>As you can see, both images look correct in the previous screenshot. It&rsquo;s just the rest of the UI that looks too bright: window border, buttons etc.</p>
+<p>If we use the workaround of disabling FBO&rsquo;s gamma correction:</p>
+<p>
+  <img src="/img/imgui_gamma/gamma_test_1.png" alt="demo_0">
+</p>
+<p>Everything looks fine&hellip; except for the images which look too dark.</p>
+<h2 id="the-actual-good-fix">The actual good fix</h2>
+<p>The actual fix involves changing the vextex shader.</p>
+<p>As we already saw, sRGB decompression happens automatically when we sample the texture.</p>
+<p>However, this is not the case for vertex colors!</p>
+<p>In the original ImGui shaders, you won&rsquo;t see any special treatment for the vertex color attribute. But the colors are actually in sRGB format.</p>
+<p>If we <strong>disable</strong> gamma correction, it&rsquo;s not a problem. The vertex color is 0.5 -&gt; shader reads 0.5 -&gt; shader writes 0.5 -&gt; FBO stores the 0.5 value.</p>
+<p>If we <strong>enable</strong> gamma correction: the vertex color is 0.5 -&gt; shaders reads 0.5 -&gt; shader writes 0.5 -&gt; the value is compressed to sRGB [0.5^(1/2.2)] then stored in the FBO.</p>
+<p>A thumb rule we use in computer graphics is: 1) store colors in sRGB space, 2) in shaders, work with colors in linear space.</p>
+<p>So the best solution is to <u>decompress the vertex color attributes in the vertex shader</u>.</p>
+<p>It&rsquo;s super easy:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">precision highp float;
+</span></span><span class="line"><span class="cl">layout (location = 0) in vec2 Position;
+</span></span><span class="line"><span class="cl">layout (location = 1) in vec2 UV;
+</span></span><span class="line"><span class="cl">layout (location = 2) in vec4 Color;
+</span></span><span class="line"><span class="cl">uniform mat4 ProjMtx;
+</span></span><span class="line"><span class="cl">out vec2 Frag_UV;
+</span></span><span class="line"><span class="cl">out vec4 Frag_Color;
+</span></span><span class="line"><span class="cl">void main()
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    Frag_UV = UV;
+</span></span><span class="line"><span class="cl"><span class="gd">-   Frag_Color = Color;
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+   Frag_Color = vec4(pow(Color.rgb, vec3(2.2)), Color.a);
+</span></span></span><span class="line"><span class="cl"><span class="gi"></span>    gl_Position = ProjMtx * vec4(Position.xy,0,1);
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>ImGui has a bunch of shaders for different versions of GLSL, so you should change all of them.</p>
+<p>
+  <img src="/img/imgui_gamma/gamma_test_2.png" alt="demo_0">
+</p>
+<p><strong>Everything looks fine now!</strong> But use a color picker to verify it - human eye is not reliable (some greys in the previous picture look slightly different to me. But using the color picker I verified they are actually identical).</p>
+<p>This simple solution works for Vulkan as well!</p>
+<p>NOTE that doing <code>pow(color, 2.2)</code> for converting from sRGB to linear is not 100% accurate. <a href="https://gamedev.stackexchange.com/questions/92015/optimized-linear-to-srgb-glsl">Here</a> you will find the correct convertion. However, <code>^2.2</code> is a good cheap approximation.</p>
 <h2 id="links">Links</h2>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn:1">
 <p><a href="https://stackoverflow.com/questions/69327444/the-data-rendered-of-imgui-within-window-get-a-lighter-color">https://stackoverflow.com/questions/69327444/the-data-rendered-of-imgui-within-window-get-a-lighter-color</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://github.com/ocornut/imgui/issues/578">https://github.com/ocornut/imgui/issues/578</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://www.reddit.com/r/vulkan/comments/s3x6hq/help_with_srgb_surface_format_and_imgui/">https://www.reddit.com/r/vulkan/comments/s3x6hq/help_with_srgb_surface_format_and_imgui/</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>

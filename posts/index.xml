@@ -15,9 +15,9 @@
       <guid>https://tuket.github.io/posts/2022-11-24-imgui-gamma/</guid>
       <description>I had been using ImGui with OpenGL for a long time. Never encountered any problem with gamma corection.
 Recently, I have started using ImGui wih Vulkan and noticed that the colors looked brighter. I immediately suspected it was a gamma issue.
-Googling how to solve my problem, I found lots of people with similar experiences1.
-[]
-Links https://stackoverflow.com/questions/69327444/the-data-rendered-of-imgui-within-window-get-a-lighter-color&amp;#160;&amp;#x21a9;&amp;#xfe0e;</description>
+Googling how to solve my problem, I found lots of people with similar experiences(1, 2, 3).
+SKIP BLAHBLAH AND GO TO THE GOOD SOLUTION
+Dumb solution One of the solutions people suggested is to create the swapchain images in linear RGB, instead of sRGB.</description>
     </item>
     
     <item>
