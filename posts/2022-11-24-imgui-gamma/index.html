@@ -91,7 +91,7 @@ onload='renderMathInElement(document.body);'></script>
     <p>I had been using ImGui with OpenGL for a long time. Never encountered any problem with gamma corection.</p>
 <p>Recently, I have started using ImGui wih Vulkan and noticed that the colors looked brighter. I immediately suspected it was a gamma issue.</p>
 <p>Googling how to solve my problem, I found lots of people with similar experiences(<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>).</p>
-<p><a href="#he-actual-good-fix">SKIP BLAHBLAH AND GO TO THE GOOD SOLUTION</a></p>
+<p><a href="#the-actual-good-fix">SKIP BLAHBLAH AND GO TO THE GOOD SOLUTION</a></p>
 <h3 id="dumb-solution">Dumb solution</h3>
 <p>One of the solutions people suggested is to create the swapchain images in linear RGB, instead of sRGB. That&rsquo;s obviously not a good solution, because our own application beneffits from using sRGB compression to avoid banding issues. But it does indeed fix the issue with ImGui so it confirms out suspicions about gamma correction being the culprit.</p>
 <h3 id="why-does-it-work-in-opengl">Why does it work in OpenGL?</h3>
