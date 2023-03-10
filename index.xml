@@ -33,6 +33,20 @@ Eventhough my game uses OpenGL, for this demo I have used the sokol library. I c
     </item>
     
     <item>
+      <title>Vulkan Concepts</title>
+      <link>https://tuket.github.io/notes/graphics/vulkan_concepts/</link>
+      <pubDate>Tue, 23 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/vulkan_concepts/</guid>
+      <description>Host &amp;amp; Device Host refers to the CPU.
+Device refers to the GPU.
+In Vulkan, the host send commands to be executed by the device. The execution is asynchronous, so you need to be careful and use the explicit synchronization mechanisms that Vulkan provides.
+Vulkan instance Out first interaction with the Vulkan API is creating an instance (VkCreateInstance).
+The Vulkan instance stores the Vulkan state for our application.
+Some interesting info you can provide when creating an instance:</description>
+    </item>
+    
+    <item>
       <title>Explosion Decals</title>
       <link>https://tuket.github.io/posts/2022-08-05-explosion-decals/</link>
       <pubDate>Fri, 05 Aug 2022 21:15:50 +0200</pubDate>
@@ -42,6 +56,15 @@ Eventhough my game uses OpenGL, for this demo I have used the sokol library. I c
 Demo available in this github repo.
 Many games have the need to splat textures on to surfaces dynamically. For example, we might have a floor and we would like to splat some blood onto it when a character has been hurt.
 Image from https://www.gamemodd.com/cs/sprites/blooddecals/3926-fear-blood.htmlThe common approach for implementing these so called decals is to project a quad along a direction.</description>
+    </item>
+    
+    <item>
+      <title>Vulkan cheatsheet</title>
+      <link>https://tuket.github.io/notes/graphics/vulkan_cheatsheet/</link>
+      <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/vulkan_cheatsheet/</guid>
+      <description>Enumerating layers constexpr u32 MAX_LAYERS = 32; VkLayerProperties layersProps[MAX_LAYERS]; u32 numLayers = MAX_LAYERS; vkEnumerateInstanceLayerProperties(&amp;amp;numLayers, layersProps); printf(&amp;#34;Available Layers\n&amp;#34;); for(u32 i = 0; i &amp;lt; numLayers; i++) { printf(&amp;#34;%s: %s\n&amp;#34;, layersProps[i].layerName, layersProps[i].description); } Create a Vulkan instance VkApplicationInfo appInfo = {}; appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO; appInfo.pApplicationName = &amp;#34;example&amp;#34;; appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0); appInfo.pEngineName = &amp;#34;none&amp;#34;; appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0); appInfo.apiVersion = VK_API_VERSION_1_0; VkInstanceCreateInfo instanceCreateInfo = {}; instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO; instanceCreateInfo.pApplicationInfo = &amp;amp;appInfo; instanceCreateInfo.</description>
     </item>
     
     <item>
@@ -244,9 +267,9 @@ for(int lvl = 0; numMips; lvl++) { glTexImage2D(GL_TEXTURE_2D, lvl, GL_RGBA8, te
       
       <guid>https://tuket.github.io/portfolio/</guid>
       <description>Disclaimer: many of these projects were done when I was very noob. Even if I provide download links and code, please don&amp;rsquo;t take it as reference since it is probably of very bad quality. Anyway, it might be useful for learning how not to do things and laughing (that&amp;rsquo;s what I do).
-glTF viewer Work in progress&amp;hellip;
-This is a simple viewer for the glTF format.
-Hosted in github. Watch video.</description>
+Evil Robots Work in progress&amp;hellip;
+A complete indie game made by me.
+I did all the design, programming, and art myself&amp;hellip; made me realize I suck as an artist haha.</description>
     </item>
     
     <item>

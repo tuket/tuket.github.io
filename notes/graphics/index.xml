@@ -6,7 +6,30 @@
     <description>Recent content in Graphics on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 19 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/notes/graphics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/notes/graphics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vulkan Concepts</title>
+      <link>https://tuket.github.io/notes/graphics/vulkan_concepts/</link>
+      <pubDate>Tue, 23 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/vulkan_concepts/</guid>
+      <description>Host &amp;amp; Device Host refers to the CPU.
+Device refers to the GPU.
+In Vulkan, the host send commands to be executed by the device. The execution is asynchronous, so you need to be careful and use the explicit synchronization mechanisms that Vulkan provides.
+Vulkan instance Out first interaction with the Vulkan API is creating an instance (VkCreateInstance).
+The Vulkan instance stores the Vulkan state for our application.
+Some interesting info you can provide when creating an instance:</description>
+    </item>
+    
+    <item>
+      <title>Vulkan cheatsheet</title>
+      <link>https://tuket.github.io/notes/graphics/vulkan_cheatsheet/</link>
+      <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/vulkan_cheatsheet/</guid>
+      <description>Enumerating layers constexpr u32 MAX_LAYERS = 32; VkLayerProperties layersProps[MAX_LAYERS]; u32 numLayers = MAX_LAYERS; vkEnumerateInstanceLayerProperties(&amp;amp;numLayers, layersProps); printf(&amp;#34;Available Layers\n&amp;#34;); for(u32 i = 0; i &amp;lt; numLayers; i++) { printf(&amp;#34;%s: %s\n&amp;#34;, layersProps[i].layerName, layersProps[i].description); } Create a Vulkan instance VkApplicationInfo appInfo = {}; appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO; appInfo.pApplicationName = &amp;#34;example&amp;#34;; appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0); appInfo.pEngineName = &amp;#34;none&amp;#34;; appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0); appInfo.apiVersion = VK_API_VERSION_1_0; VkInstanceCreateInfo instanceCreateInfo = {}; instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO; instanceCreateInfo.pApplicationInfo = &amp;amp;appInfo; instanceCreateInfo.</description>
+    </item>
+    
     <item>
       <title>Full-screen quad: easy and efficient trick</title>
       <link>https://tuket.github.io/notes/graphics/fs_quad_trick/</link>

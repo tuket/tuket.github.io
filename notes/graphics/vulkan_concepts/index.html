@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Vulkan Concepts | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        
+        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/notes/">~/notes</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<a href="../">&lt;&lt; ../</a>
+<div class="article-meta">
+<h1><span class="title">Vulkan Concepts</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#host--device">Host &amp; Device</a></li>
+    <li><a href="#vulkan-instance">Vulkan instance</a></li>
+    <li><a href="#devices">Devices</a></li>
+    <li><a href="#queues">Queues</a></li>
+    <li><a href="#memory">Memory</a></li>
+    <li><a href="#buffer">Buffer</a></li>
+    <li><a href="#renderpass">RenderPass</a></li>
+    <li><a href="#memory-availability-and-visibility">Memory availability and visibility</a></li>
+    <li><a href="#links">Links</a></li>
+    <li><a href="#images">Images</a></li>
+  </ul>
+</nav>
+
+<div class="content-wrapper">
+  <main>
+    <h2 id="host--device">Host &amp; Device</h2>
+<p><strong>Host</strong> refers to the CPU.</p>
+<p><strong>Device</strong> refers to the GPU.</p>
+<p>In Vulkan, the <strong>host</strong> send commands to be executed by the <strong>device</strong>. The execution is asynchronous, so you need to be careful and use the explicit synchronization mechanisms that Vulkan provides.</p>
+<h2 id="vulkan-instance">Vulkan instance</h2>
+<p>Out first interaction with the Vulkan API is creating an <strong>instance</strong> (<a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateInstance.html">VkCreateInstance</a>).</p>
+<p>The Vulkan <strong>instance</strong> stores the Vulkan state for our application.</p>
+<p>Some interesting info you can provide when creating an <strong>instance</strong>:</p>
+<ul>
+<li>The version of Vulkan we need to use</li>
+<li>The extensions we want to use</li>
+<li>The layers we wanto use</li>
+</ul>
+<p>More info about the Vulkan instance:</p>
+<ul>
+<li><a href="https://vulkan.lunarg.com/doc/view/1.2.154.1/windows/tutorial/html/01-init_instance.html">LunarG&rsquo;s create Vulkan instance tutorial</a></li>
+<li><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#initialization-instances">Spec</a></li>
+</ul>
+<h2 id="devices">Devices</h2>
+<p>In Vulkan we have 2 abstractions regarding devices (<a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateInstance.html">spec</a>):</p>
+<ul>
+<li><strong>Physical device</strong>: actual HW device</li>
+<li><strong>Logical device</strong>: instantiation of the device for our application</li>
+</ul>
+<p>Find out which Vulkan-compatible physical devices are available in your system: <a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkEnumeratePhysicalDevices.html">vkEnumeratePhysicalDevices</a>.</p>
+<p>Interesting <strong>functions</strong> associated with VKPhysicalDevice:</p>
+<ul>
+<li><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceProperties.html">vkGetPhysicalDeviceProperties</a>.</li>
+<li><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMemoryProperties.html">VkPhysicalDeviceMemoryProperties</a>.</li>
+<li><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html">vkGetPhysicalDeviceQueueFamilyProperties</a></li>
+<li><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceSurfaceSupportKHR.html">vkGetPhysicalDeviceSurfaceSupportKHR</a></li>
+</ul>
+<h2 id="queues">Queues</h2>
+<p><strong>Execution engines</strong>: actual HW that processes work in the device.</p>
+<p><strong>Queues</strong> are the interface of the device that we can use to send work to the <strong>execution engines</strong>.</p>
+<p><strong>Queue family</strong>: queues are grouped in the device by queue families. All the queues in a family have the same capabilities (i.e. they can process the same kind of work). Queues may run asynchronously from the others.</p>
+<p>In practice, you want to use the least amount of queues. You can even use only one.</p>
+<p>When you create the logical device you specify the number of queues of each family type you want to create.</p>
+<h2 id="memory">Memory</h2>
+<p>Device memory allocation is explicit (<a href="VkMemoryAllocateInfo">vkAllocateMemory</a> / <a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkFreeMemory.html">vkFreeMemory</a>)</p>
+<h2 id="buffer">Buffer</h2>
+<h2 id="renderpass">RenderPass</h2>
+<p>Is a collection of:</p>
+<ul>
+<li>Attachments. Description of the attachment properties:
+<ul>
+<li>Format: expected format of the image views attached</li>
+<li>Number of MASAA samples</li>
+<li>loadOp: specifies how the contents of the color and depth attachments are treated at the beginning of the first subpass where it&rsquo;s used.</li>
+<li>storeOp: specifies how the contents of the color and depth attachments are treated at the and of the last subpass where it&rsquo;s used.</li>
+<li>stencilLoadOp, stencirStoreOp: same but for the stencil attachment</li>
+<li>initialLayout:</li>
+<li>finalLayout:</li>
+</ul>
+</li>
+<li>Subpasses. Deescription of the subpasses:
+<ul>
+<li>pieplineBindPoint: GRAPHICS/COMPUTE</li>
+<li>inputAttachments: references to attachments that are read</li>
+<li>colorAttachments: references to attachments that are written</li>
+<li>resolveAttachments: multisampling resolve attachments for colorAttachments</li>
+<li>depthStencilAttachment: reference to depth stencil attachment to be written</li>
+<li>preserveAttachments: if an attachment is not referenced in one of the previous arrays, the driver assument that the contens are not needed. Use preserveAttachments to prevent that</li>
+</ul>
+</li>
+<li>Dependencies between subpases
+<ul>
+<li>src pass (index)</li>
+<li>dst pass (index)</li>
+<li>srcStageMask (precisely which pipeline stage)</li>
+<li>dstStageMask</li>
+<li>dependencyFlags: VK_DEPENDENCY_BY_REGION_BIT is interesting for tile-based GPUs because it indicates that you don&rsquo;t need to finish all tiles before stating next subpass</li>
+</ul>
+</li>
+</ul>
+<p>The <strong>host</strong> and the <strong>device</strong> can access memory though buses.</p>
+<h2 id="memory-availability-and-visibility">Memory availability and visibility</h2>
+
+
+
+<div class="goat svg-container ">
+  
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      font-family="Menlo,Lucida Console,monospace"
+      
+        viewBox="0 0 392 233"
+      >
+      <g transform='translate(8,16)'>
+<path d='M 0,0 L 96,0' fill='none' stroke='currentColor'></path>
+<path d='M 280,0 L 376,0' fill='none' stroke='currentColor'></path>
+<path d='M 104,16 L 192,16' fill='none' stroke='currentColor'></path>
+<path d='M 192,16 L 272,16' fill='none' stroke='currentColor'></path>
+<path d='M 0,32 L 96,32' fill='none' stroke='currentColor'></path>
+<path d='M 280,32 L 376,32' fill='none' stroke='currentColor'></path>
+<path d='M 0,80 L 96,80' fill='none' stroke='currentColor'></path>
+<path d='M 0,112 L 96,112' fill='none' stroke='currentColor'></path>
+<path d='M 0,176 L 96,176' fill='none' stroke='currentColor'></path>
+<path d='M 0,208 L 96,208' fill='none' stroke='currentColor'></path>
+<path d='M 0,0 L 0,32' fill='none' stroke='currentColor'></path>
+<path d='M 0,80 L 0,112' fill='none' stroke='currentColor'></path>
+<path d='M 0,176 L 0,208' fill='none' stroke='currentColor'></path>
+<path d='M 24,48 L 24,64' fill='none' stroke='currentColor'></path>
+<path d='M 48,128 L 48,160' fill='none' stroke='currentColor'></path>
+<path d='M 72,48 L 72,64' fill='none' stroke='currentColor'></path>
+<path d='M 96,0 L 96,32' fill='none' stroke='currentColor'></path>
+<path d='M 96,80 L 96,112' fill='none' stroke='currentColor'></path>
+<path d='M 96,176 L 96,208' fill='none' stroke='currentColor'></path>
+<path d='M 192,0 L 192,16' fill='none' stroke='currentColor'></path>
+<path d='M 192,16 L 192,208' fill='none' stroke='currentColor'></path>
+<path d='M 280,0 L 280,32' fill='none' stroke='currentColor'></path>
+<path d='M 376,0 L 376,32' fill='none' stroke='currentColor'></path>
+<path d='M 24,40 L 24,48' fill='none' stroke='currentColor'></path>
+<path d='M 72,64 L 72,72' fill='none' stroke='currentColor'></path>
+<path d='M 24,64 L 24,72' fill='none' stroke='currentColor'></path>
+<polygon points='40.000000,64.000000 28.000000,58.400002 28.000000,69.599998' fill='currentColor' transform='rotate(90.000000, 24.000000, 64.000000)'></polygon>
+<path d='M 48,120 L 48,128' fill='none' stroke='currentColor'></path>
+<polygon points='64.000000,128.000000 52.000000,122.400002 52.000000,133.600006' fill='currentColor' transform='rotate(270.000000, 48.000000, 128.000000)'></polygon>
+<path d='M 48,160 L 48,168' fill='none' stroke='currentColor'></path>
+<polygon points='64.000000,160.000000 52.000000,154.399994 52.000000,165.600006' fill='currentColor' transform='rotate(90.000000, 48.000000, 160.000000)'></polygon>
+<path d='M 72,40 L 72,48' fill='none' stroke='currentColor'></path>
+<polygon points='88.000000,48.000000 76.000000,42.400002 76.000000,53.599998' fill='currentColor' transform='rotate(270.000000, 72.000000, 48.000000)'></polygon>
+<polygon points='112.000000,16.000000 100.000000,10.400000 100.000000,21.600000' fill='currentColor' transform='rotate(180.000000, 104.000000, 16.000000)'></polygon>
+<polygon points='280.000000,16.000000 268.000000,10.400000 268.000000,21.600000' fill='currentColor' transform='rotate(0.000000, 272.000000, 16.000000)'></polygon>
+<text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>A</text>
+<text text-anchor='middle' x='24' y='20' fill='currentColor' style='font-size:1em'>V</text>
+<text text-anchor='middle' x='24' y='100' fill='currentColor' style='font-size:1em'>V</text>
+<text text-anchor='middle' x='32' y='20' fill='currentColor' style='font-size:1em'>A</text>
+<text text-anchor='middle' x='32' y='100' fill='currentColor' style='font-size:1em'>I</text>
+<text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>I</text>
+<text text-anchor='middle' x='40' y='100' fill='currentColor' style='font-size:1em'>S</text>
+<text text-anchor='middle' x='40' y='196' fill='currentColor' style='font-size:1em'>H</text>
+<text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>L</text>
+<text text-anchor='middle' x='48' y='100' fill='currentColor' style='font-size:1em'>I</text>
+<text text-anchor='middle' x='48' y='196' fill='currentColor' style='font-size:1em'>O</text>
+<text text-anchor='middle' x='56' y='20' fill='currentColor' style='font-size:1em'>A</text>
+<text text-anchor='middle' x='56' y='100' fill='currentColor' style='font-size:1em'>B</text>
+<text text-anchor='middle' x='56' y='196' fill='currentColor' style='font-size:1em'>S</text>
+<text text-anchor='middle' x='64' y='20' fill='currentColor' style='font-size:1em'>B</text>
+<text text-anchor='middle' x='64' y='100' fill='currentColor' style='font-size:1em'>L</text>
+<text text-anchor='middle' x='64' y='196' fill='currentColor' style='font-size:1em'>T</text>
+<text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>L</text>
+<text text-anchor='middle' x='72' y='100' fill='currentColor' style='font-size:1em'>E</text>
+<text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>E</text>
+<text text-anchor='middle' x='296' y='20' fill='currentColor' style='font-size:1em'>A</text>
+<text text-anchor='middle' x='304' y='20' fill='currentColor' style='font-size:1em'>V</text>
+<text text-anchor='middle' x='312' y='20' fill='currentColor' style='font-size:1em'>A</text>
+<text text-anchor='middle' x='320' y='20' fill='currentColor' style='font-size:1em'>I</text>
+<text text-anchor='middle' x='328' y='20' fill='currentColor' style='font-size:1em'>L</text>
+<text text-anchor='middle' x='336' y='20' fill='currentColor' style='font-size:1em'>A</text>
+<text text-anchor='middle' x='344' y='20' fill='currentColor' style='font-size:1em'>B</text>
+<text text-anchor='middle' x='352' y='20' fill='currentColor' style='font-size:1em'>L</text>
+<text text-anchor='middle' x='360' y='20' fill='currentColor' style='font-size:1em'>E</text>
+</g>
+
+    </svg>
+  
+</div>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/49237258/what-is-the-pipeline-a-vkcmdpipelinebarrier-applies-to">What is the pipeline a vkCmdPipelineBarrier applies to?</a></li>
+<li><a href="https://stackoverflow.com/questions/61342339/host-write-guarantees-source-access-scope">Host write guarantees source access scope</a></li>
+<li><a href="https://themaister.net/blog/2019/08/14/yet-another-blog-explaining-vulkan-synchronization/">Yet another blog explaining Vulkan synchronization - Maister</a></li>
+<li><a href="https://stackoverflow.com/questions/40577047/vulkan-vkcmdpipelinebarrier-for-data-coherence">Vulkan: vkCmdPipelineBarrier for data coherence</a></li>
+</ul>
+<h2 id="images">Images</h2>
+<p>Q: Let say I allocated memory for a <code>VkImage</code> and it turns out to be <code>HOST_VISIBLE</code>. Can I just <code>vkMapMemory</code> and write directly to it? Even if the image is <code>TILING_OPTIMAL</code>?</p>
+<p>A:</p>
+<p>According to the spec:</p>
+<blockquote>
+<p>Upon creation, all image subresources of an image are initially in the same layout, where that
+layout is selected by the VkImageCreateInfo::initialLayout member. The initialLayout must be either
+VK_IMAGE_LAYOUT_UNDEFINED or VK_IMAGE_LAYOUT_PREINITIALIZED. If it is VK_IMAGE_LAYOUT_PREINITIALIZED, then the image data can be preinitialized by the host while using this layout, and the transition away from this layout will preserve that data. If it is VK_IMAGE_LAYOUT_UNDEFINED, then the contents of the data are considered to be undefined, and the transition away from this layout is not guaranteed to preserve that data. For either of these initial layouts, any image subresources must be transitioned to another layout before they are accessed by the device.</p>
+<p>Host access to image memory is only well-defined for linear images and for image subresources of those images which are currently in either the VK_IMAGE_LAYOUT_PREINITIALIZED or VK_IMAGE_LAYOUT_GENERAL layout. Calling vkGetImageSubresourceLayout for a linear image returns a subresource layout mapping that is valid for either of those image layouts.</p>
+</blockquote>
+<p>So not possible for <code>TILING_OPTIMAL</code>, but possible for <code>TILING_LINEAR</code>.</p>
+<p>Additionally, the image layout needs to be <code>PREINITIALIZED</code> or <code>GENERAL</code>.</p>
+<p>However, for textures, we want to use <code>TILING_OPTIMAL</code> because:</p>
+<ul>
+<li>Has better performance</li>
+<li>Linear tiling might not even be supported for sampling</li>
+</ul>
+<p>In practice, this means that it&rsquo;s not possible to fill a texture without a staging buffer.</p>
+<p>You could use a staging <code>TILING_LINEAR</code> image to fill a <code>TILING_OPTIMAL</code> image. But this is not a good idea because this is not supported for compressesed format. Using a staging buffer supports both compressed and non-compressed formats, so it&rsquo;s a better approach for code simplicity.</p>
+<p>We can use the <code>VK_EXT_external_memory_host</code> extension to bind a host data pointer directly to a <code>VkBuffer</code>. That would allow us to save a <code>memcpy</code>! (<a href="https://stackoverflow.com/questions/71626199/can-you-transfer-directly-to-an-image-without-using-an-intermediary-buffer">link</a>)</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+
+
+<script src="https://utteranc.es/client.js"
+  repo="tuket/tuket.github.io"
+  issue-term="pathname"
+  label="💬💬"
+  theme="gruvbox-dark"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://stackoverflow.com/users/1754322/tuket"><img src="/img/stack_overflow_icon.svg" width="18" height="18" alt="stackOverflow"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"></a> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+

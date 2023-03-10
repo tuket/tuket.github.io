@@ -88,37 +88,37 @@ onload='renderMathInElement(document.body);'></script>
 <div class="content-wrapper">
   <main>
     <h2 id="enumerating-layers">Enumerating layers</h2>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">constexpr</span> <span class="n">u32</span> <span class="n">MAX_LAYERS</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-<span class="n">VkLayerProperties</span> <span class="n">layersProps</span><span class="p">[</span><span class="n">MAX_LAYERS</span><span class="p">];</span>
-<span class="n">u32</span> <span class="n">numLayers</span> <span class="o">=</span> <span class="n">MAX_LAYERS</span><span class="p">;</span>
-<span class="n">vkEnumerateInstanceLayerProperties</span><span class="p">(</span><span class="o">&amp;</span><span class="n">numLayers</span><span class="p">,</span> <span class="n">layersProps</span><span class="p">);</span>
-<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Available Layers</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
-<span class="k">for</span><span class="p">(</span><span class="n">u32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numLayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s: %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">layersProps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">layerName</span><span class="p">,</span> <span class="n">layersProps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">description</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div><h2 id="create-a-vulkan-instance">Create a Vulkan instance</h2>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">VkApplicationInfo</span> <span class="n">appInfo</span> <span class="o">=</span> <span class="p">{};</span>
-<span class="n">appInfo</span><span class="p">.</span><span class="n">sType</span> <span class="o">=</span> <span class="n">VK_STRUCTURE_TYPE_APPLICATION_INFO</span><span class="p">;</span>
-<span class="n">appInfo</span><span class="p">.</span><span class="n">pApplicationName</span> <span class="o">=</span> <span class="s">&#34;example&#34;</span><span class="p">;</span>
-<span class="n">appInfo</span><span class="p">.</span><span class="n">applicationVersion</span> <span class="o">=</span> <span class="n">VK_MAKE_VERSION</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="n">appInfo</span><span class="p">.</span><span class="n">pEngineName</span> <span class="o">=</span> <span class="s">&#34;none&#34;</span><span class="p">;</span>
-<span class="n">appInfo</span><span class="p">.</span><span class="n">engineVersion</span> <span class="o">=</span> <span class="n">VK_MAKE_VERSION</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="n">appInfo</span><span class="p">.</span><span class="n">apiVersion</span> <span class="o">=</span> <span class="n">VK_API_VERSION_1_0</span><span class="p">;</span>
-
-<span class="n">VkInstanceCreateInfo</span> <span class="n">instanceCreateInfo</span> <span class="o">=</span> <span class="p">{};</span>
-<span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">sType</span> <span class="o">=</span> <span class="n">VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO</span><span class="p">;</span>
-<span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">pApplicationInfo</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">appInfo</span><span class="p">;</span>
-<span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">enabledLayerCount</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">static</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="k">const</span> <span class="n">LAYER_NAMES</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;VK_LAYER_KHRONOS_validation&#34;</span><span class="p">};</span>
-<span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">ppEnabledLayerNames</span> <span class="o">=</span> <span class="n">LAYER_NAMES</span><span class="p">;</span>
-<span class="n">VkInstance</span> <span class="n">inst</span><span class="p">;</span>
-<span class="n">vkCreateInstance</span><span class="p">(</span><span class="o">&amp;</span><span class="n">instanceCreateInfo</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">inst</span><span class="p">);</span>
-</code></pre></div><h1 id="enumerate-physical-devices">Enumerate Physical Devices</h1>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">constexpr</span> <span class="n">u32</span> <span class="n">MAX_PHYSICAL_DEVICES</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="n">VkPhysicalDevice</span> <span class="n">physicalDevices</span><span class="p">[</span><span class="n">MAX_PHYSICAL_DEVICES</span><span class="p">];</span>
-<span class="n">u32</span> <span class="n">numPhysicalDevices</span> <span class="o">=</span> <span class="n">MAX_PHYSICAL_DEVICES</span><span class="p">;</span>
-<span class="n">vkEnumeratePhysicalDevices</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numPhysicalDevices</span><span class="p">,</span> <span class="n">physicalDevices</span><span class="p">);</span>
-</code></pre></div><h1 id="descriptor-set">Descriptor Set</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="n">u32</span> <span class="n">MAX_LAYERS</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">VkLayerProperties</span> <span class="n">layersProps</span><span class="p">[</span><span class="n">MAX_LAYERS</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">u32</span> <span class="n">numLayers</span> <span class="o">=</span> <span class="n">MAX_LAYERS</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">vkEnumerateInstanceLayerProperties</span><span class="p">(</span><span class="o">&amp;</span><span class="n">numLayers</span><span class="p">,</span> <span class="n">layersProps</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">printf</span><span class="p">(</span><span class="s">&#34;Available Layers</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span><span class="p">(</span><span class="n">u32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numLayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s: %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">layersProps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">layerName</span><span class="p">,</span> <span class="n">layersProps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">description</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="create-a-vulkan-instance">Create a Vulkan instance</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">VkApplicationInfo</span> <span class="n">appInfo</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl"><span class="n">appInfo</span><span class="p">.</span><span class="n">sType</span> <span class="o">=</span> <span class="n">VK_STRUCTURE_TYPE_APPLICATION_INFO</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">appInfo</span><span class="p">.</span><span class="n">pApplicationName</span> <span class="o">=</span> <span class="s">&#34;example&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">appInfo</span><span class="p">.</span><span class="n">applicationVersion</span> <span class="o">=</span> <span class="n">VK_MAKE_VERSION</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">appInfo</span><span class="p">.</span><span class="n">pEngineName</span> <span class="o">=</span> <span class="s">&#34;none&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">appInfo</span><span class="p">.</span><span class="n">engineVersion</span> <span class="o">=</span> <span class="n">VK_MAKE_VERSION</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">appInfo</span><span class="p">.</span><span class="n">apiVersion</span> <span class="o">=</span> <span class="n">VK_API_VERSION_1_0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">VkInstanceCreateInfo</span> <span class="n">instanceCreateInfo</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl"><span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">sType</span> <span class="o">=</span> <span class="n">VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">pApplicationInfo</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">appInfo</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">enabledLayerCount</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="k">const</span> <span class="n">LAYER_NAMES</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#34;VK_LAYER_KHRONOS_validation&#34;</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">instanceCreateInfo</span><span class="p">.</span><span class="n">ppEnabledLayerNames</span> <span class="o">=</span> <span class="n">LAYER_NAMES</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">VkInstance</span> <span class="n">inst</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">vkCreateInstance</span><span class="p">(</span><span class="o">&amp;</span><span class="n">instanceCreateInfo</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">inst</span><span class="p">);</span>
+</span></span></code></pre></div><h1 id="enumerate-physical-devices">Enumerate Physical Devices</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="n">u32</span> <span class="n">MAX_PHYSICAL_DEVICES</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">VkPhysicalDevice</span> <span class="n">physicalDevices</span><span class="p">[</span><span class="n">MAX_PHYSICAL_DEVICES</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">u32</span> <span class="n">numPhysicalDevices</span> <span class="o">=</span> <span class="n">MAX_PHYSICAL_DEVICES</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">vkEnumeratePhysicalDevices</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numPhysicalDevices</span><span class="p">,</span> <span class="n">physicalDevices</span><span class="p">);</span>
+</span></span></code></pre></div><h1 id="descriptor-set">Descriptor Set</h1>
 <h1 id="pipeline-layout">Pipeline Layout</h1>
 <p>vkEnumeratePhysicalDevices</p>
 <p>VkPhysicalDeviceProperties</p>
@@ -149,6 +149,18 @@ onload='renderMathInElement(document.body);'></script>
     <a href="/"> >> Home</a>
   </main>
 </div>
+
+
+<script src="https://utteranc.es/client.js"
+  repo="tuket/tuket.github.io"
+  issue-term="pathname"
+  label="💬💬"
+  theme="gruvbox-dark"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
     <footer>
       
 <script>
