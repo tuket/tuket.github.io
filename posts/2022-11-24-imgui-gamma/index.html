@@ -103,10 +103,10 @@ onload='renderMathInElement(document.body);'></script>
   <img src="https://i.imgflip.com/7202vq.jpg" alt="facepalm">
 </p>
 <p>I had enabled gamma correction in GLFW with:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_SRGB_CAPABLE</span><span class="p">,</span> <span class="n">GLFW_TRUE</span><span class="p">);</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="nf">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_SRGB_CAPABLE</span><span class="p">,</span> <span class="n">GLFW_TRUE</span><span class="p">);</span>
 </span></span></code></pre></div><p>But that&rsquo;s not enough!</p>
 <p>You also need to enable it with:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">glEnable</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER_SRGB</span><span class="p">);</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="nf">glEnable</span><span class="p">(</span><span class="n">GL_FRAMEBUFFER_SRGB</span><span class="p">);</span>
 </span></span></code></pre></div><p>When you do so, then ImGui looks wrong, just like the problem we were having in Vulkan.</p>
 <p>Now everything looks wrong :D</p>
 <h3 id="the-quick-opengl-fix">The quick OpenGL fix</h3>

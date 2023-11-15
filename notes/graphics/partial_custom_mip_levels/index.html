@@ -90,7 +90,7 @@ onload='renderMathInElement(document.body);'></script>
     <p>OpenGL allows to automatically create mipmaps for you with <code>glGenMipmap</code>.</p>
 <p>But you can upload you own mipmaps using <code>glTexImage2D</code>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">lvl</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">numMips</span><span class="p">;</span> <span class="n">lvl</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="n">lvl</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="n">GL_RGBA8</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">w</span><span class="p">,</span> <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
@@ -102,7 +102,7 @@ This is possible to do because OpenGL will generate mipmaps starting from <code>
 So you can do it like this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// upload custom images
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numCustomMips</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="n">lvl</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="n">GL_RGBA8</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">w</span><span class="p">,</span> <span class="n">texture</span><span class="p">[</span><span class="n">lvl</span><span class="p">].</span><span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
@@ -110,12 +110,12 @@ So you can do it like this:</p>
 </span></span><span class="line"><span class="cl">    <span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// set the base level to the smallest mip we provided
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_BASE_LEVEL</span><span class="p">,</span> <span class="n">numCustomMips</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">glGenerateMipmap</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">);</span>
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nf">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_BASE_LEVEL</span><span class="p">,</span> <span class="n">numCustomMips</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">glGenerateMipmap</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// restore base level
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_BASE_LEVEL</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nf">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_BASE_LEVEL</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 </span></span></code></pre></div><p>If you find some textures look tilted, it could be that your texture rows are not 4-byte aligned for higher mips. Try if doing this fixes your problem:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">glPixelStorei</span><span class="p">(</span><span class="n">GL_UNPACK_ALIGNMENT</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="nf">glPixelStorei</span><span class="p">(</span><span class="n">GL_UNPACK_ALIGNMENT</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
 </span></span></code></pre></div>
     <a href="/"> >> Home</a>
   </main>

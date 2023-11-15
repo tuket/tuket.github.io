@@ -112,7 +112,7 @@ The GPU generates fragments in tiles of 2x2 to compute partial derivatives. At t
 </span></span><span class="line"><span class="cl">    <span class="n">gl_Position</span> <span class="o">=</span>  <span class="k">vec4</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">v_tc</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">,</span> <span class="mo">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>   
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>And just draw it normally with:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="nf">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
 </span></span></code></pre></div><p>Important note: from OpenGL 3.3 the use VAOs is <a href="https://stackoverflow.com/questions/30057286/how-to-use-vbos-without-vaos-with-opengl-core-profile">mandatory</a>.
 That means that, despite not needing VBOs, we would still have to create at least one VAO and bind it. No need to use a specific one though, any one that was previously bound will do.</p>
 

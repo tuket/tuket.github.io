@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>Tags | tuket</title>
+    <title>Juicy Code | tuket</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     <link rel="stylesheet" href="/css/syntax.css" />
@@ -79,24 +79,46 @@ onload='renderMathInElement(document.body);'></script>
     });
 </script>
 
+<br>
+<div class="article-meta">
+<h1><span class="title">Juicy Code</span></h1>
+<p class="date" style="margin-top: 1px;margin-bottom: 1px">2012/01/23</h2>
+</div>
 
-<h1>Tags</h1>
 
-<ul class="terms">
-  
-  <li>
-    <a href="https://tuket.github.io/tags/html/">HTML</a> (1)
-  </li>
-  
-  <li>
-    <a href="https://tuket.github.io/tags/juicy/">Juicy</a> (1)
-  </li>
-  
-  <li>
-    <a href="https://tuket.github.io/tags/markdown/">Markdown</a> (1)
-  </li>
-  
-</ul>
+<div class="content-wrapper">
+  <main>
+    <p>Check out this JUICY! code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">with_value_from_database</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">from_database</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">type</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">with_cast_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">with_cast_value</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">type</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">with_type</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="n">changed_in_place?</span>
+</span></span><span class="line"><span class="cl">    <span class="n">with_value_from_user</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">with_type</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">value_before_type_cast</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">original_attribute</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span></code></pre></div>
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+
+
+<script src="https://utteranc.es/client.js"
+  repo="tuket/tuket.github.io"
+  issue-term="pathname"
+  label="💬💬"
+  theme="gruvbox-dark"
+  crossorigin="anonymous"
+  async>
+</script>
+
 
     <footer>
       

@@ -93,10 +93,17 @@ onload='renderMathInElement(document.body);'></script>
     <li><a href="#queues">Queues</a></li>
     <li><a href="#memory">Memory</a></li>
     <li><a href="#buffer">Buffer</a></li>
-    <li><a href="#renderpass">RenderPass</a></li>
+    <li><a href="#renderpass">RenderPass</a>
+      <ul>
+        <li><a href="#renderpass-compatibility">RenderPass compatibility</a></li>
+      </ul>
+    </li>
     <li><a href="#memory-availability-and-visibility">Memory availability and visibility</a></li>
     <li><a href="#links">Links</a></li>
     <li><a href="#images">Images</a></li>
+    <li><a href="#pipeline-layout">Pipeline layout</a></li>
+    <li><a href="#descriptor-set-layout">Descriptor set layout</a></li>
+    <li><a href="#pipelines">Pipelines</a></li>
   </ul>
 </nav>
 
@@ -157,7 +164,7 @@ onload='renderMathInElement(document.body);'></script>
 <li>finalLayout:</li>
 </ul>
 </li>
-<li>Subpasses. Deescription of the subpasses:
+<li>Subpasses. Description of the subpasses:
 <ul>
 <li>pieplineBindPoint: GRAPHICS/COMPUTE</li>
 <li>inputAttachments: references to attachments that are read</li>
@@ -177,6 +184,22 @@ onload='renderMathInElement(document.body);'></script>
 </ul>
 </li>
 </ul>
+<h3 id="renderpass-compatibility">RenderPass compatibility</h3>
+<p>Framebuffers and graphics pipelines are created based on a specific render pass object.</p>
+<p>They must only be used with that render pass object, or one compatible with it.</p>
+<p>Two attachment references are compatible if they have matching format and sample count, or are both VK_ATTACHMENT_UNUSED or the pointer that would contain the reference is NULL.</p>
+<p>Two arrays of attachment references are compatible if all corresponding pairs of attachments are
+compatible. If the arrays are of different lengths, attachment references not present in the smaller
+array are treated as VK_ATTACHMENT_UNUSED.</p>
+<p>Two render passes are compatible if their corresponding color, input, resolve, and depth/stencil
+attachment references are compatible and if they are otherwise identical except for:
+• Initial and final image layout in attachment descriptions
+• Load and store operations in attachment descriptions
+• Image layout in attachment references</p>
+<p>As an additional special case, if two render passes have a single subpass, the resolve attachment
+reference and depth/stencil resolve mode compatibility requirements are ignored.</p>
+<p>A framebuffer is compatible with a render pass if it was created using the same render pass or a
+compatible render pass.</p>
 <p>The <strong>host</strong> and the <strong>device</strong> can access memory though buses.</p>
 <h2 id="memory-availability-and-visibility">Memory availability and visibility</h2>
 
@@ -287,6 +310,31 @@ VK_IMAGE_LAYOUT_UNDEFINED or VK_IMAGE_LAYOUT_PREINITIALIZED. If it is VK_IMAGE_L
 <p>In practice, this means that it&rsquo;s not possible to fill a texture without a staging buffer.</p>
 <p>You could use a staging <code>TILING_LINEAR</code> image to fill a <code>TILING_OPTIMAL</code> image. But this is not a good idea because this is not supported for compressesed format. Using a staging buffer supports both compressed and non-compressed formats, so it&rsquo;s a better approach for code simplicity.</p>
 <p>We can use the <code>VK_EXT_external_memory_host</code> extension to bind a host data pointer directly to a <code>VkBuffer</code>. That would allow us to save a <code>memcpy</code>! (<a href="https://stackoverflow.com/questions/71626199/can-you-transfer-directly-to-an-image-without-using-an-intermediary-buffer">link</a>)</p>
+<h2 id="pipeline-layout">Pipeline layout</h2>
+<p>To crate a pipeline layout you need:</p>
+<ul>
+<li>[]VkDescriptorSetLayout</li>
+<li>[]VkPushConstantRange</li>
+</ul>
+<h2 id="descriptor-set-layout">Descriptor set layout</h2>
+<p>To create a VkDescriptorSetLayout you need:</p>
+<ul>
+<li>flags:
+<ul>
+<li>CREATE_UPDATE_AFTER_BIND_POOL_BIT (1.2)</li>
+<li>CREATE_PUSH_DESCRIPTOR_BIT_KHR (VK_KHR_push_descriptor)</li>
+</ul>
+</li>
+<li>[]VkDescriptorSetLayoutBinding</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">VkDescriptorSetLayoutBinding</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint32_t</span> <span class="n">binding</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">VkDescriptorType</span> <span class="n">descriptorType</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint32_t</span> <span class="n">descriptorCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">VkShaderStageFlags</span> <span class="n">stageFlags</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">VkSampler</span><span class="o">*</span> <span class="n">pImmutableSamplers</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="pipelines">Pipelines</h2>
 
     <a href="/"> >> Home</a>
   </main>
