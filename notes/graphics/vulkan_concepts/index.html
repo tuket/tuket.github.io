@@ -103,6 +103,14 @@ onload='renderMathInElement(document.body);'></script>
     <li><a href="#images">Images</a></li>
     <li><a href="#pipeline-layout">Pipeline layout</a></li>
     <li><a href="#descriptor-set-layout">Descriptor set layout</a></li>
+    <li><a href="#memory-alignment-rules">Memory alignment rules</a>
+      <ul>
+        <li><a href="#scalar-alignment">Scalar Alignment</a></li>
+        <li><a href="#base-alignment">Base alignment</a></li>
+        <li><a href="#extended-aligment">Extended aligment</a></li>
+        <li><a href="#relaxed-alignment">Relaxed alignment</a></li>
+      </ul>
+    </li>
     <li><a href="#pipelines">Pipelines</a></li>
   </ul>
 </nav>
@@ -334,7 +342,107 @@ VK_IMAGE_LAYOUT_UNDEFINED or VK_IMAGE_LAYOUT_PREINITIALIZED. If it is VK_IMAGE_L
 </span></span><span class="line"><span class="cl">    <span class="n">VkShaderStageFlags</span> <span class="n">stageFlags</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">VkSampler</span><span class="o">*</span> <span class="n">pImmutableSamplers</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h2 id="pipelines">Pipelines</h2>
+</span></span></code></pre></div><h2 id="memory-alignment-rules">Memory alignment rules</h2>
+<ul>
+<li>We can consider matrices as column-major</li>
+</ul>
+<p>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Row_and_column_major_order.svg/180px-Row_and_column_major_order.svg.png" alt="">
+</p>
+<ul>
+<li>In GLSL, a matrix type <code>matCxR</code> has <code>C</code> columns (vectors) and <code>R</code> rows</li>
+<li>For alignment porposes, <code>matCxR</code> is equivalent to an array <code>vecR[C]</code></li>
+<li>bool has size 4, just like float or int!</li>
+</ul>
+<p>We have 3 types of alignment:</p>
+<ul>
+<li>Scalar alignment</li>
+<li>Base alignment (std430)</li>
+<li>Extended alignment (std140, the default for uniform buffers)</li>
+<li>Relaxed alignment</li>
+</ul>
+<h3 id="scalar-alignment">Scalar Alignment</h3>
+<ol>
+<li>Basic types such as bool, float, int, or double have scalar alignment equal to it&rsquo;s size.</li>
+<li>A vector type has a scalar alignment equal to that of its component type</li>
+<li>An array type has a scalar alignment equal to that of its element type</li>
+<li>A structure has a scalar alignment equal to the largest scalar alignment of any of its members</li>
+</ol>
+<p>All these points are pretty obvious, except for 4 maybe. Point 4 implies that if our struct has a <code>double</code> then the scalar alignment becomes <code>8</code>.</p>
+<p>For using scalar alignment you need the <code>VK_EXT_scalar_block_layout</code> extension, which was promoted to core in Vulkan 1.2.
+In GLSL you also need to enable the corresponding extension:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="cp">#extension GL_EXT_scalar_block_layout : enable</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">scalar</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="n">buffer</span> <span class="n">block</span> <span class="p">{</span> <span class="p">}</span>
+</span></span></code></pre></div><h3 id="base-alignment">Base alignment</h3>
+<ol>
+<li>A scalar has a base alignment equal to its scalar alignment</li>
+<li>A 2-component vector has a base alignment equal to x2 its scalar alignment</li>
+<li>A 3- or 4-component vector has a base alignment equal to four times its scalar alignment</li>
+<li>An array has a base alignment equal to the base alignment of its element type</li>
+<li>A structure has a base alignment equal to the largest base alignment of any of its members.</li>
+</ol>
+<p>From these set of rules, probably 3 and 4 are the most interesting.</p>
+<p>Rule 3 tells us that 3-component vectors are actually aligned as if they were 4-component vectors. Some people even argue that one should <a href="https://stackoverflow.com/q/38172696/1754322">avoid using vec3 altogether</a> in interface blocks.</p>
+<p>Base alignment is the one used by default &ldquo;push constants&rdquo; and &ldquo;storage buffers&rdquo;. In GLSL this type of alignment is know as std430.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">uniform</span> <span class="n">MyUniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// &#34;uniform&#34; uses scalar &#34;extended alignment&#34; by default (std140)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">float</span> <span class="n">myUniform0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">vec2</span> <span class="n">myUniforms1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="n">buffer</span> <span class="n">MyStorageBuffer</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// push_constant uses &#34;base alignment&#34; by default (std140)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">uint</span> <span class="n">myStorageBuffer0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">push_constant</span><span class="p">)</span> <span class="k">uniform</span> <span class="n">MyPushConstants</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// push_constant uses &#34;base alignment&#34; by default (std140)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">mat4</span> <span class="n">myPushConstant</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>You can also use &ldquo;base alignment&rdquo; for uniform buffer through an extension <code>VK_KHR_uniform_buffer_standard_layout</code>. This extension has gone into <code>core</code> as for Vulkan 1.2.</p>
+<pre tabindex="0"><code>layout(std430, set = 0, binding = 0) uniform MyUniforms {
+  float myUniform0;
+  vec2 myUniforms1;
+};
+</code></pre><h3 id="extended-aligment">Extended aligment</h3>
+<ol>
+<li>A scalar or vector type has an extended alignment equal to its base alignment.</li>
+<li>An array or structure type has an extended alignment equal to the largest extended alignment of any of its members, rounded up to a multiple of 16.</li>
+</ol>
+<p>So basicaly, extended alignment is like &ldquo;base alignment&rdquo; but with that weird rounding rule. Which actually changes everything!</p>
+<p>And &ldquo;extended alignment&rdquo; (aka std140) is the default for uniform buffers!</p>
+<p>Example:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">MyData</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">float</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">uniform</span> <span class="n">MyUniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">MyData</span> <span class="n">myData</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">float</span> <span class="n">y</span><span class="p">;</span> <span class="c1">// offset 16</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>In the previous example, eventhough the struct has only one float (due to the rounding rule) it takes the space of a full vec4!</p>
+<h3 id="relaxed-alignment">Relaxed alignment</h3>
+<p>It&rsquo;s a small improvement to &ldquo;base aligment&rdquo; (std430) introduced in Vulkan 1.1. You don&rsquo;t need to do anything special to use &ldquo;relaxed alignement&rdquo; is automatically applies is you intend to use std430 and are using Vulkan 1.1+.</p>
+<p>In &ldquo;base aligment&rdquo; if you had a struct with a vec3 followed by a float:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">MyData</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">vec3</span> <span class="n">abc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">float</span> <span class="n">d</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>The two variables would be packed together nicely as if the where a vec4. But, due to the alignment rules, that wouldn&rsquo;t be the case id the order is reversed:</p>
+<pre tabindex="0"><code>struct MyData {
+  float a;
+  vec3 bcd; // offset 16
+}
+</code></pre><p>Relaxed alignement addressed this precisely this issue. So the 2 variables are packed nicely in a vec4 as well. Just a small quality of life improvement.</p>
+<p>Links about memory layout in Vulkan:</p>
+<ul>
+<li><a href="https://docs.vulkan.org/guide/latest/shader_memory_layout.html">https://docs.vulkan.org/guide/latest/shader_memory_layout.html</a></li>
+<li><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout">https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout</a></li>
+<li><a href="https://www.reddit.com/r/vulkan/comments/wc0428/on_shader_memory_layout/">https://www.reddit.com/r/vulkan/comments/wc0428/on_shader_memory_layout/</a></li>
+<li><a href="https://stackoverflow.com/questions/38172696/should-i-ever-use-a-vec3-inside-of-a-uniform-buffer-or-shader-storage-buffer-o">https://stackoverflow.com/questions/38172696/should-i-ever-use-a-vec3-inside-of-a-uniform-buffer-or-shader-storage-buffer-o</a></li>
+<li><a href="https://fvcaputo.github.io/2019/02/06/memory-alignment.html">https://fvcaputo.github.io/2019/02/06/memory-alignment.html</a></li>
+</ul>
+<h2 id="pipelines">Pipelines</h2>
 
     <a href="/"> >> Home</a>
   </main>
