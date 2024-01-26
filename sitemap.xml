@@ -35,6 +35,9 @@
     <loc>https://tuket.github.io/notes/graphics/fs_quad_trick/</loc>
     <lastmod>2021-03-19T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</loc>
+    <lastmod>2021-02-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://tuket.github.io/notes/asm/</loc>
     <lastmod>2021-02-10T00:00:00+00:00</lastmod>
   </url><url>
@@ -68,24 +71,6 @@
     <loc>https://tuket.github.io/posts/2018-09-03-send-gmail-cpp/</loc>
     <lastmod>2018-09-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://tuket.github.io/categories/</loc>
-    <lastmod>2018-08-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tuket.github.io/categories/example/</loc>
-    <lastmod>2018-08-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tuket.github.io/tags/markdown/</loc>
-    <lastmod>2018-08-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tuket.github.io/post/2018-08-30-markdown-guide/</loc>
-    <lastmod>2018-08-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tuket.github.io/post/</loc>
-    <lastmod>2018-08-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tuket.github.io/tags/</loc>
-    <lastmod>2018-08-30T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</loc>
     <lastmod>2017-09-30T00:00:00+00:00</lastmod>
   </url><url>
@@ -98,26 +83,19 @@
     <loc>https://tuket.github.io/posts/2017-05-13-unity-brdf-plotter/</loc>
     <lastmod>2017-05-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://tuket.github.io/categories/bullhorn/</loc>
-    <lastmod>2012-04-23T00:00:00+00:00</lastmod>
+    <loc>https://tuket.github.io/categories/</loc>
   </url><url>
-    <loc>https://tuket.github.io/post/hacker-with-horn/</loc>
-    <lastmod>2012-04-23T00:00:00+00:00</lastmod>
+    <loc>https://tuket.github.io/categories/example/</loc>
   </url><url>
-    <loc>https://tuket.github.io/categories/blog/</loc>
-    <lastmod>2012-03-12T00:00:00+00:00</lastmod>
+    <loc>https://tuket.github.io/tags/markdown/</loc>
   </url><url>
-    <loc>https://tuket.github.io/post/2015-07-23-command-line-awesomeness/</loc>
-    <lastmod>2012-03-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tuket.github.io/tags/html/</loc>
-    <lastmod>2012-03-12T00:00:00+00:00</lastmod>
+    <loc>https://tuket.github.io/posts/2018-08-30-markdown-guide/</loc>
   </url><url>
     <loc>https://tuket.github.io/notes/</loc>
   </url><url>
-    <loc>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</loc>
-  </url><url>
     <loc>https://tuket.github.io/portfolio/</loc>
+  </url><url>
+    <loc>https://tuket.github.io/tags/</loc>
   </url><url>
     <loc>https://tuket.github.io/posts/2015-02-20-test-markdown/</loc>
   </url>

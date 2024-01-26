@@ -171,6 +171,20 @@ Displacing vertices of a sphere What we are going to do is super easy.</descript
     </item>
     
     <item>
+      <title>Markdown Guide (modified)</title>
+      <link>https://tuket.github.io/posts/2018-08-30-markdown-guide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/posts/2018-08-30-markdown-guide/</guid>
+      <description>An h1 header Paragraphs are separated by a blank line.
+2nd paragraph. Italic, bold, and monospace. Itemized lists look like:
+this one that one the other one Note that &amp;mdash; not considering the asterisk &amp;mdash; the actual text content starts at 4-columns in.
+Block quotes are written like so.
+They can span multiple paragraphs, if you like.
+Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., &amp;ldquo;it&amp;rsquo;s all in chapters 12&amp;ndash;14&amp;rdquo;).</description>
+    </item>
+    
+    <item>
       <title>Test markdown</title>
       <link>https://tuket.github.io/posts/2015-02-20-test-markdown/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

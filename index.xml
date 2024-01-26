@@ -89,6 +89,17 @@ Draw a single triangle that covers the whole screen (the triangle will extend ou
     </item>
     
     <item>
+      <title>Partial custom mipmap levels in OpenGL</title>
+      <link>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</link>
+      <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</guid>
+      <description>OpenGL allows to automatically create mipmaps for you with glGenMipmap.
+But you can upload you own mipmaps using glTexImage2D.
+for(int lvl = 0; numMips; lvl++) { glTexImage2D(GL_TEXTURE_2D, lvl, GL_RGBA8, texture[lvl].w, texture[lvl].h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture[lvl].data ); } However, I wanted to provide my own images only for the upper levels, and let OpenGL compute the rest. This is possible to do because OpenGL will generate mipmaps starting from GL_TEXTURE_BASE_LEVEL. So you can do it like this:</description>
+    </item>
+    
+    <item>
       <title>ELF64 hello world</title>
       <link>https://tuket.github.io/notes/asm/elf64_hello_world/</link>
       <pubDate>Wed, 10 Feb 2021 00:00:00 +0000</pubDate>
@@ -207,20 +218,6 @@ SSL You cannot simply connect to GMail through a regular socket. You will have t
     </item>
     
     <item>
-      <title>Markdown Guide (modified)</title>
-      <link>https://tuket.github.io/post/2018-08-30-markdown-guide/</link>
-      <pubDate>Thu, 30 Aug 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://tuket.github.io/post/2018-08-30-markdown-guide/</guid>
-      <description>An h1 header Paragraphs are separated by a blank line.
-2nd paragraph. Italic, bold, and monospace. Itemized lists look like:
-this one that one the other one Note that &amp;mdash; not considering the asterisk &amp;mdash; the actual text content starts at 4-columns in.
-Block quotes are written like so.
-They can span multiple paragraphs, if you like.
-Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., &amp;ldquo;it&amp;rsquo;s all in chapters 12&amp;ndash;14&amp;rdquo;).</description>
-    </item>
-    
-    <item>
       <title>Sorting multiple vectors in the same way using C&#43;&#43; variadic templates</title>
       <link>https://tuket.github.io/posts/2017-09-30-sorting-multiple-vectors-in-the-same-way-using-c-variadic-templates/</link>
       <pubDate>Sat, 30 Sep 2017 00:00:00 +0000</pubDate>
@@ -264,25 +261,17 @@ Displacing vertices of a sphere What we are going to do is super easy.</descript
     </item>
     
     <item>
-      <title>Hacker with Bullhorn</title>
-      <link>https://tuket.github.io/post/hacker-with-horn/</link>
-      <pubDate>Mon, 23 Apr 2012 00:00:00 +0000</pubDate>
+      <title>Markdown Guide (modified)</title>
+      <link>https://tuket.github.io/posts/2018-08-30-markdown-guide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://tuket.github.io/post/hacker-with-horn/</guid>
-      <description>Hacker with bullhorn: &amp;ldquo;Save your money! Accept one of our free tanks! It is invulnerable, and can drive across rocks and swamps at ninety miles an hour while getting a hundred miles to the gallon!&amp;rdquo;
-Prospective station wagon buyer: &amp;ldquo;I know what you say is true&amp;hellip;but&amp;hellip;er&amp;hellip;I don&amp;rsquo;t know how to maintain a tank!&amp;rdquo;
-Bullhorn: &amp;ldquo;You don&amp;rsquo;t know how to maintain a station wagon either!&amp;rdquo;
-Buyer: &amp;ldquo;But this dealership has mechanics on staff.</description>
-    </item>
-    
-    <item>
-      <title>Command Line Awesomeness</title>
-      <link>https://tuket.github.io/post/2015-07-23-command-line-awesomeness/</link>
-      <pubDate>Mon, 12 Mar 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://tuket.github.io/post/2015-07-23-command-line-awesomeness/</guid>
-      <description>This crud is called HTML (HyperText Markup Language) and it is basically a very simple programming language instructing your web browser how to draw a page on a screen. Anyone can learn HTML and many people do. The important thing is that no matter what splendid multimedia web pages they might represent, HTML files are just telegrams.
-When Ronald Reagan was a radio announcer, he used to call baseball games by reading the terse descriptions that trickled in over the telegraph wire and were printed out on a paper tape.</description>
+      <guid>https://tuket.github.io/posts/2018-08-30-markdown-guide/</guid>
+      <description>An h1 header Paragraphs are separated by a blank line.
+2nd paragraph. Italic, bold, and monospace. Itemized lists look like:
+this one that one the other one Note that &amp;mdash; not considering the asterisk &amp;mdash; the actual text content starts at 4-columns in.
+Block quotes are written like so.
+They can span multiple paragraphs, if you like.
+Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., &amp;ldquo;it&amp;rsquo;s all in chapters 12&amp;ndash;14&amp;rdquo;).</description>
     </item>
     
     <item>
@@ -293,17 +282,6 @@ When Ronald Reagan was a radio announcer, he used to call baseball games by read
       <guid>https://tuket.github.io/notes/</guid>
       <description>These are my notes on different topics
 Graphics Assembly </description>
-    </item>
-    
-    <item>
-      <title>Partial custom mipmap levels in OpenGL</title>
-      <link>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://tuket.github.io/notes/graphics/partial_custom_mip_levels/</guid>
-      <description>OpenGL allows to automatically create mipmaps for you with glGenMipmap.
-But you can upload you own mipmaps using glTexImage2D.
-for(int lvl = 0; numMips; lvl++) { glTexImage2D(GL_TEXTURE_2D, lvl, GL_RGBA8, texture[lvl].w, texture[lvl].h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture[lvl].data ); } However, I wanted to provide my own images only for the upper levels, and let OpenGL compute the rest. This is possible to do because OpenGL will generate mipmaps starting from GL_TEXTURE_BASE_LEVEL. So you can do it like this:</description>
     </item>
     
     <item>
