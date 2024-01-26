@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Vulkan render loop synchronization | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        
+        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/notes/">~/notes</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<br>
+<div class="article-meta">
+<h1><span class="title">Vulkan render loop synchronization</span></h1>
+<p class="date" style="margin-top: 1px;margin-bottom: 1px">2024/01/24</h2>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>One of the things I struggled the most when learning Vulkan is the <strong>render loop synchronization</strong>. For over 2 years I&rsquo;ve been revisiting the topic many times. Every time, I though I had finally understood how to do it properly. But I see different approaches implemented in tutorials and examples out there, and some of them are buggy or sub-optimal.</p>
+<p>In this post I wanted to write down the way I settled with. This way is correct (no validation errors), optimal (no unnecessary stalls), and simple.</p>
+<h2 id="be-ready-to-support-triple-buffering">Be ready to support triple buffering</h2>
+<p><strong>Double buffering</strong> is a good tradeoff for memory and performance. You just have two images: while one is being presented, you can keep drawing into the other. You could have more images in the swapchain in order to increase the amount of work that can be done concurrently, but many programs don&rsquo;t need to go as far as using triple buffering.</p>
+<p>Still, when you create a swapchain in Vulkan, you provide a <strong>minimum</strong> amount of images to be created (<code>VkSwapchainCreateInfoKHR::minImageCount</code>). However, the driver could give you <strong>more</strong> images than you requested. So you need to be able to support that case. It has actually happened to me that I had some code that would work in Nvidia, but when I tested it in another AMD card it would crash because I wasn&rsquo;t expecting anything other than double buffering.</p>
+<h2 id="vkacquirenextimagekhr-doesnt-block-as-you-might-expect">vkAcquireNextImageKHR doesn&rsquo;t block as you might expect</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// Provided by VK_KHR_swapchain
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">VkResult</span> <span class="nf">vkAcquireNextImageKHR</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">VkDevice</span>                                    <span class="n">device</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">VkSwapchainKHR</span>                              <span class="n">swapchain</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint64_t</span>                                    <span class="n">timeout</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">VkSemaphore</span>                                 <span class="n">semaphore</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">VkFence</span>                                     <span class="n">fence</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">uint32_t</span><span class="o">*</span>                                   <span class="n">pImageIndex</span><span class="p">);</span>
+</span></span></code></pre></div><p>You see the <code>timeout</code> parameter?</p>
+<p>This is what the documentation says about it:</p>
+<pre tabindex="0"><code>timeout specifies how long the function waits, in nanoseconds, if no image is available
+</code></pre><p>The function will return <code>VK_TIMEOUT</code> if the image could not be acquired within <code>timeout</code> nanoseconds. If <code>timeout</code> is 0, we try to acquire the image immediately. And the function returns <code>VK_NOT_READY</code>, if the images could not be acquired at the time we call the function. If the image is successfully acquired the function returns <code>VK_SUCCESS</code>, and the index of the image is returned though the <code>pImageIndex</code> parameter.</p>
+<p>Here is the confusing part: even if the function successfully returns after some waiting/blocking on the CPU, that doesn&rsquo;t mean you can already draw to the image. The presentation engine could be still reading that image. You would also need to wait on the <code>fence</code> for that. So why the timeout if we need to wait on the fence anyways? The function returns when it <strong>knows</strong> what the index of the next image will be. But that doesn&rsquo;t mean you can use that image yet. For that you can use the <code>fence</code> and <code>semaphore</code> parameters.</p>
+<h2 id="use-at-least-one-command-buffer-for-each-swapchain-image">Use at least one command buffer for each swapchain image</h2>
+<p>The whole point of double buffering (or N-buffering) is to be able to draw consecutive frames in parallel. If your swapchain has N images, you should have at least one <strong>command buffer</strong> for each of them. You could have N+1 command buffers, if you would like to start recording commands for the next frame while we are rendering the N previous frames. But I don&rsquo;t think this is necessary.</p>
+<p>It&rsquo;s also worth considering using a <strong>command pool</strong> per swapchain image. This way you can reset the whole pool every frame. It should be quicker that resetting individual command buffers.</p>
+<h2 id="use-a-fences-to-limit-the-fps">Use a fences to limit the FPS</h2>
+<p>If the frames are quick to render, you will eventually run out of images to render to. All images will be queued in the presentation engine. Use fences to perform idle waiting.</p>
+<h2 id="pseudo-code">pseudo code</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">VkSemaphore</span> <span class="n">semaphore_imageAvailable</span><span class="p">[</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span> <span class="c1">// notice the +1 (even if all N frames have been presented, we would like to query what will be the next image index)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">u32</span> <span class="n">semaphoreInd_imageAvailable</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">VkSemaphore</span> <span class="n">semaphore_drawFinished</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">VkFence</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">VkCommandBuffer</span> <span class="n">cmdBuffers_draw</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="c1">// render loop
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">u32</span> <span class="n">scImgInd</span> <span class="o">=</span> <span class="n">acquireNextImage</span><span class="p">(</span><span class="n">semaphore_imageAvailable</span><span class="p">[</span><span class="n">semaphoreInd_imageAvailable</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="c1">// wait until drawing to scImgInd has finished. We need to wait because, otherwise, cmdBuffers_draw[scImgInd] would be in use
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">VkFence</span><span class="o">&amp;</span> <span class="n">fence</span> <span class="o">=</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vkWaitForFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">,</span> <span class="n">VK_FALSE</span><span class="p">,</span> <span class="n">u64</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vkResetFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">cmdBuffer_draw</span> <span class="o">=</span> <span class="n">cmdBuffers_draw</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">reset</span><span class="p">(</span><span class="n">cmdBuffer_draw</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">begin</span><span class="p">(</span><span class="n">cmdBuffer_draw</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// record cmds
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">end</span><span class="p">(</span><span class="n">cmdBuffer_draw</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">submit</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">cmdBuffer</span> <span class="o">=</span> <span class="n">cmdBuffer_draw</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">waitSemaphore</span> <span class="o">=</span> <span class="n">semaphore_imageAvailable</span><span class="p">[</span><span class="n">semaphoreInd_imageAvailable</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">signalSemaphore</span> <span class="o">=</span> <span class="n">semaphore_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">signalFence</span> <span class="o">=</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">present</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">waitSemaphore</span> <span class="o">=</span> <span class="n">semaphore_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">imageInd</span> <span class="o">=</span> <span class="n">scImgInd</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">semaphoreInd_imageAvailable</span> <span class="o">=</span> <span class="p">(</span><span class="n">semaphoreInd_imageAvailable</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This is essentially the same approach used in <a href="https://github.com/KhronosGroup/Vulkan-Samples/blob/27d1c21f82be8c580349d3e19f85891be504eea5/samples/api/hello_triangle/hello_triangle.cpp">Khronos Examples</a>. But they use a semaphore recycle queue, instead of using our simple [N+1] array.</p>
+<h2 id="delay-the-destruction-of-resources-n-frames">Delay the destruction of resources N frames</h2>
+<p>Whenever you need to destroy a Vulkan resource, you need to keep in mind it might still be in use by previous frames!</p>
+<p>Without the need of any extra synchronization primitives, we can leverage our render loop to do safely destroy resources.</p>
+<p>Every time we want to destroy a resource, we will instead push the resource into a per-frame queue. After N frames, we can be sure that the resource is not being used by any cmd buffer.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ... 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VkBuffer</span><span class="o">&gt;</span> <span class="n">toDestroy_buffers</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VkBuffer</span><span class="o">&gt;</span> <span class="n">toDestroy_images</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="c1">// wait until drawing to scImgInd has finished
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">VkFence</span><span class="o">&amp;</span> <span class="n">fence</span> <span class="o">=</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vkWaitForFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">,</span> <span class="n">VK_FALSE</span><span class="p">,</span> <span class="n">u64</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vkResetFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">buffer</span> <span class="p">:</span> <span class="n">toDestroy_buffers</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="n">destroy</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">image</span> <span class="p">:</span> <span class="n">toDestroy_images</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="n">destroy</span><span class="p">(</span><span class="n">image</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div>
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+
+
+<script src="https://utteranc.es/client.js"
+  repo="tuket/tuket.github.io"
+  issue-term="pathname"
+  label="💬💬"
+  theme="gruvbox-dark"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://stackoverflow.com/users/1754322/tuket"><img src="/img/stack_overflow_icon.svg" width="18" height="18" alt="stackOverflow"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"></a> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+

@@ -6,7 +6,17 @@
     <description>Recent content in Posts on tuket</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 24 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://tuket.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vulkan render loop synchronization</title>
+      <link>https://tuket.github.io/posts/2024-01-24-vulkan-loop/</link>
+      <pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://tuket.github.io/posts/2024-01-24-vulkan-loop/</guid>
+      <description>One of the things I struggled the most when learning Vulkan is the render loop synchronization. For over 2 years I&amp;rsquo;ve been revisiting the topic many times. Every time, I though I had finally understood how to do it properly. But I see different approaches implemented in tutorials and examples out there, and some of them are buggy or sub-optimal.
+In this post I wanted to write down the way I settled with.</description>
+    </item>
+    
     <item>
       <title>ImGui gamma correction in OpenGL and Vulkan</title>
       <link>https://tuket.github.io/posts/2022-11-24-imgui-gamma/</link>
