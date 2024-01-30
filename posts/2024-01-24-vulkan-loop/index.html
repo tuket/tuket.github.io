@@ -154,7 +154,7 @@ onload='renderMathInElement(document.body);'></script>
 </span></span></code></pre></div><p>This is essentially the same approach used in <a href="https://github.com/KhronosGroup/Vulkan-Samples/blob/27d1c21f82be8c580349d3e19f85891be504eea5/samples/api/hello_triangle/hello_triangle.cpp">Khronos Examples</a>. But they use a semaphore recycle queue, instead of using our simple [N+1] array.</p>
 <h2 id="delay-the-destruction-of-resources-n-frames">Delay the destruction of resources N frames</h2>
 <p>Whenever you need to destroy a Vulkan resource, you need to keep in mind it might still be in use by previous frames!</p>
-<p>Without the need of any extra synchronization primitives, we can leverage our render loop to do safely destroy resources.</p>
+<p>Without the need of any extra synchronization primitives, we can leverage our render loop to destroy resources safely.</p>
 <p>Every time we want to destroy a resource, we will instead push the resource into a per-frame queue. After N frames, we can be sure that the resource is not being used by any cmd buffer.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// ... 
@@ -173,9 +173,11 @@ onload='renderMathInElement(document.body);'></script>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">buffer</span> <span class="p">:</span> <span class="n">toDestroy_buffers</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">])</span>
 </span></span><span class="line"><span class="cl">        <span class="n">destroy</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">toDestroy_buffers</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">].</span><span class="n">clear</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">image</span> <span class="p">:</span> <span class="n">toDestroy_images</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">])</span>
 </span></span><span class="line"><span class="cl">        <span class="n">destroy</span><span class="p">(</span><span class="n">image</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">toDestroy_images</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">].</span><span class="n">clear</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">//...
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
