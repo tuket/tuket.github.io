@@ -22,7 +22,7 @@
       
       <li class="pull-left ">
         
-        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
       </li>
       
       
@@ -93,7 +93,7 @@ onload='renderMathInElement(document.body);'></script>
 <p>I have made an algorithm that outputs the result, in a couple of flat arrays(vertices and indices), in a single pass, so it&rsquo;s faster and very cache friendly. It also has the advantage that you can query the exact memory you need to allocate.</p>
 <p><a href="https://gist.github.com/tuket/32951040ca0a4b31395175ee3e075d46">https://gist.github.com/tuket/32951040ca0a4b31395175ee3e075d46</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// example usage
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">generateIcosphere</span><span class="p">(</span><span class="n">numVerts</span><span class="p">,</span> <span class="n">numInds</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="n">vec3</span><span class="o">*</span> <span class="n">verts</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vec3</span><span class="p">[</span><span class="n">numVerts</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="kt">int</span><span class="o">*</span> <span class="n">inds</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">numInds</span><span class="p">];</span>

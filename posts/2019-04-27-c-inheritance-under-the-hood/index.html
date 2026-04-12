@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>C&#43;&#43; inheritance under the hood | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/notes/">~/notes</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<br>
+<div class="article-meta">
+<h1><span class="title">C++ inheritance under the hood</span></h1>
+<p class="date" style="margin-top: 1px;margin-bottom: 1px">2019/04/27</h2>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>In this post we are going to explore how C++ inheritance works.</p>
+<p>We will cover things like the memory layout of the objects, vtables, different types of casting and virtual inheritance.</p>
+<h1 id="simple-inheritance">Simple inheritance</h1>
+<p>Let&rsquo;s start with the simplest kind of inheritance: only one parent, no virtual functions, no virtual inheritance.</p>
+<img src="{{site.baseurl}}/img/simple.svg" alt="simple.svg" width="100"/>
+<p>This would be the code.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Button</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p><a href="https://ideone.com/2Wj0uo">Try code</a></p>
+<p>And this would be the memory layout of an instance of <code>Button</code></p>
+<table>
+    <tr>
+        <th>bytes</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>widget</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>button</td>
+    </tr>
+</table>
+<p>As we can see, the memory layout of <code>Button</code> objects is just an aggregation of the member variables.</p>
+<p>In this case, inheritance is not very different from composition:</p>
+<table>
+    <tr>
+        <th>Button</th>
+    </tr>
+    <tr>
+        <td>
+        <table>
+            <tr>
+                <th>Widget</th>
+            </tr>
+            <tr>
+                <td>widget</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>button</td>
+    </tr>
+</table>
+<h3 id="static_cast">static_cast</h3>
+<p>In this case, <code>static_cast</code> does nothing.</p>
+<p>We can test it with the following code.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Button</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Button</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">*</span> <span class="n">w</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">w</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span></code></pre></div><p><a href="https://ideone.com/r8epPG">Try code</a></p>
+<p>In my PC the output is:</p>
+<pre tabindex="0"><code>0x555555767e70
+0x555555767e70
+</code></pre><p>That makes sense since, in the table we have seen before, <code>Widget</code> was at the begining of <code>Button</code>.</p>
+<h3 id="dynamic_cast">dynamic_cast</h3>
+<p><code>dynamic_cast</code> is for casting downwards.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">*</span> <span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Button</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">Button</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+</span></span></code></pre></div><p>But in this case it&rsquo;s not possible because <code>Widget</code> is not polymorphic. So it fails to compile.</p>
+<pre tabindex="0"><code>error: cannot dynamic_cast ‘w’ (of type ‘struct Widget*’) to type ‘struct Button*’ (source type is not polymorphic)
+</code></pre><p><a href="https://ideone.com/v2HCYO">Try code</a></p>
+<p>This is because there are no virtual functions in <code>Widget</code>. We will explore polymorphic classes later.</p>
+<h1 id="multiple-inheritance">Multiple inheritance</h1>
+<p>One class derives from multiple classes:</p>
+<img src="{{site.baseurl}}/img/multi.svg" alt="multi.svg" width="32%"/>
+<pre tabindex="0"><code>struct A { int a; };
+struct B { int b; };
+struct C { int c; };
+ 
+struct ABC
+    : public A
+    , public B
+    , public C
+{
+    int abc;
+};
+</code></pre><p><a href="https://ideone.com/3KRjJq">Try code</a></p>
+<p>The memory layout of ABC would come out as:</p>
+<table>
+    <tr>
+        <th>bytes</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>a</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>b</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>c</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>abc</td>
+    </tr>
+</table>
+<p>Again, like in the the case of simple inheritance, this works just like composition.</p>
+<table>
+    <tr>
+        <th>ABC</th>
+    </tr>
+    <tr>
+        <td>
+        <table>
+            <tr>
+                <th>A</th>
+            </tr>
+            <tr>
+                <td>a</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <table>
+            <tr>
+                <th>B</th>
+            </tr>
+            <tr>
+                <td>b</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <table>
+            <tr>
+                <th>C</th>
+            </tr>
+            <tr>
+                <td>c</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>abc</td>
+    </tr>
+</table>
+<h3 id="static_cast-1">static_cast</h3>
+<p>For multiple inheritance, <code>static_cast</code> gets a bit more interesting.</p>
+<p>Lets run this code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">ABC</span><span class="o">*</span> <span class="n">abc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ABC</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;abc: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">abc</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">A</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">A</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">abc</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;a: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">B</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">B</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">abc</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;b: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">C</span><span class="o">*</span> <span class="n">c</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">C</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">abc</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;c: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span></code></pre></div><p><a href="https://ideone.com/k7hkWc">(Test code)</a></p>
+<p>The output is:</p>
+<pre tabindex="0"><code>abc: 0x56242a01ac20
+a: 0x56242a01ac20
+b: 0x56242a01ac24
+c: 0x56242a01ac28
+</code></pre><p>They are different now. That means that, in order to perform the cast, we need to increment the pointer. The offset is known at compile time.</p>
+<p>If you like assembly, have a look at the generated machine code:
+<a href="https://godbolt.org/z/bl-Ckj">(compiler explorer)</a></p>
+<p>You will see that, for the first cast, it&rsquo;s not incrementing anything. However, for the other two casts, it&rsquo;s adding <code>4</code> and <code>8</code>.</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+
+
+<script src="https://utteranc.es/client.js"
+  repo="tuket/tuket.github.io"
+  issue-term="pathname"
+  label="💬💬"
+  theme="gruvbox-dark"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://stackoverflow.com/users/1754322/tuket"><img src="/img/stack_overflow_icon.svg" width="18" height="18" alt="stackOverflow"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"></a> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+

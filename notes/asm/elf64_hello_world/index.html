@@ -22,7 +22,7 @@
       
       <li class="pull-left ">
         
-        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
       </li>
       
       
@@ -142,7 +142,7 @@ onload='renderMathInElement(document.body);'></script>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
 </span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp">
 </span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="kt">uint8_t</span> <span class="n">u8</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="kt">uint16_t</span> <span class="n">u16</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">u32</span><span class="p">;</span>
@@ -150,49 +150,49 @@ onload='renderMathInElement(document.body);'></script>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">Elf64Header</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">elfMagicNumber</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span> <span class="c1">// &#34;\x7fELF&#34;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u8</span> <span class="n">bitAmount</span><span class="p">;</span> <span class="c1">// 1: 32-bit, 2: 64-bit
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u8</span> <span class="n">endian</span><span class="p">;</span> <span class="c1">// 1: little endian, 2: big endian
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u8</span> <span class="n">elfVersion1</span><span class="p">;</span> <span class="c1">// must be 1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u8</span> <span class="n">osAbi</span><span class="p">;</span> <span class="c1">// 0: System V, 3: Linux
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u8</span> <span class="n">abiVersion</span><span class="p">;</span> <span class="c1">// in statically linked executables has no effect. In dynamically linked executables, if OS_ABI==3, defines dynamic linker features
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u8</span> <span class="n">unused</span><span class="p">[</span><span class="mi">7</span><span class="p">];</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">u8</span> <span class="n">bitAmount</span><span class="p">;</span> <span class="c1">// 1: 32-bit, 2: 64-bit
+</span></span></span><span class="line"><span class="cl">    <span class="n">u8</span> <span class="n">endian</span><span class="p">;</span> <span class="c1">// 1: little endian, 2: big endian
+</span></span></span><span class="line"><span class="cl">    <span class="n">u8</span> <span class="n">elfVersion1</span><span class="p">;</span> <span class="c1">// must be 1
+</span></span></span><span class="line"><span class="cl">    <span class="n">u8</span> <span class="n">osAbi</span><span class="p">;</span> <span class="c1">// 0: System V, 3: Linux
+</span></span></span><span class="line"><span class="cl">    <span class="n">u8</span> <span class="n">abiVersion</span><span class="p">;</span> <span class="c1">// in statically linked executables has no effect. In dynamically linked executables, if OS_ABI==3, defines dynamic linker features
+</span></span></span><span class="line"><span class="cl">    <span class="n">u8</span> <span class="n">unused</span><span class="p">[</span><span class="mi">7</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">objFileType</span><span class="p">;</span> <span class="c1">// ET_EXEC=2, ET_DYN=3 (DYN is used for PIC)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u16</span> <span class="n">arch</span><span class="p">;</span> <span class="c1">// 0x3E: AMD64
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u32</span> <span class="n">elfVersion2</span><span class="p">;</span> <span class="c1">// the elf version again, must be 1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">entryPointOffset</span><span class="p">;</span> <span class="c1">// entry point from where the process should start executing
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">phtOffset</span><span class="p">;</span> <span class="c1">// start of the program header table
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">shtOffset</span><span class="p">;</span> <span class="c1">// start of the section header table
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u32</span> <span class="n">processorFlags</span><span class="p">;</span> <span class="c1">// processor-specific flags
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u16</span> <span class="n">headerSize</span><span class="p">;</span> <span class="c1">// the size of this header
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u16</span> <span class="n">phtEntrySize</span><span class="p">;</span> <span class="c1">// the size of one PHT entry
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u16</span> <span class="n">numPhtEntries</span><span class="p">;</span> <span class="c1">// num entries in the PHT
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u16</span> <span class="n">shtEntrySize</span><span class="p">;</span> <span class="c1">// the size of one SHT entry
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u16</span> <span class="n">numShtEntries</span><span class="p">;</span> <span class="c1">// num entries in the SHT
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u16</span> <span class="n">namesSht</span><span class="p">;</span> <span class="c1">// the index of the SHT entry that contains the section names
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span> <span class="n">Elf64Header</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">arch</span><span class="p">;</span> <span class="c1">// 0x3E: AMD64
+</span></span></span><span class="line"><span class="cl">    <span class="n">u32</span> <span class="n">elfVersion2</span><span class="p">;</span> <span class="c1">// the elf version again, must be 1
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">entryPointOffset</span><span class="p">;</span> <span class="c1">// entry point from where the process should start executing
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">phtOffset</span><span class="p">;</span> <span class="c1">// start of the program header table
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">shtOffset</span><span class="p">;</span> <span class="c1">// start of the section header table
+</span></span></span><span class="line"><span class="cl">    <span class="n">u32</span> <span class="n">processorFlags</span><span class="p">;</span> <span class="c1">// processor-specific flags
+</span></span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">headerSize</span><span class="p">;</span> <span class="c1">// the size of this header
+</span></span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">phtEntrySize</span><span class="p">;</span> <span class="c1">// the size of one PHT entry
+</span></span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">numPhtEntries</span><span class="p">;</span> <span class="c1">// num entries in the PHT
+</span></span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">shtEntrySize</span><span class="p">;</span> <span class="c1">// the size of one SHT entry
+</span></span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">numShtEntries</span><span class="p">;</span> <span class="c1">// num entries in the SHT
+</span></span></span><span class="line"><span class="cl">    <span class="n">u16</span> <span class="n">namesSht</span><span class="p">;</span> <span class="c1">// the index of the SHT entry that contains the section names
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">Elf64Header</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">Elf64_PhtEntry</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">u32</span> <span class="n">segmentType</span><span class="p">;</span> <span class="c1">// 1: loadable segment, 2: dynamic linking info
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u32</span> <span class="n">flags</span><span class="p">;</span> <span class="c1">// segment-dependent flags (position for 64-bit structure)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">offset</span><span class="p">;</span> <span class="c1">// offset of the segment in the file image
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">vaddr</span><span class="p">;</span> <span class="c1">// virtual address of the segment in memory
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">paddr</span><span class="p">;</span> <span class="c1">// on systems where the physical address is relevant, reserved for the physical address of the segment
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">sizeInFile</span><span class="p">;</span> <span class="c1">// size of the segment in the file image
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">sizeInMem</span><span class="p">;</span> <span class="c1">// size of the segment in memory
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">u64</span> <span class="n">align</span><span class="p">;</span> <span class="c1">// 0 and 1 specify no alignment. Otherwise should be a positive, integral power of 2, with &#39;vaddr&#39; equating &#39;offset&#39; modulus &#39;p_align&#39;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span> <span class="n">Elf64_PhtEntry</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">u32</span> <span class="n">flags</span><span class="p">;</span> <span class="c1">// segment-dependent flags (position for 64-bit structure)
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">offset</span><span class="p">;</span> <span class="c1">// offset of the segment in the file image
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">vaddr</span><span class="p">;</span> <span class="c1">// virtual address of the segment in memory
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">paddr</span><span class="p">;</span> <span class="c1">// on systems where the physical address is relevant, reserved for the physical address of the segment
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">sizeInFile</span><span class="p">;</span> <span class="c1">// size of the segment in the file image
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">sizeInMem</span><span class="p">;</span> <span class="c1">// size of the segment in memory
+</span></span></span><span class="line"><span class="cl">    <span class="n">u64</span> <span class="n">align</span><span class="p">;</span> <span class="c1">// 0 and 1 specify no alignment. Otherwise should be a positive, integral power of 2, with &#39;vaddr&#39; equating &#39;offset&#39; modulus &#39;p_align&#39;
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">Elf64_PhtEntry</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// https://godbolt.org/z/vh8aEe
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">asmCode</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">asmCode</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="mh">0xb8</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="c1">// mov rax, 1 (syscall: write)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="mh">0xbf</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="c1">// mov rdi, 1 (stdout)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="mh">0x48</span><span class="p">,</span> <span class="mh">0x8d</span><span class="p">,</span> <span class="mh">0x35</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="c1">// lea rsi, [rel helloStr]
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="mh">0xba</span><span class="p">,</span> <span class="mh">0x07</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="c1">// mov rex, sizeof(helloStr)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="mh">0x0f</span><span class="p">,</span> <span class="mh">0x05</span><span class="p">,</span> <span class="c1">// syscall
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="mh">0xb8</span><span class="p">,</span> <span class="mh">0x3c</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="c1">// mov eax, 3c
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="mh">0x48</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xff</span><span class="p">,</span> <span class="c1">// xor rdi, rdi
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="mh">0x0f</span><span class="p">,</span> <span class="mh">0x05</span> <span class="c1">// syscall
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl">    <span class="mh">0xbf</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="c1">// mov rdi, 1 (stdout)
+</span></span></span><span class="line"><span class="cl">    <span class="mh">0x48</span><span class="p">,</span> <span class="mh">0x8d</span><span class="p">,</span> <span class="mh">0x35</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="c1">// lea rsi, [rel helloStr]
+</span></span></span><span class="line"><span class="cl">    <span class="mh">0xba</span><span class="p">,</span> <span class="mh">0x07</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="c1">// mov rex, sizeof(helloStr)
+</span></span></span><span class="line"><span class="cl">    <span class="mh">0x0f</span><span class="p">,</span> <span class="mh">0x05</span><span class="p">,</span> <span class="c1">// syscall
+</span></span></span><span class="line"><span class="cl">    <span class="mh">0xb8</span><span class="p">,</span> <span class="mh">0x3c</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="c1">// mov eax, 3c
+</span></span></span><span class="line"><span class="cl">    <span class="mh">0x48</span><span class="p">,</span> <span class="mh">0x31</span><span class="p">,</span> <span class="mh">0xff</span><span class="p">,</span> <span class="c1">// xor rdi, rdi
+</span></span></span><span class="line"><span class="cl">    <span class="mh">0x0f</span><span class="p">,</span> <span class="mh">0x05</span> <span class="c1">// syscall
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">char</span> <span class="n">helloStr</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="sc">&#39;h&#39;</span><span class="p">,</span> <span class="sc">&#39;e&#39;</span><span class="p">,</span> <span class="sc">&#39;l&#39;</span><span class="p">,</span> <span class="sc">&#39;l&#39;</span><span class="p">,</span> <span class="sc">&#39;o&#39;</span><span class="p">,</span> <span class="sc">&#39;\n&#39;</span><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -203,10 +203,10 @@ onload='renderMathInElement(document.body);'></script>
 </span></span><span class="line"><span class="cl">    <span class="n">Elf64Header</span> <span class="n">header</span> <span class="o">=</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">elfMagicNumber</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x7F</span><span class="p">,</span> <span class="sc">&#39;E&#39;</span><span class="p">,</span> <span class="sc">&#39;L&#39;</span><span class="p">,</span> <span class="sc">&#39;F&#39;</span><span class="p">},</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">bitAmount</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="c1">// 64-bit
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="c1">// little endian
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">elfVersion1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">endian</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="c1">// little endian
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">elfVersion1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">osAbi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">// system V
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">abiVersion</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">abiVersion</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">unused</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">objFileType</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">arch</span> <span class="o">=</span> <span class="mh">0x3E</span><span class="p">,</span>
@@ -220,17 +220,17 @@ onload='renderMathInElement(document.body);'></script>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">numPhtEntries</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">shtEntrySize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">numShtEntries</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">//1,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">namesSht</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">namesSht</span> <span class="o">=</span> <span class="mi">0</span>
 </span></span><span class="line"><span class="cl">    <span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">Elf64_PhtEntry</span> <span class="n">phtEntry</span> <span class="o">=</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">segmentType</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="c1">// 1: PT_LOAD
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="mh">0x7</span><span class="p">,</span> <span class="c1">// 0: execute, 1: write, 2: read
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="mh">0x7</span><span class="p">,</span> <span class="c1">// 0: execute, 1: write, 2: read
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">            <span class="c1">// this one is quite weird. It looks like the entire executable need to be inside
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// some segment, including the Elf64Header
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">vaddr</span> <span class="o">=</span> <span class="mh">0x400000</span><span class="p">,</span> <span class="c1">// linux likes this address for x64
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">.</span><span class="n">paddr</span> <span class="o">=</span> <span class="mh">0x400000</span><span class="p">,</span>
+</span></span></span><span class="line"><span class="cl">            <span class="c1">// some segment, including the Elf64Header
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">vaddr</span> <span class="o">=</span> <span class="mh">0x400000</span><span class="p">,</span> <span class="c1">// linux likes this address for x64
+</span></span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">paddr</span> <span class="o">=</span> <span class="mh">0x400000</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">sizeInFile</span> <span class="o">=</span> <span class="n">fileSize</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">sizeInMem</span> <span class="o">=</span> <span class="n">fileSize</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">align</span> <span class="o">=</span> <span class="mh">0x1000</span>
@@ -255,26 +255,26 @@ onload='renderMathInElement(document.body);'></script>
 </blockquote>
 <p>And our executable layout looks like this:</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:left"></th>
-<th style="text-align:left"></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Elf64Header</td>
-<td style="text-align:left">64 bytes</td>
-</tr>
-<tr>
-<td style="text-align:left">Program Header Entry</td>
-<td style="text-align:left">56 bytes</td>
-</tr>
-<tr>
-<td style="text-align:left">Program Segment</td>
-<td style="text-align:left">&hellip;</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: left"></th>
+          <th style="text-align: left"></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Elf64Header</td>
+          <td style="text-align: left">64 bytes</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Program Header Entry</td>
+          <td style="text-align: left">56 bytes</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Program Segment</td>
+          <td style="text-align: left">&hellip;</td>
+      </tr>
+  </tbody>
 </table>
 <p>So shouldn&rsquo;t <code>p_offset</code> be 64+56=120?</p>
 <p>That would make sense but there is a little problem.

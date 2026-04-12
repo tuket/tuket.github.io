@@ -22,7 +22,7 @@
       
       <li class="pull-left ">
         
-        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
       </li>
       
       
@@ -98,8 +98,11 @@ onload='renderMathInElement(document.body);'></script>
         <li><a href="#renderpass-compatibility">RenderPass compatibility</a></li>
       </ul>
     </li>
-    <li><a href="#memory-availability-and-visibility">Memory availability and visibility</a></li>
-    <li><a href="#links">Links</a></li>
+    <li><a href="#memory-availability-and-visibility">Memory availability and visibility</a>
+      <ul>
+        <li><a href="#links-about-memory-availability-and-visibility">Links about memory availability and visibility</a></li>
+      </ul>
+    </li>
     <li><a href="#images">Images</a></li>
     <li><a href="#pipeline-layout">Pipeline layout</a></li>
     <li><a href="#descriptor-set-layout">Descriptor set layout</a></li>
@@ -109,9 +112,15 @@ onload='renderMathInElement(document.body);'></script>
         <li><a href="#base-alignment">Base alignment</a></li>
         <li><a href="#extended-aligment">Extended aligment</a></li>
         <li><a href="#relaxed-alignment">Relaxed alignment</a></li>
+        <li><a href="#links-about-memory-layout">Links about memory layout:</a></li>
       </ul>
     </li>
     <li><a href="#pipelines">Pipelines</a></li>
+    <li><a href="#pipeline-barriers">Pipeline Barriers</a>
+      <ul>
+        <li><a href="#links-about-pipeline-barriers">Links about Pipeline Barriers</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
@@ -291,9 +300,8 @@ compatible render pass.</p>
     </svg>
   
 </div>
-<h2 id="links">Links</h2>
+<h3 id="links-about-memory-availability-and-visibility">Links about memory availability and visibility</h3>
 <ul>
-<li><a href="https://stackoverflow.com/questions/49237258/what-is-the-pipeline-a-vkcmdpipelinebarrier-applies-to">What is the pipeline a vkCmdPipelineBarrier applies to?</a></li>
 <li><a href="https://stackoverflow.com/questions/61342339/host-write-guarantees-source-access-scope">Host write guarantees source access scope</a></li>
 <li><a href="https://themaister.net/blog/2019/08/14/yet-another-blog-explaining-vulkan-synchronization/">Yet another blog explaining Vulkan synchronization - Maister</a></li>
 <li><a href="https://stackoverflow.com/questions/40577047/vulkan-vkcmdpipelinebarrier-for-data-coherence">Vulkan: vkCmdPipelineBarrier for data coherence</a></li>
@@ -434,7 +442,7 @@ In GLSL you also need to enable the corresponding extension:</p>
   vec3 bcd; // offset 16
 }
 </code></pre><p>Relaxed alignement addressed this precisely this issue. So the 2 variables are packed nicely in a vec4 as well. Just a small quality of life improvement.</p>
-<p>Links about memory layout in Vulkan:</p>
+<h3 id="links-about-memory-layout">Links about memory layout:</h3>
 <ul>
 <li><a href="https://docs.vulkan.org/guide/latest/shader_memory_layout.html">https://docs.vulkan.org/guide/latest/shader_memory_layout.html</a></li>
 <li><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout">https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout</a></li>
@@ -443,6 +451,14 @@ In GLSL you also need to enable the corresponding extension:</p>
 <li><a href="https://fvcaputo.github.io/2019/02/06/memory-alignment.html">https://fvcaputo.github.io/2019/02/06/memory-alignment.html</a></li>
 </ul>
 <h2 id="pipelines">Pipelines</h2>
+<h2 id="pipeline-barriers">Pipeline Barriers</h2>
+<h3 id="links-about-pipeline-barriers">Links about Pipeline Barriers</h3>
+<ul>
+<li><a href="https://www.rastergrid.com/blog/gpu-tech/2026/03/vulkan-memory-barriers-and-image-layouts-explained/">Vulkan memory barriers and image layouts explained - Rastergrid</a></li>
+<li><a href="https://themaister.net/blog/2019/08/14/yet-another-blog-explaining-vulkan-synchronization/">Yet another blog explaining Vulkan synchronization - Maister</a></li>
+<li><a href="https://stackoverflow.com/questions/49237258/what-is-the-pipeline-a-vkcmdpipelinebarrier-applies-to">What is the pipeline a vkCmdPipelineBarrier applies to?</a></li>
+<li><a href="https://stackoverflow.com/questions/40577047/vulkan-vkcmdpipelinebarrier-for-data-coherence">Vulkan: vkCmdPipelineBarrier for data coherence</a></li>
+</ul>
 
     <a href="/"> >> Home</a>
   </main>

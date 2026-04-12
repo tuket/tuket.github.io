@@ -22,7 +22,7 @@
       
       <li class="pull-left ">
         
-        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
       </li>
       
       
@@ -136,7 +136,7 @@ onload='renderMathInElement(document.body);'></script>
 </ol>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">socket</span><span class="p">.</span><span class="n">set_verify_callback</span><span class="p">(</span><span class="n">make_verbose_verification</span><span class="p">(</span>
 </span></span><span class="line"><span class="cl">    <span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">rfc2818_verification</span><span class="p">(</span><span class="n">serverUrl</span><span class="p">)));</span>  <span class="c1">// this is so we can print certificate stuff
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="p">.</span><span class="n">set_verify_mode</span><span class="p">(</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">verify_peer</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">socket</span><span class="p">.</span><span class="n">handshake</span><span class="p">(</span><span class="n">SslSocket</span><span class="o">::</span><span class="n">client</span><span class="p">);</span>

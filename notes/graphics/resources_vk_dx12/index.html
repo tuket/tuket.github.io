@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Resources in Vulkan vs DX12 | tuket</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/syntax.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/posts/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="/notes/">~/notes</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/portfolio/">~/portfolio</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/rss</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+crossorigin="anonymous"
+onload='renderMathInElement(document.body);'></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+<a href="../">&lt;&lt; ../</a>
+<div class="article-meta">
+<h1><span class="title">Resources in Vulkan vs DX12</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#creating-resources">Creating resources</a>
+      <ul>
+        <li><a href="#creating-resources-in-vulkan">Creating resources in Vulkan</a></li>
+        <li><a href="#creating-resources-in-dx12">Creating resources in DX12</a></li>
+      </ul>
+    </li>
+    <li><a href="#assigning-memory-to-resources">Assigning Memory to Resources</a>
+      <ul>
+        <li><a href="#assigning-memory-to-resources---vulkan">Assigning Memory to Resources - Vulkan</a></li>
+        <li><a href="#assigning-memory-to-resources---dx12">Assigning Memory to Resources - DX12</a></li>
+      </ul>
+    </li>
+    <li><a href="#shaders">Shaders</a></li>
+    <li><a href="#shader-stages">Shader Stages</a></li>
+    <li><a href="#pipelines">Pipelines</a></li>
+    <li><a href="#resource-layouts">Resource layouts</a></li>
+    <li><a href="#resource-views">Resource Views</a></li>
+    <li><a href="#descriptors">Descriptors</a>
+      <ul>
+        <li><a href="#sampler">Sampler</a></li>
+        <li><a href="#compare-sampler">Compare Sampler</a></li>
+        <li><a href="#combined-image-sampler">Combined Image-Sampler</a></li>
+        <li><a href="#uniform-buffer">Uniform Buffer</a></li>
+        <li><a href="#uniform-texel-buffer">Uniform Texel Buffer</a></li>
+        <li><a href="#storage-texel-buffer">Storage Texel Buffer</a></li>
+        <li><a href="#sampled-image">Sampled Image</a></li>
+        <li><a href="#storage-image">Storage Image</a></li>
+        <li><a href="#storage-buffer">Storage Buffer</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+
+<div class="content-wrapper">
+  <main>
+    <p><strong>Vulkan</strong> and <strong>DX12</strong> are the first two modern explicit APIs that came to market. <br>
+They have more or less the same functionality and, as HW provides new capabilities, the APIs add extensions to take advantage of them.</p>
+<p>Now, despite both APIs can do more or less the same, the interfaces are quite different. <br>
+Also, the differences in terminology can get confusing: sometimes they use different words to refer to the same thing, sometimes they use the same word to refer to different things, sometimes there is no exact equivalent.</p>
+<div class="row" align="middle">
+  <img src="https://www.vulkan.org/user/themes/vulkan/images/logo/vulkan-logo.svg" width=300 style="vertical-align:middle">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/DirectX_12_Ultimate.png" width=200 style="vertical-align:middle">
+</div>
+<p>I have been learning Vulkan for several years and, due to my work, now I&rsquo;ve been recently exposed to DX12 too (although I&rsquo;m a total noob in DX12 TBH). <br>
+When you are learning something new, it&rsquo;s always helpful to find analogies and similarities to something you already know. <br>
+For example, when I was reading about root signatures in DX12 I was having trouble understanding them until my brain clicked: hold on, this is actually very similar to <code>VkDescriptorSetLayout</code>! And then I was able to hold it in my brain more easily.</p>
+<p>So, in this post, I wanted to lay out those similarities (and differences) I found between Vulkan and DX12 in relation to <strong>resources</strong>. <br>
+I write this down to help others in the same situation: you already know one API; you want to learn the other. And also, since I&rsquo;m very forgetful, I&rsquo;m sure I will find this post helpful myself in the future :)</p>
+<p>Disclaimer: <br>
+I&rsquo;m a noob in DX12, so please forgive me for any mistakes (and please let me know in the comments so I can fix them).</p>
+<h2 id="creating-resources">Creating resources</h2>
+<p>The most basic resources are: buffers, images and samplers. <br>
+Samplers are pretty similar in both APIs, so I will only talk about them briefly.</p>
+<h3 id="creating-resources-in-vulkan">Creating resources in Vulkan</h3>
+<p>In Vulkan, you have <strong>VkBuffer</strong> and <strong>VkImage</strong> as two separate objects. <br>
+There are two functions for creating them: <a href="https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateBuffer.html">vkCreateBuffer</a> and <a href="https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateImage.html">vkCreateImage</a>.</p>
+<p>The creation of a VkBuffer or a VkImage doesn&rsquo;t assign memory to these resources. <br>
+The memory needs to be assigned explicitly. We will cover this in chapter <a href="#assigning-memory-to-resources">Assigning Memory to Resources</a>.</p>
+<h3 id="creating-resources-in-dx12">Creating resources in DX12</h3>
+<p>In DX12, <code>ID3D12Resource</code> is used for both buffers and textures. <br>
+The same functions can be used to create buffers and images:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommittedresource">ID3D12Device::CreateCommittedResource</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource">ID3D12Device::CreatePlacedResource</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createreservedresource">ID3D12Device::CreateReservedResource</a></li>
+</ul>
+<p>As you can see, we don&rsquo;t have separate functions for creating buffers and images, like in Vulkan. <br>
+In DX12, whether we are creating a buffer or an image is determined by the <a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc">D3D12_RESOURCE_DESC</a>. More precisely, <code>D3D12_RESOURCE_DESC::Dimension</code> is an enum (<a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_dimension">D3D12_RESOURCE_DIMENSION</a>):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">enum</span> <span class="n">D3D12_RESOURCE_DIMENSION</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">D3D12_RESOURCE_DIMENSION_UNKNOWN</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="n">D3D12_RESOURCE_DIMENSION_BUFFER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="n">D3D12_RESOURCE_DIMENSION_TEXTURE1D</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="n">D3D12_RESOURCE_DIMENSION_TEXTURE2D</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="n">D3D12_RESOURCE_DIMENSION_TEXTURE3D</span> <span class="o">=</span> <span class="mi">4</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="p">;</span>
+</span></span></code></pre></div><p>Notice that in <strong>DX12</strong> the term &ldquo;texture&rdquo; is used instead of &ldquo;image&rdquo;. <br>
+In <strong>Vulkan</strong>, the word &ldquo;texture&rdquo; is used sometimes to refer to an image that is going to be sampled. But there is no formal definition of &ldquo;texture&rdquo; in the Vulkan spec. <br>
+In <strong>GLSL</strong>, the keyword &ldquo;texture&rdquo; is a <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/texture.xhtml">built-in function</a> that allows sampling an image+sampler.</p>
+<p>As we just saw, there are 3 different functions to create buffers and images in DX12: this has to do with the way memory is assigned to the resource. We will cover that in chapter <a href="#assigning-memory-to-resources">Assigning Memory to Resources</a>.</p>
+<h2 id="assigning-memory-to-resources">Assigning Memory to Resources</h2>
+<p>Here there are important differences in terminology.</p>
+<p>In <strong>Vulkan</strong>, the term used for a memory chunk allocation is &ldquo;<strong>memory</strong>&rdquo; and the handle type is <code>VkDeviceMemory</code>.<br>
+In <strong>DX12</strong>, we call it &ldquo;<strong>heap</strong>&rdquo; and the handle type is <code>ID3D12Heap</code>.</p>
+<p>Now, in Vulkan, the term &ldquo;heap&rdquo; means a different thing.<br>
+In <strong>Vulkan</strong>, a <strong>heap</strong> refers to actual <strong>physical</strong> memory sources. The number of heaps and their properties depend on the particular system. Some of the most important properties of the different heaps are: whether the memory attached to CPU or GPU memory (could be both), whether it&rsquo;s visible by the CPU or the GPU (again could be both), the size, and the cache coherency model.</p>
+<p>In <strong>DX12</strong>, there is no exact equivalent to what they call &ldquo;heap&rdquo; in Vulkan. The closest thing would be <a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_heap_properties">D3D12_HEAP_PROPERTIES</a>, which is passed as a parameter to <a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommittedresource">CreateCommittedResource</a>`</p>
+<h3 id="assigning-memory-to-resources---vulkan">Assigning Memory to Resources - Vulkan</h3>
+<p>You need to query how much memory is needed by the resource, allocate a <code>VkDeviceMemory</code>, and assign a memory range to the resource with <a href="https://docs.vulkan.org/refpages/latest/refpages/source/vkBindBufferMemory.html">vkBindBufferMemory</a> and <a href="https://docs.vulkan.org/refpages/latest/refpages/source/vkBindImageMemory.html">vkBindImageMemory</a>. <br>
+Efficient implementations won&rsquo;t allocate a <code>VkDeviceMemory</code> for each resource&hellip; instead, they will allocate large chunks of memory and assign subranges of the chunk to multiple resources. As you can imagine, GPU memory management in Vulkan can be complicated, so people like to use the <a href="https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator">VMA library</a>. VMA is a general-purpose GPU memory allocator for Vulkan; it should work pretty well for most applications, but you can always make your own allocation strategies to get better performance.</p>
+<h3 id="assigning-memory-to-resources---dx12">Assigning Memory to Resources - DX12</h3>
+<p>In DX12, the memory used by a resource can be assigned automatically if you use <code>CreateCommittedResource</code>. <br>
+In this regard, DX12 is much simpler than Vulkan, as you can just forget about memory management for resources.</p>
+<p>However, if you want, you can go into <em>hardcore</em> mode and do manual memory management, just like in Vulkan (although it&rsquo;s recommended to start with the easy way and then optimize incrementally if needed). <br>
+Instead of calling <code>CreateCommittedResource</code>, you would call <a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createheap">CreateHeap</a>, and then assign sub-ranges to your resources using <a href="https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createplacedresource">CreatePlacedResource</a>. <br>
+Read this tutorial if you want to learn more about manual memory management in DX12 (Ctrl+F: &ldquo;Advanced Model&rdquo;): <a href="https://logins.github.io/graphics/2020/07/31/DX12ResourceHandling.html">https://logins.github.io/graphics/2020/07/31/DX12ResourceHandling.html</a> <br>
+There is the DX12 equivalent of VMA: <a href="https://gpuopen.com/d3d12-memory-allocator">https://gpuopen.com/d3d12-memory-allocator</a>.</p>
+<h2 id="shaders">Shaders</h2>
+<p>In this section we will see how resources are used in shaders.</p>
+<p>Vulkan and DX12 don&rsquo;t recognize high-level shader code such as GLSL or HLSL; you need to provide them IR (intermediate representation) bytecode.<br>
+<strong>Vulkan</strong> uses <strong>SPIR-V</strong> (Standard Portable Intermediate Representation - Vulkan).<br>
+<strong>DX12</strong> uses <strong>DXIL</strong> (DirectX Intermediate Language).</p>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>Vulkan</th>
+          <th>DX12</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>High-Level Language</td>
+          <td>GLSL</td>
+          <td>HLSL</td>
+      </tr>
+      <tr>
+          <td>Low-Level IR</td>
+          <td>SPIR-V</td>
+          <td>DXIL</td>
+      </tr>
+  </tbody>
+</table>
+<p>Even though GLSL and HLSL are respectively the official high-level languages for Vulkan and DX12, it&rsquo;s not mandatory to use them.</p>
+<p>Both GLSL and HLSL can be compiled to SPIR-V.</p>
+<ul>
+<li>GLSL can be converted to SPIR-V using:
+<ul>
+<li><a href="https://github.com/KhronosGroup/glslang">glslang</a>: it&rsquo;s the official compiler from Khronos. It comes with the Vulkan SDK.</li>
+<li><a href="https://github.com/google/shaderc">glslc</a>: it&rsquo;s a wrapper around glslang made by Google. <code>glslc</code> is the name of the CLI tool, and <code>shaderc</code> is the name of the library. They are also included in the Vulkan SDK. I prefer glslc over glslang as I find the interface easier to use, but both are perfectly valid.</li>
+</ul>
+</li>
+<li>HLSL can be converted to SPIR-V using:
+<ul>
+<li><a href="https://github.com/microsoft/DirectXShaderCompiler">DXC</a>: it&rsquo;s the official HLSL compiler from Microsoft. It comes with the Vulkan SDK. DXC can convert to both SPIR-V and DXIL.</li>
+<li>You will see that glslang has a HLSL parser, but it&rsquo;s not complete. Just use DXC.</li>
+</ul>
+</li>
+</ul>
+<p>Having so many HW vendors, operating systems, and graphics APIs adds a lot of work for developers. Companies usually try to impose their own thing, and they want to be the ones that define &ldquo;the standard&rdquo;, so we end up with many different competing standards.</p>
+<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimgs.xkcd.com%2Fcomics%2Fstandards_2x.png&f=1&nofb=1&ipt=15ac6913ef4ee525444c310c196cb8e45dd6bf9458ece7878e4a7569dae51949" width=480>
+<p>In the realm of shaders, however, something wonderful (and surprising) happened: SPIR-V has become a true standard.</p>
+<p>The first thing that contributed to this miracle is <a href="https://github.com/KhronosGroup/SPIRV-Cross">SPIRV-Cross</a>. SPIRV-Cross is a tool/library made by Khronos that can convert SPIR-V to other languages such as GLSL, MSL, and HLSL.</p>
+<p>SPIR-V contributed to the following scenario:</p>
+<ul>
+<li>Take any high-level shader language you like: GLSL, HLSL, MSL, Slang</li>
+<li>Compile it to SPIR-V</li>
+<li>Convert the SPIR-V to anything!</li>
+</ul>
+<p>The second thing that stablished SPIR-V is&hellip; when Microsoft anounced that they will be officially supporting SPIR-V in DX12: <a href="https://devblogs.microsoft.com/directx/directx-adopting-spir-v/">https://devblogs.microsoft.com/directx/directx-adopting-spir-v/</a></p>
+<p>
+  <img src="https://www.khronos.org/assets/uploads/apis/2024-spirv-language-ecosystem.jpg" alt="spirv ecosystem">
+</p>
+<p>So now SPIR-V is the standard interchange format.</p>
+<p>Ok, so SPIR-V is very cool, but you won&rsquo;t be programming directly in SPIR-V because it&rsquo;s designed for tools and drivers, not for humans.</p>
+<p>In this post we will cover how resources are used in GLSL and HLSL.</p>
+<h2 id="shader-stages">Shader Stages</h2>
+<p>Here&rsquo;s a table that matches the names of the shader stages in Vulkan and DX12.</p>
+<table>
+<tr>
+  <th>Vulkan</th>
+  <th>DX12</th>
+</tr>
+<tr>
+  <th colspan="2">Graphics Pipeline</th>
+</tr>
+<tr>
+  <td>Vertex Shader</td>
+  <td>Vertex Shader</td>
+</tr>
+<tr>
+  <td>Fragment Shader</td>
+  <td>Pixel Shader</td>
+</tr>
+<tr>
+  <td>Geometry Shader</td>
+  <td>Geometry Shader</td>
+</tr>
+<tr>
+  <td>Tessellation Control Shader</td>
+  <td>Hull Shader</td>
+</tr>
+<tr>
+  <td>Tessellation Evaluation Shader</td>
+  <td>Domain Shader</td>
+</tr>
+<tr>
+  <th colspan="2">Compute Pipeline</th>
+</tr>
+<tr>
+  <td>Compute Shader</td>
+  <td>Compute Shader</td>
+</tr>
+<tr>
+  <th colspan="2">Mesh Shading Pipeline</th>
+</tr>
+<tr>
+  <td>Task Shader</td>
+  <td>Amplification Shader</td>
+</tr>
+<tr>
+  <td>Mesh Shader</td>
+  <td>Mesh Shader</td>
+</tr>
+</table>
+<h2 id="pipelines">Pipelines</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Vulkan</th>
+          <th>DX12</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Pipeline</td>
+          <td>PSO (Pipeline State Object)</td>
+      </tr>
+      <tr>
+          <td>PipelineLayout</td>
+          <td>Root Signature</td>
+      </tr>
+      <tr>
+          <td>set</td>
+          <td>space</td>
+      </tr>
+      <tr>
+          <td>binding</td>
+          <td>slot</td>
+      </tr>
+  </tbody>
+</table>
+<p>Shaders are used to create Pipeline objects. <br>
+Pipeline objects contain state that shaders need to know: the format of the vertex buffers, configuration of the rasterizer, configuration of color blending, configuration of the depth testing, the resources that can be bound, and <a href="https://docs.vulkan.org/refpages/latest/refpages/source/VkGraphicsPipelineCreateInfo.html">much much more</a></p>
+<p>In <strong>Vulkan</strong> they use the term &ldquo;<strong>pipeline</strong>&rdquo;; in <strong>DX12</strong> they use the term &ldquo;<strong>PSO</strong>&rdquo; (pipeline state object).</p>
+<h2 id="resource-layouts">Resource layouts</h2>
+<p>For creating a pipeline object, a <strong>resource layout</strong> needs to be specified. <br>
+The resource layout defines what resources can be bound to a pipeline, and what stages can access each of the bound resources. <br>
+In <strong>Vulkan</strong> they use the term <a href="https://docs.vulkan.org/refpages/latest/refpages/source/vkCreatePipelineLayout.html">&ldquo;pipeline layout&rdquo;</a>; in <strong>DX12</strong> they use the term <a href="https://learn.microsoft.com/en-us/windows/win32/direct3d12/root-signatures-overview">&ldquo;root signature&rdquo;</a>.</p>
+<p>Resource layouts are organized in groups. <br>
+In <strong>Vulkan</strong>, these groups are called <a href="https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html">&ldquo;descriptor sets&rdquo;</a>. <br>
+In <strong>DX12</strong>, these groups are called <a href="https://learn.microsoft.com/en-us/windows/win32/direct3d12/resource-binding-in-hlsl">&ldquo;spaces&rdquo;</a>.</p>
+<p>Inside each of these groups (set/space), we have slots for our resource descriptors. <br>
+We will cover descriptors extensively later. For now, you can just think of them as pointers to resources with some metadata. <br>
+In <strong>Vulkan</strong> they use the term &ldquo;<strong>binding</strong>&rdquo; for the individual descriptor slots; in <strong>DX12</strong>, they just call it &ldquo;<strong>slot</strong>&rdquo;.</p>
+<p>The criteria for grouping descriptors into the same set/space is update frequency. <br>
+For example, you could have 3 different sets:</p>
+<ul>
+<li>Per scene: with resources common to all objects of the same scene. Here we could have the lights, the environment map, or the shadowmaps.</li>
+<li>Per material: there might be multiple objects with the same material. They would share the albedo texture, the normal map, etc.</li>
+<li>Per object: the transformation matrices for each object.</li>
+</ul>
+<p>This way, we only need to rebind the descriptor set that changes (better performance and code organization).</p>
+<p>Sets/spaces and bindings/slots can be assigned arbitrary numbers, meaning you don&rsquo;t need to assign them consecutive numbers. Example resource layout:</p>
+<table>
+  <tr>
+    <th>Set</th>
+    <th>Binding</th>
+    <th>Name</th>
+  </tr>
+  <tr>
+    <td rowspan="3" scope="rowgroup">2</td>
+    <td scope="row">1</td>
+    <td>lightsBuffer</td>
+  </tr>
+  <tr>
+    <td scope="row">5</td>
+    <td>shadowMap</td>
+  </tr>
+  <tr>
+    <td scope="row">2</td>
+    <td>environmentMap</td>
+  </tr>
+  <tr>
+    <td rowspan="3" scope="rowgroup">5</td>
+    <td scope="row">0</td>
+    <td>albedoTexture</td>
+  </tr>
+  <tr>
+    <td scope="row">1</td>
+    <td>normalTexture</td>
+  </tr>
+  <tr>
+    <td scope="row">2</td>
+    <td>pbrUniformBuffer</td>
+  </tr>
+</table>
+<p>Also, as you can see, you can have the same binding number in two different sets/spaces. For example, lightsBuffer and normalTexture both have binding number &ldquo;1&rdquo;.</p>
+<p>Here&rsquo;s an important distinction: in DX12 the slots are per resource type, meaning you can have a texture in slot 0 and, at the same time, a buffer in slot 0. In Vulkan that won&rsquo;t work; slots are shared for all resource types. <br>
+Check out the following shader code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// GLSL</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">set</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">uniform</span> <span class="n">texture2D</span> <span class="n">u_albedoTexture</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">set</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">uniform</span> <span class="n">sampler</span> <span class="n">u_albedoSampler</span><span class="p">;</span> 
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// HLSL</span>
+</span></span><span class="line"><span class="cl"><span class="kt">Texture2D</span><span class="o">&lt;</span><span class="kt">float4</span><span class="o">&gt;</span> <span class="n">u_albedoTexture</span> <span class="o">:</span> <span class="k">register</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">space0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">SamplerState</span> <span class="n">u_albedoSampler</span> <span class="o">:</span> <span class="k">register</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">space0</span><span class="p">);</span>
+</span></span></code></pre></div><p>As you can see, in GLSL the sampler and the texture have different binding slots.<br>
+In HLSL, both the texture and the sampler can be assigned to slot 0, because they are different types of resource. <br>
+Also, you can see that, in HLSL, each type of resource has a different prefix:</p>
+<ul>
+<li>s: sampler</li>
+<li>t: texture</li>
+<li>b: constant buffer</li>
+<li>u: unordered access buffer</li>
+</ul>
+<h2 id="resource-views">Resource Views</h2>
+<p>Buffers and images can have <strong>views</strong> to them. <br>
+Views can:</p>
+<ol>
+<li>Reference parts of a resource.</li>
+<li>Interpret the resource with a different format.</li>
+</ol>
+<p>For example, you could have an ImageView that references a specific mip within an Image. <br>
+Or you could have a buffer view that references a range of bytes within a buffer, and interprets them as RGB8 colors.</p>
+<p>In Vulkan, we have just two types of view:</p>
+<ul>
+<li>VkBufferView</li>
+<li>VkImageView</li>
+</ul>
+<p>In DX12, we have all these:</p>
+<ul>
+<li>Constant Buffer View (CBV)</li>
+<li>Shader Resource View (SRV)</li>
+<li>Unordered Access View (UAV)</li>
+<li>Render Target View (RTV)</li>
+<li>Depth Stencil View (DSV)</li>
+<li>Vertex Buffer View (VBV)</li>
+<li>Index Buffer View (IBV)</li>
+<li>Stream Output View (SOV)</li>
+</ul>
+<p>When I initially learned about all the resource view types in DX12, I thought it was unnecessarily complex. Why so many types of view? <br>
+It turns out that the term &ldquo;view&rdquo; doesn&rsquo;t mean exactly the same in Vulkan and DX12. <br>
+In DX12, the concepts of &ldquo;view&rdquo; and &ldquo;descriptor&rdquo; are tied together.</p>
+<h2 id="descriptors">Descriptors</h2>
+<p>Descriptors are handles that can be bound to the slots of resource sets. <br>
+Descriptors are lightweight objects that reference the resources we want to bind to pipelines/shaders.</p>
+<p>In <strong>Vulkan</strong>, views and descriptors are two completely separate things. <br>
+Descriptors don&rsquo;t reference buffers/images directly; descriptors reference views, and the view references the buffer/image.</p>
+<p>In <strong>DX12</strong>, views and descriptors are closely related. <br>
+Views can be used directly as descriptors. That&rsquo;s why in DX12 there are so many types of view: the view has information about how the resource is used, so it can be used as a descriptor.</p>
+<p>These are the <a href="https://docs.vulkan.org/refpages/latest/refpages/source/VkDescriptorType.html">types of descriptor</a> in <strong>Vulkan</strong>:</p>
+<ul>
+<li><strong>Sampler</strong>: can be used to sample an image.</li>
+<li><strong>Combined Image-Sampler</strong>: combines a sampled <strong>image</strong>, and a <strong>sampler</strong> into the same descriptor (Vulkan exclusive)</li>
+<li><strong>Sampled Image</strong>: an <strong>image</strong> that can be sampled using a sampler.</li>
+<li><strong>Storage Image</strong>: an <strong>image</strong> that can be used to load/store data in precise integer texel coordinates. It doesn&rsquo;t require the use of a sampler.</li>
+<li><strong>Uniform Texel Buffer</strong>: a read-only <strong>buffer</strong> that can be used in the shader like a 1D image with a given format.</li>
+<li><strong>Storage Texel Buffer</strong>: like a Uniform Texel Buffer, but can be written.</li>
+<li><strong>Uniform Buffer</strong>: a read-only buffer (usually small) interpreted as a collection of values of different types. Has limitations in size, which enables them to be stored in fast, specific-purpose, memory banks.</li>
+<li><strong>Storage Buffer</strong>: general purpose read/write buffer, with arbitrary type, and arbitrary size.</li>
+<li><strong>Input Attachment</strong>: read-only image from previous render sub-passes (Vulkan exclusive). In Vulkan you can specify the sub-passes involved in a render pass, and the dependencies between them. This explicitness allows optimizations in tiled renderers (usually found in smartphones and other low-power devices). In DX12, since it&rsquo;s designed for desktop and XBOX, they don&rsquo;t have anything similar. As such, Vulkan is more complicated and verbose in this regard, and has been criticized for it. In response to that criticism, Vulkan made the <a href="https://docs.vulkan.org/samples/latest/samples/extensions/dynamic_rendering/README.html">dynamic rendering</a> extension, which provides a simpler API. With this extension you can simplify your renderer if your application doesn&rsquo;t need to run on tiled HW.</li>
+</ul>
+<p>In Vulkan and GLSL, the term &ldquo;uniform&rdquo; denotes that a binding is read-only.</p>
+<p>These are the <a href="https://learn.microsoft.com/en-us/windows/win32/direct3d12/descriptors-overview">types of descriptor</a> in <strong>DX12</strong>:</p>
+<ul>
+<li>Constant Buffer View (<strong>CBV</strong>): fast read-only buffer, with space limitations.</li>
+<li>Shader Resource View (<strong>SRV</strong>): read-only buffer or image.</li>
+<li>Unordered Access View (<strong>UAV</strong>): read/write buffer or image.</li>
+<li><strong>Sampler</strong>: can be used to sample a texture.</li>
+</ul>
+<p>As you can see, in DX12 there is a peculiar overlap between descriptors and views. For example:</p>
+<ul>
+<li>Constant Buffer View (CBV) is both a view and a descriptor.</li>
+<li>Sampler is a descriptor, but not a view.</li>
+<li>Index Buffer View (IBV) is a view, but not a descriptor.</li>
+</ul>
+<p>The following table tries to match the descriptor types in Vulkan/DX12, and how they are used in GLSL/HLSL. <br>
+After the table, there will be more detailed discussion.</p>
+<p></p>
+<table>
+<tr>
+  <td> DX12<br>descriptor<br>type </td>
+  <td> Vulkan<br>descriptor<br>type </td>
+  <td> HLSL </td>
+  <td> GLSL </td>
+</tr>
+<!----- SAMPLER ---------->
+<tr>
+  <td> sampler </td>
+  <td> sampler </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">SamplerState</span> <span class="n">u_sampler</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">sampler</span> <span class="n">u_sampler</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- SHADOW SAMPLER ---------->
+<tr>
+  <td> sampler </td>
+  <td> sampler </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">SamplerComparisonState</span>
+</span></span><span class="line"><span class="cl"><span class="n">u_sampler</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">samplerShadow</span> <span class="n">u_sampler</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- COMBINED IMAGE-SAMPLER ---------->
+<tr>
+  <td> - </td>
+  <td> combined<br>image+sampler </td>
+<td> - </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">u_texture</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!------ CONSTANT BUFFER --------->
+<tr>
+  <td> CBV </td>
+  <td> Uniform<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="k">cbuffer</span> <span class="n">Uniforms</span> <span class="o">:</span>
+</span></span><span class="line"><span class="cl"><span class="k">register</span><span class="p">(...)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>or:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">Uniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">ConstantBuffer</span><span class="o">&lt;</span><span class="n">Uniforms</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">uniforms</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">Uniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>or:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">Uniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">uniforms</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!------ UNIFORM TEXEL BUFFER --------->
+<tr>
+  <td> SRV </td>
+  <td> Uniform<br>Texel<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">Buffer</span><span class="o">&lt;</span><span class="kt">float3</span><span class="o">&gt;</span> <span class="n">colors</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span> 
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">samplerBuffer</span> <span class="n">colors</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!------ STORAGE TEXEL BUFFER --------->
+<tr>
+  <td> UAV </td>
+  <td> Storage<br>Texel<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">RWBuffer</span><span class="o">&lt;</span><span class="kt">float3</span><span class="o">&gt;</span> <span class="n">colors</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span> 
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">imageBuffer</span> <span class="n">colors</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- SAMPLED IMAGE ---------->
+<tr>
+  <td> SRV </td>
+  <td> Sampled<br>Image </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">Texture2D</span> <span class="n">albedo</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span> 
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">texture2D</span> <span class="n">albedo</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- STORAGE IMAGE ---------->
+<tr>
+  <td> UAV </td>
+  <td> Storage<br>Image </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">RWTexture2D</span> <span class="n">albedo</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span> 
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">image2D</span> <span class="n">albedo</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- STRUCTURED BUFFER ---------->
+<tr>
+  <td> UAV </td>
+  <td> Storage<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">Particle</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">speed</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">RWStructuredBuffer</span><span class="o">&lt;</span><span class="n">Particle</span><span class="o">&gt;</span> <span class="n">particles</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span> 
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">Particle</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">vec4</span> <span class="n">position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">vec4</span> <span class="n">speed</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="p">...)</span>
+</span></span><span class="line"><span class="cl"><span class="n">buffer</span> <span class="n">Particles</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Particle</span> <span class="n">particles</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div></td>
+<!----- BYTE ADDESS BUFFER ---------->
+<tr>
+  <td> SRV </td>
+  <td> Storage<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">ByteAddressBuffer</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span> 
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="p">...)</span>
+</span></span><span class="line"><span class="cl"><span class="n">readonly</span> <span class="n">buffer</span> <span class="n">Data</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">uint</span> <span class="n">data</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- RW BYTE ADDESS BUFFER ---------->
+<tr>
+  <td> UAV </td>
+  <td> Storage<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="kt">RWByteAddressBuffer</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span> 
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="p">...)</span>
+</span></span><span class="line"><span class="cl"><span class="n">buffer</span> <span class="n">Data</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">uint</span> <span class="n">data</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- APPEND STRUCTURED BUFFER ---------->
+<tr>
+  <td> UAV </td>
+  <td> Storage<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="nb">AppendStructuredBuffer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">list</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ...</span>
+</span></span><span class="line"><span class="cl"><span class="n">list</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="n">X</span><span class="p">);</span>
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">buffer</span> <span class="n">List</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">elems</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">list</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ...</span>
+</span></span><span class="line"><span class="cl"><span class="n">list</span><span class="p">.</span><span class="n">elems</span><span class="p">[</span><span class="n">atomicAdd</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">X</span><span class="p">;</span>
+</span></span></code></pre></div></td>
+</tr>
+<!----- CONSUME STRUCTURED BUFFER ---------->
+<tr>
+  <td> UAV </td>
+  <td> Storage<br>Buffer </td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="nb">ConsumeStructuredBuffer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">list</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ...</span>
+</span></span><span class="line"><span class="cl"><span class="n">X</span> <span class="o">=</span> <span class="n">list</span><span class="p">.</span><span class="n">Consume</span><span class="p">();</span>
+</span></span></code></pre></div></td>
+<td>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">buffer</span> <span class="n">List</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">elems</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">list</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ...</span>
+</span></span><span class="line"><span class="cl"><span class="n">X</span> <span class="o">=</span> <span class="n">list</span><span class="p">.</span><span class="n">elems</span><span class="p">[</span><span class="n">atomicAdd</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="n">count</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</span></span></code></pre></div></td>
+</tr>
+</table>
+<p>I have deliberately skipped DX12&rsquo;s TextureBuffer/tbuffer: they are weird. They are basically the same as a constant buffer, but they are supposedly optimized for &ldquo;<a href="https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-constants">arbitrarily indexed data</a>&rdquo;. There is very <a href="https://computergraphics.stackexchange.com/a/12967/6172">little information</a> around about tbuffer; it doesn&rsquo;t look like people are using them.</p>
+<h3 id="sampler">Sampler</h3>
+<p>Sampler descriptors are fairly simple.
+In both APIs, these kinds of descriptors are handles that reference a sampler.</p>
+<p>In HLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declare sampler</span>
+</span></span><span class="line"><span class="cl"><span class="kt">SamplerState</span> <span class="n">u_sampler</span> <span class="o">:</span> <span class="k">register</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">space0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// use sampler</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float4</span> <span class="n">color</span> <span class="o">=</span> <span class="n">u_sampler</span><span class="p">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">myTexture</span><span class="p">,</span> <span class="n">uv</span><span class="p">);</span>
+</span></span></code></pre></div><p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declare sampler</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">sampler</span> <span class="n">u_sampler</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// use sampler</span>
+</span></span><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">color</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="k">sampler2D</span><span class="p">(</span><span class="n">myTexture</span><span class="p">,</span> <span class="n">u_sampler</span><span class="p">),</span> <span class="n">uv</span><span class="p">);</span>
+</span></span></code></pre></div><h3 id="compare-sampler">Compare Sampler</h3>
+<p>Compare samplers are used to fetch texels and compare them against a reference value.<br>
+It&rsquo;s commonly used in shadow mapping to figure out if a pixel is in shadow or not.<br>
+When the texture is sampled we get 1.0 if the comparison is true, and 0.0 if the comparison is false. <br>
+However, you can get values in between [0, 1] when using multiple samples (e.g when using linear filtering), then you get the percentage of comparisons that passed.</p>
+<p>In HLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="kt">SamplerComparisonState</span> <span class="n">u_sampler</span> <span class="o">:</span> <span class="k">register</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">space0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">visible</span> <span class="o">=</span> <span class="n">shadowMap</span><span class="p">.</span><span class="n">SampleCmpLevelZero</span><span class="p">(</span><span class="n">u_sampler</span><span class="p">,</span> <span class="n">uv</span><span class="p">,</span> <span class="n">referenceDepth</span><span class="p">);</span>
+</span></span></code></pre></div><p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">uniform</span> <span class="n">samplerShadow</span> <span class="n">u_sampler</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">float</span> <span class="n">visible</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="k">sampler2DShadow</span><span class="p">(</span><span class="n">shadowMap</span><span class="p">,</span> <span class="n">u_sampler</span><span class="p">),</span> <span class="k">vec3</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">referenceDepth</span><span class="p">));</span>
+</span></span></code></pre></div><h3 id="combined-image-sampler">Combined Image-Sampler</h3>
+<p>Combined image-samplers are exclusive to Vulkan.</p>
+<p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declare sampler</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span> <span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">u_texture</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// use sampler</span>
+</span></span><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">color</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">u_texture</span><span class="p">,</span> <span class="n">uv</span><span class="p">);</span>
+</span></span></code></pre></div><p>This also applies to shadow samplers:</p>
+<p>In GLSL, with combined image-sampler:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span> <span class="k">uniform</span> <span class="k">sampler2DShadow</span> <span class="n">u_shadowTex</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">float</span> <span class="n">visible</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">u_shadowTex</span><span class="p">,</span> <span class="k">vec3</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">referenceDepth</span><span class="p">));</span>
+</span></span></code></pre></div><h3 id="uniform-buffer">Uniform Buffer</h3>
+<p><strong>Uniform Buffer</strong> in Vulkan. <br>
+<strong>ConstantBuffer</strong> in DX12.</p>
+<p>A buffer that contains a set of constants that can be read from the shader. <br>
+Usually, these kind of buffers are limited in size. Keeping them small can allow them to be placed in local, small, fast-to-access memory types.</p>
+<p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">Uniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">AB</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span><span class="p">;</span>
+</span></span></code></pre></div><p>or:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(...)</span>
+</span></span><span class="line"><span class="cl"><span class="k">uniform</span> <span class="n">Uniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vec4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">uniforms</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">AB</span> <span class="o">=</span> <span class="n">uniforms</span><span class="p">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">uniforms</span><span class="p">.</span><span class="n">B</span><span class="p">;</span>
+</span></span></code></pre></div><p>In HLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="k">cbuffer</span> <span class="n">Uniforms</span> <span class="o">:</span>
+</span></span><span class="line"><span class="cl"><span class="k">register</span><span class="p">(...)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float4</span> <span class="n">AB</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span><span class="p">;</span>
+</span></span></code></pre></div><p>or:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">Uniforms</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">A</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">B</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">ConstantBuffer</span><span class="o">&lt;</span><span class="n">Uniforms</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">uniforms</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float4</span> <span class="n">AB</span> <span class="o">=</span> <span class="n">uniforms</span><span class="p">.</span><span class="n">A</span> <span class="o">+</span> <span class="n">uniforms</span><span class="p">.</span><span class="n">B</span><span class="p">;</span>
+</span></span></code></pre></div><p>Warning: in both APIs there are alignment rules that need to be taken into account. This applies to all kinds of buffers, but it&rsquo;s even more restrictive with uniforms buffers. I will not cover alignment rules here, as that could make it&rsquo;s own post.</p>
+<h3 id="uniform-texel-buffer">Uniform Texel Buffer</h3>
+<p><strong>Uniform Texel Buffer</strong>s, <a href="https://docs.vulkan.org/guide/latest/storage_image_and_texel_buffers.html#_texel_buffers">according to Vulkan</a>, allow to access buffers with texture-like operations in shaders. I think this definition is misleading. To me they are just 1D arrays, but with a fixed color format for it&rsquo;s elements.</p>
+<p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span> <span class="k">uniform</span> <span class="n">samplerBuffer</span> <span class="n">colors</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">c</span> <span class="o">=</span> <span class="n">texelFetch</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="mi">123</span><span class="p">);</span>
+</span></span></code></pre></div><p>In HLSL the equivalent would be <code>Buffer</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="kt">Buffer</span><span class="o">&lt;</span><span class="kt">float4</span><span class="o">&gt;</span> <span class="n">colors</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float4</span> <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="mi">123</span><span class="p">];</span>
+</span></span></code></pre></div><p>This post talks about the difference between <code>Buffer</code> and <code>StructuredBuffer</code>: <a href="https://darkcorners.dev/buffers-vs-structuredbuffers">https://darkcorners.dev/buffers-vs-structuredbuffers</a></p>
+<h3 id="storage-texel-buffer">Storage Texel Buffer</h3>
+<p>The same as uniform texel buffer, but allows for writing.</p>
+<p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(...)</span> <span class="k">uniform</span> <span class="n">imageBuffer</span> <span class="n">colors</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="n">imageStore</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="n">c</span><span class="p">);</span>
+</span></span></code></pre></div><p>In HLSL the equivalent would be <code>RWBuffer</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="kt">RWBuffer</span><span class="o">&lt;</span><span class="kt">float4</span><span class="o">&gt;</span> <span class="n">colors</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="n">colors</span><span class="p">[</span><span class="mi">123</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</span></span></code></pre></div><h3 id="sampled-image">Sampled Image</h3>
+<p>An image which can be sampled using a sampler, or fetched using integer coordinates.</p>
+<p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(...)</span> <span class="k">uniform</span> <span class="n">texture2D</span> <span class="n">albedo</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">c</span> <span class="o">=</span> <span class="n">texelFetch</span><span class="p">(</span><span class="n">albedo</span><span class="p">,</span> <span class="k">ivec2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">));</span>
+</span></span></code></pre></div><p>In HLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="kt">Texture2D</span> <span class="n">albedo</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float4</span> <span class="n">c</span> <span class="o">=</span> <span class="n">albedo</span><span class="p">.</span><span class="n">Load</span><span class="p">(</span><span class="kt">int2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">));</span>
+</span></span></code></pre></div><h3 id="storage-image">Storage Image</h3>
+<p>An image that can be read &amp; written.</p>
+<p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(...)</span> <span class="k">uniform</span> <span class="n">image2D</span> <span class="n">albedo</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage (read)</span>
+</span></span><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">c</span> <span class="o">=</span> <span class="n">imageLoad</span><span class="p">(</span><span class="n">albedo</span><span class="p">,</span> <span class="k">ivec2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage (write)</span>
+</span></span><span class="line"><span class="cl"><span class="n">imageStore</span><span class="p">(</span><span class="n">albedo</span><span class="p">,</span> <span class="k">ivec2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">),</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">c</span><span class="p">);</span>
+</span></span></code></pre></div><p>In HLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="kt">RWTexture2D</span> <span class="n">albedo</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage (read)</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float4</span> <span class="n">c</span> <span class="o">=</span> <span class="n">albedo</span><span class="p">.</span><span class="n">Load</span><span class="p">(</span><span class="kt">int2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// usage (write)</span>
+</span></span><span class="line"><span class="cl"><span class="n">albedo</span><span class="p">.</span><span class="n">Store</span><span class="p">(</span><span class="kt">int2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">),</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">c</span><span class="p">);</span>
+</span></span></code></pre></div><h3 id="storage-buffer">Storage Buffer</h3>
+<p>Vulkan&rsquo;s Storage Buffer is very versatile. <br>
+In GLSL, we can just use the &ldquo;buffer&rdquo; keyword. <br>
+In HLSL, for convenience, there are multiple types for doing different things. But we can just simulate those in GLSL.</p>
+<p>The thing that makes GLSL&rsquo;s <code>buffer</code> so versatile, is the fact that you can add an unspecified-length array as the last member.</p>
+<p>Here follows DX12&rsquo;s buffer types that can be emulated with Vulkan&rsquo;s <strong>Storage Buffer</strong>s:</p>
+<h4 id="structuredbuffer">StructuredBuffer</h4>
+<p>A StructuredBuffer is a buffer that is interpreted as an array of a given type.<br>
+The type can be any of the basic types (e.g int2, float4x4, etc), or a struct.<br>
+In <strong>HLSL</strong>, there is <code>StructuredBuffer</code> and <code>RWStructuredBuffer</code>.
+In <strong>GLSL</strong>, the <code>buffer</code> is read&amp;write by default, but you can prepend the keyword <code>readonly</code> to make it&hellip; read-only.</p>
+<p>In HLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">Particle</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float4</span> <span class="n">speed</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">RWStructuredBuffer</span><span class="o">&lt;</span><span class="n">Particle</span><span class="o">&gt;</span> <span class="n">particles</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">position</span> <span class="o">+=</span> <span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">speed</span> <span class="o">*</span> <span class="n">dt</span><span class="p">;</span>
+</span></span></code></pre></div><p>In GLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">Particle</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">vec4</span> <span class="n">position</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">vec4</span> <span class="n">speed</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="p">...)</span> <span class="n">buffer</span> <span class="n">Particles</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Particle</span> <span class="n">particles</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="k">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">position</span> <span class="o">+=</span> <span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">speed</span> <span class="o">*</span> <span class="n">dt</span><span class="p">;</span>
+</span></span></code></pre></div><h4 id="byteaddressbuffer">ByteAddressBuffer</h4>
+<p>A buffer interpreted as an array of bytes.</p>
+<p>In GLSL there isn&rsquo;t any direct equivalent, but it can be emulated with an array of uint and bitmasks. <br>
+This is a bit cumbersome, yeah. <br>
+However, it&rsquo;s a fairly good way to emulate it since, in HLSL, the ByteAddressBuffer needs to be 4-byte aligned anyway.</p>
+<h4 id="appendstructuredbuffer">AppendStructuredBuffer</h4>
+<p>It&rsquo;s a type of StructuredBuffer that can be used to build a list by appending elements.</p>
+<p>In GLSL, this can be emulated with an unspecified-length array, and an atomic counter.</p>
+<p>In HLSL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="nb">AppendStructuredBuffer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="n">list</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="n">X</span><span class="p">);</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="n">buffer</span> <span class="n">List</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">elems</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">list</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="n">list</span><span class="p">.</span><span class="n">elems</span><span class="p">[</span><span class="n">atomicAdd</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">X</span><span class="p">;</span>
+</span></span></code></pre></div><p><code>atomicAdd</code> adds some number (1 in this case) to list.count, and returns the old value.</p>
+<h4 id="consumestructuredbuffer">ConsumeStructuredBuffer</h4>
+<p>It&rsquo;s a type of StructuredBuffer that appears as a stream that you can consume values from.</p>
+<p>In GLSL, this can be emulated with an unspecified-length array, and an atomic counter.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-hlsl" data-lang="hlsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="nb">ConsumeStructuredBuffer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">:</span> <span class="k">register</span><span class="p">(...);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="n">X</span> <span class="o">=</span> <span class="n">list</span><span class="p">.</span><span class="n">Consume</span><span class="p">();</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-glsl" data-lang="glsl"><span class="line"><span class="cl"><span class="c1">// declaration</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span> <span class="p">(</span><span class="n">std430</span><span class="p">,</span> <span class="n">set</span> <span class="o">=</span> <span class="mo">0</span><span class="p">,</span> <span class="n">binding</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="n">buffer</span> <span class="n">List</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="n">elems</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">list</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// usage</span>
+</span></span><span class="line"><span class="cl"><span class="n">X</span> <span class="o">=</span> <span class="n">list</span><span class="p">.</span><span class="n">elems</span><span class="p">[</span><span class="n">atomicAdd</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="n">count</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</span></span></code></pre></div><h2 id="conclusion">Conclusion</h2>
+<p>I hope this post has helped you in some way.<br>
+Let me know in the comments if you have any feedback or questions.</p>
+<h1 id="links">Links</h1>
+<ul>
+<li><a href="https://www.lei.chat/posts/hlsl-for-vulkan-resources/">https://www.lei.chat/posts/hlsl-for-vulkan-resources/</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/direct3d12/resource-binding-in-hlsl">https://learn.microsoft.com/en-us/windows/win32/direct3d12/resource-binding-in-hlsl</a></li>
+<li><a href="https://stefanpijnacker.nl/article/directx12-resources-key-concepts/">https://stefanpijnacker.nl/article/directx12-resources-key-concepts/</a></li>
+<li><a href="https://logins.github.io/graphics/2020/07/31/DX12ResourceHandling.html">https://logins.github.io/graphics/2020/07/31/DX12ResourceHandling.html</a></li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+
+
+<script src="https://utteranc.es/client.js"
+  repo="tuket/tuket.github.io"
+  issue-term="pathname"
+  label="💬💬"
+  theme="gruvbox-dark"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/tuket"><img src="/img/github_icon.svg" width="18" height="18" alt="github"></a> <a href="https://stackoverflow.com/users/1754322/tuket"><img src="/img/stack_overflow_icon.svg" width="18" height="18" alt="stackOverflow"></a> <a href="https://www.linkedin.com/in/tuket/"><img src="/img/linkedin_icon.svg" width="18" height="18" alt="linkedin"></a> <a href="mailto:tuket.webpage.0@gmail.com"><img src="/img/email_icon.svg" width="18" height="18" alt="email"></a>
+      
+    </footer>
+    
+  </body>
+</html>
+

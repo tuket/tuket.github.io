@@ -22,7 +22,7 @@
       
       <li class="pull-left ">
         
-        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
       </li>
       
       
@@ -118,26 +118,26 @@ F(\vec \omega _o, \vec h)  \ G(\vec \omega _i, \vec \omega _o, \vec h) \ D(\vec 
 $$</p>
 <h2 id="f-fresnel-term">$F$: Fresnel term</h2>
 <table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center"></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Exact Fresnel</td>
-<td style="text-align:center">$\frac 1 2 \left(\frac{g-c}{g+c} \right) ^2 \ \left(1 + \left( \frac{c \ (g + c) - 1} {c \ (g-c) +1 } \right)^2 \right)    \\ where: g = \sqrt{\frac{\eta _t} {\eta _i} ^2 -1 +c^2} \ , \ \ \ c = \lvert \vec\omega _o \cdot \vec h \rvert$</td>
-</tr>
-<tr>
-<td style="text-align:center">Schlick&rsquo;s approximation</td>
-<td style="text-align:center">$F_0 + (1-F_0) \ (1 - cos \theta _h) ^ 5$</td>
-</tr>
-<tr>
-<td style="text-align:center">Epic approximation</td>
-<td style="text-align:center">$ F_0 + (1-F_0) \ 2 ^{(-5.55473 \ (\vec\omega _o \cdot \vec h) - 6.98316) \ (\vec\omega _o \cdot \vec h)} $ <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center"></th>
+          <th style="text-align: center"></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">Exact Fresnel</td>
+          <td style="text-align: center">$\frac 1 2 \left(\frac{g-c}{g+c} \right) ^2 \ \left(1 + \left( \frac{c \ (g + c) - 1} {c \ (g-c) +1 } \right)^2 \right)    \\ where: g = \sqrt{\frac{\eta _t} {\eta _i} ^2 -1 +c^2} \ , \ \ \ c = \lvert \vec\omega _o \cdot \vec h \rvert$</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Schlick&rsquo;s approximation</td>
+          <td style="text-align: center">$F_0 + (1-F_0) \ (1 - cos \theta _h) ^ 5$</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Epic approximation</td>
+          <td style="text-align: center">$ F_0 + (1-F_0) \ 2 ^{(-5.55473 \ (\vec\omega _o \cdot \vec h) - 6.98316) \ (\vec\omega _o \cdot \vec h)} $ <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="g-geometry-term-shadowing-and-masking">$G$: geometry term (shadowing and masking)</h2>
 <p>Both $G$ and $D$ depend on the type of distribution.</p>
@@ -145,26 +145,26 @@ $$</p>
 G(\vec \omega _i, \vec \omega _o, \vec h) = G_1(\vec \omega _i, \vec h) \ G_1(\vec \omega _o, \vec h)
 $$</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:center">Distribution</th>
-<th style="text-align:center">$ G_1(\vec v, \vec h) $</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Beckmann</td>
-<td style="text-align:center">$$ \chi ^{+} \left(\frac {\vec v \cdot \vec h} {\vec v \cdot \vec n} \right)  \begin{dcases}  \frac {3.535a + 2.181a^2} {1 + 2.276a + 2.577a^2}   &amp; if \ \ \ a &lt; 1.6 \\ 1 &amp; else \end{dcases} $$  <br/> with $ a= \frac 1 {\alpha _b \ \tan \theta _v} $</td>
-</tr>
-<tr>
-<td style="text-align:center">Blinn-Phong</td>
-<td style="text-align:center">Same as Beckmann but with $ a= \frac {\sqrt{0.5 \alpha _p + 1}} {\tan \theta _v} $</td>
-</tr>
-<tr>
-<td style="text-align:center">GGX</td>
-<td style="text-align:center">$$\chi ^{+} \left( \frac {\vec v \cdot \vec h} {\vec v \cdot \vec n} \right)  \frac 2 {1 + \sqrt{1 + (\alpha_g \ \tan \theta_v)^2}}$$</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">Distribution</th>
+          <th style="text-align: center">$ G_1(\vec v, \vec h) $</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">Beckmann</td>
+          <td style="text-align: center">$$ \chi ^{+} \left(\frac {\vec v \cdot \vec h} {\vec v \cdot \vec n} \right)  \begin{dcases}  \frac {3.535a + 2.181a^2} {1 + 2.276a + 2.577a^2}   &amp; if \ \ \ a &lt; 1.6 \\ 1 &amp; else \end{dcases} $$  <br/> with $ a= \frac 1 {\alpha _b \ \tan \theta _v} $</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Blinn-Phong</td>
+          <td style="text-align: center">Same as Beckmann but with $ a= \frac {\sqrt{0.5 \alpha _p + 1}} {\tan \theta _v} $</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">GGX</td>
+          <td style="text-align: center">$$\chi ^{+} \left( \frac {\vec v \cdot \vec h} {\vec v \cdot \vec n} \right)  \frac 2 {1 + \sqrt{1 + (\alpha_g \ \tan \theta_v)^2}}$$</td>
+      </tr>
+  </tbody>
 </table>
 <p>$\alpha_b$: width parameter for the Beckmann distribution <br>
 $\alpha_p$: Blinn-Phong exponent or shininess <br>
@@ -172,50 +172,50 @@ $\alpha_g$: width parameter for the GGX distribution, also know as squared rough
 <h2 id="d-normal-distribution">$D$: normal distribution</h2>
 <p>If you are going to compute the rendering equation with <strong>uniform sampling or sampling analytic lights</strong> such as point lights, use one of these formulas:</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:center">Distribution</th>
-<th style="text-align:center">$ D $</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Beckmann</td>
-<td style="text-align:center">$$ \frac{\chi^+ \left(\vec n \cdot \vec h \right)} {\pi \left( \alpha_b \cos^2 \theta_h \right)^2} e ^{- \left( \frac{\tan \theta_h} {\alpha_b} \right)}$$</td>
-</tr>
-<tr>
-<td style="text-align:center">Blinn-Phong</td>
-<td style="text-align:center">$$ \chi^+ \left( \vec n \cdot \vec h \right) \frac {\alpha_p + 2} {2 \pi} \left( \cos  \theta_h \right) ^{\alpha_p}$$</td>
-</tr>
-<tr>
-<td style="text-align:center">GGX</td>
-<td style="text-align:center">$$  \frac{\chi^+ \left( \vec n \cdot \vec h \right)} {\pi} \left( \frac {\alpha_g} {cos^2 \theta_h \left( \alpha _g ^2 + \tan^2 \theta_h \right)} \right)^2 = \frac{\chi^+ \left( \vec n \cdot \vec h \right)} {\pi} \left( \frac {\alpha_g} {cos^2 \theta_h \ \alpha _g ^2 + \sin^2 \theta_h } \right)^2 $$</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">Distribution</th>
+          <th style="text-align: center">$ D $</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">Beckmann</td>
+          <td style="text-align: center">$$ \frac{\chi^+ \left(\vec n \cdot \vec h \right)} {\pi \left( \alpha_b \cos^2 \theta_h \right)^2} e ^{- \left( \frac{\tan \theta_h} {\alpha_b} \right)}$$</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Blinn-Phong</td>
+          <td style="text-align: center">$$ \chi^+ \left( \vec n \cdot \vec h \right) \frac {\alpha_p + 2} {2 \pi} \left( \cos  \theta_h \right) ^{\alpha_p}$$</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">GGX</td>
+          <td style="text-align: center">$$  \frac{\chi^+ \left( \vec n \cdot \vec h \right)} {\pi} \left( \frac {\alpha_g} {cos^2 \theta_h \left( \alpha _g ^2 + \tan^2 \theta_h \right)} \right)^2 = \frac{\chi^+ \left( \vec n \cdot \vec h \right)} {\pi} \left( \frac {\alpha_g} {cos^2 \theta_h \ \alpha _g ^2 + \sin^2 \theta_h } \right)^2 $$</td>
+      </tr>
+  </tbody>
 </table>
 <p>With <strong>importance sampling</strong> we sample according to $D(\vec h) \cos \theta_h$.
 Given two random numbers $ \xi_1 \xi_2 \ \in [0, 1)$ we compute $\vec h$ with one of these formulas:</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:center">Distribution</th>
-<th style="text-align:center">$ \theta, \phi $</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Beckmann</td>
-<td style="text-align:center">$$ \theta_h = \arctan \left( \sqrt{-\alpha^2 _b \log(1 - \xi_1)} \right) \ \phi_h = 2 \pi \xi_2 $$</td>
-</tr>
-<tr>
-<td style="text-align:center">Blinn-Phong</td>
-<td style="text-align:center">$$ \theta_m = \arccos \left( \xi_1 ^{\frac{1}{\alpha_p+2}} \right) \ \phi_m = 2 \pi \xi_2$$</td>
-</tr>
-<tr>
-<td style="text-align:center">GGX</td>
-<td style="text-align:center">$$ \theta_m = \arctan \frac{\alpha_g \sqrt{\xi_1}} {\sqrt{1-\xi_1}} \ \phi_m = 2 \pi \xi_2$$</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">Distribution</th>
+          <th style="text-align: center">$ \theta, \phi $</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">Beckmann</td>
+          <td style="text-align: center">$$ \theta_h = \arctan \left( \sqrt{-\alpha^2 _b \log(1 - \xi_1)} \right) \ \phi_h = 2 \pi \xi_2 $$</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Blinn-Phong</td>
+          <td style="text-align: center">$$ \theta_m = \arccos \left( \xi_1 ^{\frac{1}{\alpha_p+2}} \right) \ \phi_m = 2 \pi \xi_2$$</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">GGX</td>
+          <td style="text-align: center">$$ \theta_m = \arctan \frac{\alpha_g \sqrt{\xi_1}} {\sqrt{1-\xi_1}} \ \phi_m = 2 \pi \xi_2$$</td>
+      </tr>
+  </tbody>
 </table>
 <p>Compute $\vec h$ from $\theta_h$ and $\phi_h$:</p>
 <p>$$

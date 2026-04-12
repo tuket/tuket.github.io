@@ -22,7 +22,7 @@
       
       <li class="pull-left ">
         
-        <a href="https://tuket.github.io">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
+        <a href="https://tuket.github.io/">~/<img src="/img/tuket_alpha_icon.png" width=18 style="vertical-align:-5px;"></a>
       </li>
       
       
@@ -95,7 +95,7 @@ onload='renderMathInElement(document.body);'></script>
 <p>Still, when you create a swapchain in Vulkan, you provide a <strong>minimum</strong> amount of images to be created (<code>VkSwapchainCreateInfoKHR::minImageCount</code>). However, the driver could give you <strong>more</strong> images than you requested. So you need to be able to support that case. It has actually happened to me that I had some code that would work in Nvidia, but when I tested it in another AMD card it would crash because I wasn&rsquo;t expecting anything other than double buffering.</p>
 <h2 id="vkacquirenextimagekhr-doesnt-block-as-you-might-expect">vkAcquireNextImageKHR doesn&rsquo;t block as you might expect</h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// Provided by VK_KHR_swapchain
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">VkResult</span> <span class="nf">vkAcquireNextImageKHR</span><span class="p">(</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">VkResult</span> <span class="nf">vkAcquireNextImageKHR</span><span class="p">(</span>
 </span></span><span class="line"><span class="cl">    <span class="n">VkDevice</span>                                    <span class="n">device</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="n">VkSwapchainKHR</span>                              <span class="n">swapchain</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">uint64_t</span>                                    <span class="n">timeout</span><span class="p">,</span>
@@ -115,17 +115,17 @@ onload='renderMathInElement(document.body);'></script>
 <h2 id="pseudo-code">pseudo code</h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">VkSemaphore</span> <span class="n">semaphore_imageAvailable</span><span class="p">[</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span> <span class="c1">// notice the +1 (even if all N frames have been presented, we would like to query what will be the next image index)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">u32</span> <span class="n">semaphoreInd_imageAvailable</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">u32</span> <span class="n">semaphoreInd_imageAvailable</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">VkSemaphore</span> <span class="n">semaphore_drawFinished</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="n">VkFence</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="n">VkCommandBuffer</span> <span class="n">cmdBuffers_draw</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="c1">// render loop
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">u32</span> <span class="n">scImgInd</span> <span class="o">=</span> <span class="n">acquireNextImage</span><span class="p">(</span><span class="n">semaphore_imageAvailable</span><span class="p">[</span><span class="n">semaphoreInd_imageAvailable</span><span class="p">]);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="c1">// wait until drawing to scImgInd has finished. We need to wait because, otherwise, cmdBuffers_draw[scImgInd] would be in use
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">VkFence</span><span class="o">&amp;</span> <span class="n">fence</span> <span class="o">=</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">];</span>
+</span></span></span><span class="line"><span class="cl">        <span class="n">VkFence</span><span class="o">&amp;</span> <span class="n">fence</span> <span class="o">=</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">        <span class="n">vkWaitForFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">,</span> <span class="n">VK_FALSE</span><span class="p">,</span> <span class="n">u64</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
 </span></span><span class="line"><span class="cl">        <span class="n">vkResetFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
@@ -134,8 +134,8 @@ onload='renderMathInElement(document.body);'></script>
 </span></span><span class="line"><span class="cl">    <span class="n">reset</span><span class="p">(</span><span class="n">cmdBuffer_draw</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="n">begin</span><span class="p">(</span><span class="n">cmdBuffer_draw</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="c1">// record cmds
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// ...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">end</span><span class="p">(</span><span class="n">cmdBuffer_draw</span><span class="p">)</span>
+</span></span></span><span class="line"><span class="cl">        <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">    <span class="n">end</span><span class="p">(</span><span class="n">cmdBuffer_draw</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">submit</span><span class="p">(</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">cmdBuffer</span> <span class="o">=</span> <span class="n">cmdBuffer_draw</span><span class="p">,</span>
@@ -158,15 +158,15 @@ onload='renderMathInElement(document.body);'></script>
 <p>Every time we want to destroy a resource, we will instead push the resource into a per-frame queue. After N frames, we can be sure that the resource is not being used by any cmd buffer.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// ... 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VkBuffer</span><span class="o">&gt;</span> <span class="n">toDestroy_buffers</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VkBuffer</span><span class="o">&gt;</span> <span class="n">toDestroy_buffers</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VkBuffer</span><span class="o">&gt;</span> <span class="n">toDestroy_images</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// ...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="c1">// wait until drawing to scImgInd has finished
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">VkFence</span><span class="o">&amp;</span> <span class="n">fence</span> <span class="o">=</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">];</span>
+</span></span></span><span class="line"><span class="cl">        <span class="n">VkFence</span><span class="o">&amp;</span> <span class="n">fence</span> <span class="o">=</span> <span class="n">fence_drawFinished</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl">        <span class="n">vkWaitForFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">,</span> <span class="n">VK_FALSE</span><span class="p">,</span> <span class="n">u64</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
 </span></span><span class="line"><span class="cl">        <span class="n">vkResetFences</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="n">device</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fence</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
@@ -180,7 +180,7 @@ onload='renderMathInElement(document.body);'></script>
 </span></span><span class="line"><span class="cl">    <span class="n">toDestroy_images</span><span class="p">[</span><span class="n">scImgInd</span><span class="p">].</span><span class="n">clear</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">//...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div>
     <a href="/"> >> Home</a>
   </main>
