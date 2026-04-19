@@ -177,6 +177,13 @@
       <description>&lt;p&gt;I needed a tool to plot analytical BRDFs.&#xA;&lt;del&gt;I was surprised I wasn&amp;rsquo;t able to find anything that could fit my requirements&lt;/del&gt;(shame on me: check out &lt;a href=&#34;https://github.com/wdas/brdf&#34;&gt;the one from Disney&lt;/a&gt;).&#xA;So I created my own interactive BRDF plotter using Unity.&#xA;It&amp;rsquo;s pretty easy to create your own BRDF plotter (if you don&amp;rsquo;t have big expectations on it).&#xA;The goal is to make something useful in a couple hours.&lt;/p&gt;&#xA;&lt;h2 id=&#34;displacing-vertices-of-a-sphere&#34;&gt;Displacing vertices of a sphere&lt;/h2&gt;&#xA;&lt;p&gt;What we are going to do is super easy. Create a sphere, evaluate the BRDF, displace the vertices by that amount. We can do this in either the vertex, or geometry shader.&lt;/p&gt;</description>
     </item>
     <item>
+      <title></title>
+      <link>https://tuket.github.io/notes/graphics/vk_swapchain_sync/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://tuket.github.io/notes/graphics/vk_swapchain_sync/</guid>
+      <description>&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://raphlinus.github.io/ui/graphics/gpu/2021/10/22/swapchain-frame-pacing.html&#34;&gt;https://raphlinus.github.io/ui/graphics/gpu/2021/10/22/swapchain-frame-pacing.html&lt;/a&gt;&#xA;&lt;a href=&#34;https://developer.samsung.com/sdp/blog/en/2019/07/26/vulkan-mobile-best-practice-how-to-configure-your-vulkan-swapchain&#34;&gt;https://developer.samsung.com/sdp/blog/en/2019/07/26/vulkan-mobile-best-practice-how-to-configure-your-vulkan-swapchain&lt;/a&gt;&#xA;&lt;a href=&#34;https://docs.vulkan.org/samples/latest/samples/performance/swapchain_images/README.html&#34;&gt;https://docs.vulkan.org/samples/latest/samples/performance/swapchain_images/README.html&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Markdown Guide (modified)</title>
       <link>https://tuket.github.io/posts/2018-08-30-markdown-guide/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
